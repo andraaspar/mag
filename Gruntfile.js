@@ -1,6 +1,18 @@
 module.exports = function(grunt) {
 	
 	grunt.initConfig({
+		appcache: {
+			compile: {
+				options: {
+					basePath: 'build'
+				},
+				dest: 'build/index.appcache',
+				cache: {
+					patterns: ['build/**', '!build/*.html']
+				},
+				network: '*'
+			}
+		},
 		clean: {
 			compile: ['build', 'tmp']
 		},
@@ -74,6 +86,7 @@ module.exports = function(grunt) {
 		}
 	});
 
+	grunt.loadNpmTasks('grunt-appcache');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-less');
@@ -83,6 +96,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-typescript');
 
 	grunt.registerTask('update', ['shell:update','sas:update']);
-	grunt.registerTask('compile', ['clean:compile','typescript:compile','less:compile', 'copy:compile', 'kapocs:compile']);
+	grunt.registerTask('compile', ['clean:compile','typescript:compile','less:compile', 'copy:compile', 'kapocs:compile', 'appcache:compile']);
 	grunt.registerTask('default', ['compile']);
 };

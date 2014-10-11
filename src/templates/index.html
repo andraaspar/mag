@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html manifest="index.appcache">
 	<head>
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -18,161 +18,219 @@
 				<div class="col-xs-12">
 					<h1 class="text-center">mag <small>szógyakorló program</small></h1>
 					<ul class="nav nav-tabs nav-justified h3" role="tablist">
-						<li class="active"><a href="#"><span class="glyphicon glyphicon-play-circle"></span> Indulás</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-list"></span> Szófelvétel</a></li>
-						<li><a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Tanulás</a></li>
+						<li id="tab-start" class="active"><a href=""><span class="glyphicon glyphicon-play-circle"></span> Indulás</a></li>
+						<li id="tab-wordlist" class="disabled"><a href=""><span class="glyphicon glyphicon-list"></span> Szófelvétel</a></li>
+						<li id="tab-learn" class="disabled"><a href=""><span class="glyphicon glyphicon-thumbs-up"></span> Tanulás</a></li>
 					</ul>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<h2>Indulás</h2>
-					<p class="lead">Szia! Ez a mag, egy szógyakorló program.</p>
-					<p>Kattints a <em>szófelvétel</em> fülre hogy kialakítsd a saját szólistádat, azután a <em>tanulás</em> fülre, hogy megtanuld!</p>
-					<div class="alert alert-danger" role="alert">
-						<span class="glyphicon glyphicon-warning-sign"></span> Adatbázis nélkül nem működöm!
-					</div>
-					<div class="alert alert-warning" role="alert">
-						<span class="glyphicon glyphicon-time"></span> Kérlek várj, amíg a program teljesen betöltődik.
-					</div>
-					<div class="alert alert-success" role="alert">
-						<span class="glyphicon glyphicon-ok"></span> Letöltöttem egy új verziót,
-						<a class="alert-link" href="#">kattints ide</a> hogy elindítsd!
-					</div>
-					<div class="alert alert-success" role="alert">
-						<span class="glyphicon glyphicon-ok"></span> Kész! Most már internet nélkül is működöm! Jelölj be kedvencnek!
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<h2>Szófelvétel</h2>
-					<h3>Új szólista létrehozás</h3>
-					<div class="alert alert-danger" role="alert">
-						<span class="glyphicon glyphicon-warning-sign"></span> Ez a listanév már foglalt.
-					</div>
-					<div class="form-group">
-						<label for="new-list-name-in">Új lista neve</label>
-						<div class="input-group">
-							<input type="text" class="form-control" id="new-list-name-in" placeholder="Adj nevet az új listának!"/>
-							<span class="input-group-btn">
-								<button type="button" class="btn btn-primary">
-									<span class="glyphicon glyphicon-plus"></span> Új lista létrehozása
-								</button>
-							</span>
+			<div id="tab-pane-start">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2>Indulás</h2>
+						<p class="lead">Szia! Mag vagyok, egy szógyakorló program.</p>
+						<div id="notifications-start">
+							<noscript>
+								<div class="alert alert-danger" role="alert">
+									<span class="glyphicon glyphicon-warning-sign"></span> JavaScript nélkül nem működöm!
+								</div>
+							</noscript>
 						</div>
 					</div>
-					<h3>Szólista választás</h3>
-					<div class="form-group">
-						<label for="list-select">Szólista</label>
-						<select id="list-select" class="form-control">
-							<option>Válassz egy listát...</option>
-						</select>
-					</div>
-					<h3>Szólista szerkesztés</h3>
-					<div class="alert alert-danger" role="alert">
-						<span class="glyphicon glyphicon-warning-sign"></span> Ez a listanév már foglalt.
-					</div>
-					<div class="form-group">
-						<label for="rename-list-name-in">Új listanév</label>
-						<div class="input-group">
-							<input type="text" class="form-control" id="rename-list-name-in" placeholder="Adj új nevet a listának!"/>
-							<span class="input-group-btn">
-								<button type="button" class="btn btn-primary">
-									<span class="glyphicon glyphicon-pencil"></span> Átnevezés
-								</button>
-							</span>
+				</div>
+			</div>
+			<div id="tab-pane-wordlist" class="mag-template">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2>Szófelvétel</h2>
+						<h3>Új szólista létrehozás</h3>
+						<div class="alert alert-danger" role="alert">
+							<span class="glyphicon glyphicon-warning-sign"></span> Ez a listanév már foglalt.
+						</div>
+						<div class="form-group">
+							<label for="new-list-name-in">Új lista neve</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="new-list-name-in" placeholder="Adj nevet az új listának!"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-primary">
+										<span class="glyphicon glyphicon-plus"></span> Új lista létrehozása
+									</button>
+								</span>
+							</div>
+						</div>
+						<h3>Szólista választás</h3>
+						<div class="form-group">
+							<label for="list-select">Szólista</label>
+							<select id="list-select" class="form-control">
+								<option>Válassz egy listát...</option>
+							</select>
+						</div>
+						<h3>Szólista szerkesztés</h3>
+						<div class="alert alert-danger" role="alert">
+							<span class="glyphicon glyphicon-warning-sign"></span> Ez a listanév már foglalt.
+						</div>
+						<div class="form-group">
+							<label for="rename-list-name-in">Új listanév</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="rename-list-name-in" placeholder="Adj új nevet a listának!"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-primary">
+										<span class="glyphicon glyphicon-pencil"></span> Átnevezés
+									</button>
+								</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<button id="delete-list" type="button" class="btn btn-danger">
+								<span class="glyphicon glyphicon-remove"></span> Szólista törlése
+							</button>
+						</div>
+						<h3>Szófelvétel</h3>
+						<div class="alert alert-danger" role="alert">
+							<span class="glyphicon glyphicon-warning-sign"></span> Ez a szó már a listában van.
 						</div>
 					</div>
-					<div class="form-group">
-						<button id="delete-list" type="button" class="btn btn-danger">
-							<span class="glyphicon glyphicon-remove"></span> Szólista törlése
-						</button>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-md-5">
+						<div class="form-group">
+							<label for="word-1-in">Egy szó</label>
+							<input type="text" class="form-control" id="word-1-in" placeholder="Írj be egy szót!"/>
+						</div>
 					</div>
-					<h3>Szófelvétel</h3>
-					<div class="alert alert-danger" role="alert">
-						<span class="glyphicon glyphicon-warning-sign"></span> Ez a szó már a listában van.
+					<div class="col-xs-12 col-md-5">
+						<div class="form-group">
+							<label for="word-2-in">...és a párja</label>
+							<input type="text" class="form-control" id="word-2-in" placeholder="Írd be a párját!"/>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-2">
+						<div class="form-group">
+							<label for="add-word" class="hidden-xs hidden-sm">&nbsp;</label>
+							<button id="add-word" type="button" class="btn btn-primary btn-block">
+								<span class="glyphicon glyphicon-plus"></span> Szópár felvétele
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<h3>Szavak szerkesztése</h3>
+						<table class="table table-striped table-condensed">
+							<thead>
+								<tr>
+									<th><input id="select-all-pairs" type="checkbox"/></th>
+									<th>Szám</th>
+									<th>Egy szó</th>
+									<th>...és a párja</th>
+									<th>Gyakorlás száma</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<p class="form-control-static">
+											<input type="checkbox"/>
+										</p>
+									</td>
+									<td><p class="form-control-static">1</p></td>
+									<td><p class="form-control-static">Argle-bargle</p></td>
+									<td><p class="form-control-static">Morple swoosh</p></td>
+									<td><input type="number" class="form-control" value="3" min="0" max="3" step="1" pattern="\d"/></td>
+								</tr>
+								<tr>
+									<td>
+										<p class="form-control-static">
+											<input type="checkbox"/>
+										</p>
+									</td>
+									<td><p class="form-control-static">1</p></td>
+									<td><p class="form-control-static">Argle-bargle</p></td>
+									<td><p class="form-control-static">Morple swoosh</p></td>
+									<td><input type="number" class="form-control" value="3" min="0" max="3" step="1" pattern="\d"/></td>
+								</tr>
+								<tr>
+									<td>
+										<p class="form-control-static">
+											<input type="checkbox"/>
+										</p>
+									</td>
+									<td><p class="form-control-static">1</p></td>
+									<td><p class="form-control-static">Argle-bargle</p></td>
+									<td><p class="form-control-static">Morple swoosh</p></td>
+									<td><input type="number" class="form-control" value="3" min="0" max="3" step="1" pattern="\d"/></td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="form-group">
+							<button id="delete-words" type="button" class="btn btn-danger">
+								<span class="glyphicon glyphicon-remove"></span> Szavak törlése
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-xs-12 col-md-5">
-					<div class="form-group">
-						<label for="word-1-in">Egy szó</label>
-						<input type="text" class="form-control" id="word-1-in" placeholder="Írj be egy szót!"/>
+			<div id="tab-pane-learn" class="mag-template">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2>Tanulás</h2>
+						<table class="table table-striped table-condensed">
+							<thead>
+								<tr>
+									<th>Kérdések</th>
+									<th>Eredményed</th>
+									<th>Kiejtett szavak</th>
+									<th>Maradt</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>17</td>
+									<td class="h1"><strong>75%</strong></td>
+									<td><strong>3</strong></td>
+									<td>14</td>
+								</tr>
+							</tbody>
+						</table>
+						<p class="text-center">
+							<button class="btn btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span> Tanulás kezdése</button>
+						</p>
+						<div class="progress">
+							<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+								style="width: 60%;">
+								60%
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="col-xs-12 col-md-5">
-					<div class="form-group">
-						<label for="word-2-in">...és a párja</label>
-						<input type="text" class="form-control" id="word-2-in" placeholder="Írd be a párját!"/>
+					<div class="col-xs-12 col-md-6">
+						<div class="form-group">
+							<label>Egy szó</label>
+							<p class="form-control-static">foobar</p>
+						</div>
 					</div>
-				</div>
-				<div class="col-xs-12 col-md-2">
-					<div class="form-group">
-						<label for="add-word" class="hidden-xs hidden-sm">&nbsp;</label>
-						<button id="add-word" type="button" class="btn btn-primary btn-block">
-							<span class="glyphicon glyphicon-plus"></span> Szópár felvétele
+					<div class="col-xs-12 col-md-6">
+<!-- 							<div class="form-group has-success has-feedback"> -->
+						<div class="form-group has-feedback">
+							<label for="word-2-learn-in">...és a párja</label>
+							<input type="text" class="form-control" id="word-2-learn-in" placeholder="Írd be a párját!"/>
+<!-- 								<span class="glyphicon glyphicon-ok form-control-feedback"></span> -->
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<button type="button" class="btn btn-warning">
+							<span class="glyphicon glyphicon-question-sign"></span> Nem tudom
+						</button>
+						<button type="button" class="btn btn-danger">
+							<span class="glyphicon glyphicon-remove"></span> Tanulás abbahagyása
 						</button>
 					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<h3>Szavak szerkesztése</h3>
-					<table class="table table-striped table-condensed">
-						<thead>
-							<tr>
-								<th><input id="select-all-pairs" type="checkbox"/></th>
-								<th>Szám</th>
-								<th>Egy szó</th>
-								<th>...és a párja</th>
-								<th>Gyakorlás száma</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>
-									<p class="form-control-static">
-										<input type="checkbox"/>
-									</p>
-								</td>
-								<td><p class="form-control-static">1</p></td>
-								<td><p class="form-control-static">Argle-bargle</p></td>
-								<td><p class="form-control-static">Morple swoosh</p></td>
-								<td><input type="number" class="form-control" value="3" min="0" max="3" step="1" pattern="\d"/></td>
-							</tr>
-							<tr>
-								<td>
-									<p class="form-control-static">
-										<input type="checkbox"/>
-									</p>
-								</td>
-								<td><p class="form-control-static">1</p></td>
-								<td><p class="form-control-static">Argle-bargle</p></td>
-								<td><p class="form-control-static">Morple swoosh</p></td>
-								<td><input type="number" class="form-control" value="3" min="0" max="3" step="1" pattern="\d"/></td>
-							</tr>
-							<tr>
-								<td>
-									<p class="form-control-static">
-										<input type="checkbox"/>
-									</p>
-								</td>
-								<td><p class="form-control-static">1</p></td>
-								<td><p class="form-control-static">Argle-bargle</p></td>
-								<td><p class="form-control-static">Morple swoosh</p></td>
-								<td><input type="number" class="form-control" value="3" min="0" max="3" step="1" pattern="\d"/></td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="form-group">
-						<button id="delete-words" type="button" class="btn btn-danger">
-							<span class="glyphicon glyphicon-remove"></span> Szavak törlése
+					<div class="col-xs-6 text-right">
+						<button type="button" class="btn btn-primary">
+							<span class="glyphicon glyphicon-ok"></span> Rendben
 						</button>
 					</div>
 				</div>
 			</div>
 		</div>
-</body>
+	</body>
 </html>
