@@ -11,8 +11,7 @@ module mag.ui {
 		private lang2NameIn = jQuery('#new-wordlist-lang2-name-in');
 		private submitButton = jQuery('#create-new-wordlist');
 		private newList: data.Wordlist;
-		private existingListGetTransaction: adat.Transaction;
-		private addNewListTransaction: adat.Transaction;
+		private transaction: adat.Transaction;
 		
 		constructor() {
 			super();
@@ -46,11 +45,11 @@ module mag.ui {
 			
 			this.notifications.message('Kérlek várj...', 'time');
 			this.submitButton.prop('disabled', true);
-			this.existingListGetTransaction = new adat.Transaction(mag.Main.getDatabase(), [
+			this.transaction = new adat.Transaction(mag.Main.getDatabase(), [
 				new adat.RequestIndexGet(mag.Main.getDBWordlistsDesc(), mag.Main.getDBWordlistsNameIndexDesc(),
 					illa.bind(this.onExistingListRetrieved, this), this.newList.name)
-			]);
-			this.existingListGetTransaction.process();
+			], adat.TransactionMode.READWRITE);
+			this.transaction.process();
 		}
 		
 		onExistingListRetrieved(existingList: data.Wordlist): void {
@@ -61,11 +60,11 @@ module mag.ui {
 				return;
 			}
 			
-			this.addNewListTransaction = new adat.Transaction(mag.Main.getDatabase(), [
+			this.transaction.setRequests([
 				new adat.RequestAdd(mag.Main.getDBWordlistsDesc(), this.newList)
 			]);
-			this.addNewListTransaction.addEventCallback(adat.Transaction.EVENT_COMPLETE, this.onNewListAdded, this);
-			this.addNewListTransaction.process();
+			this.transaction.addEventCallback(adat.Transaction.EVENT_COMPLETE, this.onNewListAdded, this);
+			this.transaction.process();
 		}
 		
 		onNewListAdded(e: illa.Event): void {
