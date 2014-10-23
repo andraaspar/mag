@@ -49,7 +49,7 @@
 						</div>
 						<div class="form-group">
 							<label for="new-wordlist-name-in">Új lista neve</label>
-							<input type="text" class="form-control" id="new-wordlist-name-in" placeholder="Adj nevet az új listának!"/>
+							<input type="text" class="form-control" id="new-wordlist-name-in"/>
 						</div>
 					</div>
 				</div>
@@ -57,13 +57,13 @@
 					<div class="col-xs-12 col-md-6">
 						<div class="form-group">
 							<label for="new-wordlist-lang1-name-in">Az egyik nyelv neve</label>
-							<input type="text" class="form-control" id="new-wordlist-lang1-name-in" placeholder="Hogy hívják az egyik nyelvet?"/>
+							<input type="text" class="form-control" id="new-wordlist-lang1-name-in"/>
 						</div>
 					</div>
 					<div class="col-xs-12 col-md-6">
 						<div class="form-group">
 							<label for="new-wordlist-lang2-name-in">A másik nyelv neve</label>
-							<input type="text" class="form-control" id="new-wordlist-lang2-name-in" placeholder="Hogy hívják a másik nyelvet?"/>
+							<input type="text" class="form-control" id="new-wordlist-lang2-name-in"/>
 						</div>
 					</div>
 				</div>
@@ -81,50 +81,85 @@
 								<option>Válassz egy listát...</option>
 							</select>
 						</div>
-						<h3>Szólista szerkesztés</h3>
-						<div class="alert alert-danger" role="alert">
-							<span class="glyphicon glyphicon-warning-sign"></span> Ez a listanév már foglalt.
-						</div>
+						<h3>Szólista szerkesztése</h3>
+						<div id="notifications-rename"></div>
 						<div class="form-group">
-							<label for="rename-list-name-in">Új listanév</label>
+							<label for="rename-list-name-in">Listanév szerkesztése</label>
 							<div class="input-group">
-								<input type="text" class="form-control" id="rename-list-name-in" placeholder="Adj új nevet a listának!"/>
+								<input type="text" class="form-control" id="rename-list-name-in"/>
 								<span class="input-group-btn">
-									<button type="button" class="btn btn-primary">
+									<button type="button" class="btn btn-primary" id="rename-list-button">
 										<span class="glyphicon glyphicon-pencil"></span> Átnevezés
 									</button>
 								</span>
 							</div>
 						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-md-6">
 						<div class="form-group">
-							<button id="delete-list" type="button" class="btn btn-danger">
+							<label for="rename-list-name-in">Az egyik nyelv nevének szerkesztése</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="rename-lang1-name-in"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-primary" id="rename-lang1-button">
+										<span class="glyphicon glyphicon-pencil"></span> Átnevezés
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-6">
+						<div class="form-group">
+							<label for="rename-list-name-in">A másik nyelv nevének szerkesztése</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="rename-lang2-name-in"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-primary" id="rename-lang2-button">
+										<span class="glyphicon glyphicon-pencil"></span> Átnevezés
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<h3>Szólista törlése</h3>
+						<div id="notifications-delete"></div>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="delete-list-confirm"/> Igen, biztos vagyok benne hogy törölni akarom.
+							</label>
+						</div>
+						<div class="form-group" id="delete-list-button-group">
+							<button id="delete-list-button" type="button" class="btn btn-danger">
 								<span class="glyphicon glyphicon-remove"></span> Szólista törlése
 							</button>
 						</div>
-						<h3>Szófelvétel</h3>
-						<div class="alert alert-danger" role="alert">
-							<span class="glyphicon glyphicon-warning-sign"></span> Ez a szó már a listában van.
-						</div>
+						<h3>Új szó hozzáadása</h3>
+						<div id="notifications-add-word"></div>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-12 col-md-5">
 						<div class="form-group">
-							<label for="word-1-in">Egy szó</label>
-							<input type="text" class="form-control" id="word-1-in" placeholder="Írj be egy szót!"/>
+							<label for="add-word-1-in" id="add-word-1-in-label"></label>
+							<input type="text" class="form-control" id="add-word-1-in"/>
 						</div>
 					</div>
 					<div class="col-xs-12 col-md-5">
 						<div class="form-group">
-							<label for="word-2-in">...és a párja</label>
-							<input type="text" class="form-control" id="word-2-in" placeholder="Írd be a párját!"/>
+							<label for="add-word-2-in" id="add-word-2-in-label"></label>
+							<input type="text" class="form-control" id="add-word-2-in"/>
 						</div>
 					</div>
 					<div class="col-xs-12 col-md-2">
 						<div class="form-group">
-							<label for="add-word" class="hidden-xs hidden-sm">&nbsp;</label>
-							<button id="add-word" type="button" class="btn btn-primary btn-block">
-								<span class="glyphicon glyphicon-plus"></span> Szópár felvétele
+							<label for="add-word-button" class="hidden-xs hidden-sm">&nbsp;</label>
+							<button id="add-word-button" type="button" class="btn btn-primary btn-block">
+								<span class="glyphicon glyphicon-plus"></span> Szó hozzáadása
 							</button>
 						</div>
 					</div>
@@ -132,51 +167,20 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<h3>Szavak szerkesztése</h3>
-						<table class="table table-striped table-condensed">
+						<div id="notifications-edit-words"></div>
+						<table class="table table-striped table-condensed table-bordered">
 							<thead>
 								<tr>
-									<th><input id="select-all-pairs" type="checkbox"/></th>
-									<th>Szám</th>
-									<th>Egy szó</th>
-									<th>...és a párja</th>
-									<th>Gyakorlás száma</th>
+									<th class="mag-cell-min"><input id="edit-words-select-all" type="checkbox"/></th>
+									<th class="mag-cell-min">Sorszám</th>
+									<th class="mag-cell-half" id="edit-words-lang-1-th"></th>
+									<th class="mag-cell-min">Gyakorlás száma</th>
+									<th class="mag-cell-half" id="edit-words-lang-2-th"></th>
+									<th class="mag-cell-min">Gyakorlás száma</th>
+									<th class="mag-cell-min">Szerkesztés mentése</th>
 								</tr>
 							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<p class="form-control-static">
-											<input type="checkbox"/>
-										</p>
-									</td>
-									<td><p class="form-control-static">1</p></td>
-									<td><p class="form-control-static">Argle-bargle</p></td>
-									<td><p class="form-control-static">Morple swoosh</p></td>
-									<td><input type="number" class="form-control" value="3" min="0" max="3" step="1" pattern="\d"/></td>
-								</tr>
-								<tr>
-									<td>
-										<p class="form-control-static">
-											<input type="checkbox"/>
-										</p>
-									</td>
-									<td><p class="form-control-static">1</p></td>
-									<td><p class="form-control-static">Argle-bargle</p></td>
-									<td><p class="form-control-static">Morple swoosh</p></td>
-									<td><input type="number" class="form-control" value="3" min="0" max="3" step="1" pattern="\d"/></td>
-								</tr>
-								<tr>
-									<td>
-										<p class="form-control-static">
-											<input type="checkbox"/>
-										</p>
-									</td>
-									<td><p class="form-control-static">1</p></td>
-									<td><p class="form-control-static">Argle-bargle</p></td>
-									<td><p class="form-control-static">Morple swoosh</p></td>
-									<td><input type="number" class="form-control" value="3" min="0" max="3" step="1" pattern="\d"/></td>
-								</tr>
-							</tbody>
+							<tbody id="edit-words-tbody"></tbody>
 						</table>
 						<div class="form-group">
 							<button id="delete-words" type="button" class="btn btn-danger">
@@ -228,7 +232,7 @@
 <!-- 							<div class="form-group has-success has-feedback"> -->
 						<div class="form-group has-feedback">
 							<label for="word-2-learn-in">...és a párja</label>
-							<input type="text" class="form-control" id="word-2-learn-in" placeholder="Írd be a párját!"/>
+							<input type="text" class="form-control" id="word-2-learn-in"/>
 <!-- 								<span class="glyphicon glyphicon-ok form-control-feedback"></span> -->
 						</div>
 					</div>

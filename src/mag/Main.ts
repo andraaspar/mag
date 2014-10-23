@@ -11,10 +11,10 @@
 /// <reference path='../../lib/jQuery.d.ts'/>
 
 /// <reference path='data/Wordlist.ts'/>
+/// <reference path='ui/EditWordlistForm.ts'/>
 /// <reference path='ui/MainTabs.ts'/>
 /// <reference path='ui/NewWordlistForm.ts'/>
 /// <reference path='ui/Notifications.ts'/>
-/// <reference path='ui/SelectWordlistForm.ts'/>
 
 module mag {
 	export class Main {
@@ -25,7 +25,7 @@ module mag {
 		private startNotifications: ui.Notifications;
 		
 		private newWordlistForm: ui.NewWordlistForm;
-		private selectWordlistForm: ui.SelectWordlistForm;
+		private selectWordlistForm: ui.EditWordlistForm;
 		
 		private supportsAppCache: boolean;
 		private hasNewVersion = false;
@@ -82,9 +82,9 @@ module mag {
 		}
 		
 		onAfterCache(): void {
-			if (this.debugModeEnabled) {
-				adat.Database.deleteDatabase('mag');
-			}
+//			if (this.debugModeEnabled) {
+//				adat.Database.deleteDatabase('mag');
+//			}
 			
 			this.startNotifications.message('Szükségem lesz egy böngésző adatbázisra...', 'floppy-disk');
 			this.database = new adat.Database('mag', [
@@ -135,7 +135,7 @@ module mag {
 			this.newWordlistForm = new ui.NewWordlistForm();
 			this.newWordlistForm.addEventCallback(ui.NewWordlistForm.EVENT_NEW_WORDLIST_CREATED, this.onNewWordlistCreated, this);
 			
-			this.selectWordlistForm = new ui.SelectWordlistForm();
+			this.selectWordlistForm = new ui.EditWordlistForm();
 			
 			this.mainTabs.enableAllTabs();
 			this.startNotifications.success([

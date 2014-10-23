@@ -24,21 +24,21 @@ module mag.ui {
 			this.notifications.removeAll();
 			
 			this.newList = new data.Wordlist();
-			this.newList.name = this.nameIn.val();
-			this.newList.lang1Name = this.lang1NameIn.val();
-			this.newList.lang2Name = this.lang2NameIn.val();
+			this.newList.name = illa.StringUtil.trim(this.nameIn.val());
+			this.newList.lang1Name = illa.StringUtil.trim(this.lang1NameIn.val());
+			this.newList.lang2Name = illa.StringUtil.trim(this.lang2NameIn.val());
 			
-			if (!illa.isString(this.newList.name) || !this.newList.name) {
+			if (!this.newList.name) {
 				this.notifications.error('Kérlek adj nevet a szólistának!');
 				return;
 			}
 			
-			if (!illa.isString(this.newList.lang1Name) || !this.newList.lang1Name) {
+			if (!this.newList.lang1Name) {
 				this.notifications.error('Kérlek adj nevet az egyik nyelvnek!');
 				return;
 			}
 			
-			if (!illa.isString(this.newList.lang2Name) || !this.newList.lang2Name) {
+			if (!this.newList.lang2Name) {
 				this.notifications.error('Kérlek adj nevet a másik nyelvnek!');
 				return;
 			}

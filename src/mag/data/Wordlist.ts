@@ -1,8 +1,21 @@
+/// <reference path='Word.ts'/>
+
 module mag.data {
 	export class Wordlist {
 		id: number;
-		name: string;
-		lang1Name: string;
-		lang2Name: string;
+		name = '';
+		lang1Name = '';
+		lang2Name = '';
+		words: Word[] = [];
+		
+		constructor(other?: Wordlist) {
+			if (other) {
+				for (var i in other) {
+					if (other.hasOwnProperty(i)) {
+						this[i] = other[i];
+					}
+				}
+			}
+		}
 	}
 }
