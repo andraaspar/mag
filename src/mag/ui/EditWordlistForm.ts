@@ -1,14 +1,13 @@
 /// <reference path='../../../lib/adat/RequestDelete.ts'/>
 /// <reference path='../../../lib/adat/RequestPut.ts'/>
 
+/// <reference path='../util/WordlistOptionRenderer.ts'/>
+
+/// <reference path='WordlistSelectorForm.ts'/>
+
 module mag.ui {
-	export class EditWordlistForm extends illa.EventHandler {
+	export class EditWordlistForm extends WordlistSelectorForm {
 		
-		static EVENT_SELECTED = 'mag_ui_SelectWordlistForm_EVENT_SELECTED';
-		
-		static LS_KEY_SELECTION_ID = 'mag_ui_SelectWordlistForm_selectionId';
-		
-		private selector = jQuery('#list-select');
 		private renameNotifications = new Notifications(jQuery('#notifications-rename'));
 		private renameListNameIn = jQuery('#rename-list-name-in');
 		private renameListButton = jQuery('#rename-list-button');
@@ -31,11 +30,9 @@ module mag.ui {
 		private editWordsLang1Th = jQuery('#edit-words-lang-1-th');
 		private editWordsLang2Th = jQuery('#edit-words-lang-2-th');
 		private editWordsTbody = jQuery('#edit-words-tbody');
+		private saveWordsButton = jQuery('#save-words');
 		private deleteWordsButton = jQuery('#delete-words');
 		
-		private wordlists: data.Wordlist[] = [];
-		
-		private loadListsTransaction: adat.Transaction;
 		private renameTransaction: adat.Transaction;
 		private deleteTransaction: adat.Transaction;
 		private addWordTransaction: adat.Transaction;
@@ -43,26 +40,38 @@ module mag.ui {
 		private deleteWordsTransaction: adat.Transaction;
 		
 		constructor() {
-			super();
-			
-			this.selector.on('change', illa.bind(this.onSelected, this));
+			super('#list-select');
 			
 			this.renameListButton.on('click', illa.bind(this.onListRenameRequested, this));
 			this.renameLang1Button.on('click', <any>illa.partial(this.onLangRenameRequested, this, true));
 			this.renameLang2Button.on('click', <any>illa.partial(this.onLangRenameRequested, this, false));
 			this.deleteListConfirm.on('change', illa.bind(this.onDeleteListConfirmChanged, this));
 			this.deleteListButton.on('click', illa.bind(this.onDeleteListRequested, this));
+			this.addWord1In.on('keyup', illa.bind(this.onAddWordInKeyUp, this));
+			this.addWord2In.on('keyup', illa.bind(this.onAddWordInKeyUp, this));
 			this.addWordButton.on('click', illa.bind(this.onAddWordRequested, this));
-			this.editWordsTbody.on('click', 'button[data-edit-word-save-button]', illa.bind(this.onEditWordsSaveRequested, this));
-			this.editWordsTbody.on('input', 'input', illa.bind(this.onEditWordsInputChanged, this));
+			this.saveWordsButton.on('click', illa.bind(this.onEditWordsSaveRequested, this));
 			this.editWordsSelectAll.on('change', illa.bind(this.onEditWordsSelectAllChanged, this));
 			this.deleteWordsButton.on('click', illa.bind(this.onDeleteWordsRequested, this));
-			
-			this.refreshWordlists();
+		}
+		
+		onWordlistsLoaded(e: illa.Event): void {
+			super.onWordlistsLoaded(e);
+			this.updateFormOnSelectionChanged();
+		}
+		
+		onSelectedWordlistChanged(e: illa.Event): void {
+			super.onSelectedWordlistChanged(e);
+			this.updateFormOnSelectionChanged();
 		}
 		
 		updateFormOnSelectionChanged(): void {
-			var wordlist = this.getSelectedWordlist() || new data.Wordlist();
+			var wordlist = Main.getInstance().getSelectedWordlist() || new data.Wordlist();
+			
+			this.renameNotifications.removeAll();
+			this.editWordsNotifications.removeAll();
+			this.addWordNotifications.removeAll();
+			this.deleteNotifications.removeAll();
 			
 			this.renameListNameIn.val(wordlist.name);
 			this.renameLang1NameIn.val(wordlist.lang1Name);
@@ -81,77 +90,12 @@ module mag.ui {
 			this.renderWords();
 		}
 		
-		refreshWordlists(): void {
-			this.selector.prop('disabled', true);
-			this.loadListsTransaction = new adat.Transaction(mag.Main.getDatabase(), [
-				new adat.RequestIndexCursor(mag.Main.getDBWordlistsDesc(), mag.Main.getDBWordlistsNameIndexDesc(),
-					illa.bind(this.onWordlistsReceived, this))
-			]);
-			this.loadListsTransaction.process();
-		}
-		
-		onWordlistsReceived(wordlists: data.Wordlist[]): void {
-			this.wordlists = wordlists;
-			var arrkup: any[] = [['option', 'Válassz egy listát...']];
-			for (var i = 0, n = wordlists.length; i < n; i++) {
-				var wordlist = wordlists[i];
-				arrkup.push(['option', {value: wordlist.id}, wordlist.name + ' (' + wordlist.lang1Name + ', ' + wordlist.lang2Name + ')']);
-			}
-			this.selector.html(illa.Arrkup.createString(arrkup));
-			this.selector.prop('disabled', false);
-			this.loadSelection();
-			this.updateFormOnSelectionChanged();
-		}
-		
-		onSelected(e: jQuery.IEvent): void {
-			this.storeSelection();
-			this.updateFormOnSelectionChanged();
-			new illa.Event(EditWordlistForm.EVENT_SELECTED, this).dispatch();
-		}
-		
-		storeSelection(): void {
-			var wordlist = this.getSelectedWordlist();
-			if (wordlist) {
-				window.localStorage[EditWordlistForm.LS_KEY_SELECTION_ID] = wordlist.id;
-			} else {
-				delete window.localStorage[EditWordlistForm.LS_KEY_SELECTION_ID];
-			}
-		}
-		
-		loadSelection(): void {
-			var id: number = Number(window.localStorage[EditWordlistForm.LS_KEY_SELECTION_ID]);
-			if (isNaN(id)) return;
-			this.setSelectedWordlistId(id);
-		}
-		
-		getSelectedWordlist(): data.Wordlist {
-			var result: data.Wordlist = null;
-			var id = this.selector.val();
-			for (var i = 0, n = this.wordlists.length; i < n; i++) {
-				var wordlist = this.wordlists[i];
-				if (wordlist.id == id) {
-					result = wordlist;
-					break;
-				}
-			}
-			return result;
-		}
-		
-		setSelectedWordlistId(id: number) {
-			for (var i = 0, n = this.wordlists.length; i < n; i++) {
-				var wordlist = this.wordlists[i];
-				if (wordlist.id == id) {
-					this.selector.val(id + '');
-				}
-			}
-		}
-		
 		onListRenameRequested(e: jQuery.IEvent): void {
 			e.preventDefault();
 			
 			this.renameNotifications.removeAll();
 			
-			var wordlist = this.getSelectedWordlist();
+			var wordlist = Main.getInstance().getSelectedWordlist();
 			if (!wordlist) {
 				this.renameNotifications.warning('Válassz listát előbb!');
 				return;
@@ -194,13 +138,13 @@ module mag.ui {
 		onListRenameError(e: illa.Event): void {
 			this.renameNotifications.error('Hiba történt, nem tudtam átnevezni!');
 			
-			this.refreshWordlists();
+			Main.getInstance().refreshWordlists();
 		}
 		
 		onListRenamed(e: illa.Event): void {
 			this.renameNotifications.success('Rendben, átneveztem!');
 			
-			this.refreshWordlists();
+			Main.getInstance().refreshWordlists();
 		}
 		
 		onLangRenameRequested(isFirstLang: boolean, e: jQuery.IEvent): void {
@@ -208,7 +152,7 @@ module mag.ui {
 			
 			this.renameNotifications.removeAll();
 			
-			var wordlist = this.getSelectedWordlist();
+			var wordlist = Main.getInstance().getSelectedWordlist();
 			if (!wordlist) {
 				this.renameNotifications.warning('Válassz listát előbb!');
 				return;
@@ -260,7 +204,7 @@ module mag.ui {
 			
 			this.deleteNotifications.removeAll();
 			
-			var list = this.getSelectedWordlist();
+			var list = Main.getInstance().getSelectedWordlist();
 			
 			if (!list) {
 				this.deleteNotifications.error('Válassz listát előbb!');
@@ -278,21 +222,25 @@ module mag.ui {
 		onListDeleteError(e: illa.Event): void {
 			this.deleteNotifications.error('Hiba történt, nem tudtam törölni!');
 			
-			this.refreshWordlists();
+			Main.getInstance().refreshWordlists();
 		}
 		
 		onListDeleted(e: illa.Event): void {
 			this.deleteNotifications.success('Rendben, töröltem!');
 			
-			this.refreshWordlists();
+			Main.getInstance().refreshWordlists();
 		}
 		
-		onAddWordRequested(e: jQuery.IEvent): void {
-			e.preventDefault();
-			
+		onAddWordInKeyUp(e: jQuery.IEvent): void {
+			if (e.which == 13) {
+				this.onAddWordRequested();
+			}
+		}
+		
+		onAddWordRequested(e?: jQuery.IEvent): void {
 			this.addWordNotifications.removeAll();
 			
-			var wordlist = this.getSelectedWordlist();
+			var wordlist = Main.getInstance().getSelectedWordlist();
 			if (!wordlist) {
 				this.addWordNotifications.warning('Válassz listát előbb!');
 				return;
@@ -301,15 +249,15 @@ module mag.ui {
 			var newWord = new data.Word();
 			newWord.lang1 = illa.StringUtil.trim(this.addWord1In.val());
 			newWord.lang2 = illa.StringUtil.trim(this.addWord2In.val());
-			newWord.lang1Count = 3;
-			newWord.lang2Count = 3;
+			newWord.lang1Count = Main.PRACTICE_COUNT_DEFAULT;
+			newWord.lang2Count = Main.PRACTICE_COUNT_DEFAULT;
 			
 			if (!newWord.lang1 || !newWord.lang2) {
 				this.addWordNotifications.error('Kérlek add meg mindkét szót!');
 				return;
 			}
 			
-			this.checkNewWordAndReportCollisions(wordlist, newWord, this.addWordNotifications);
+			this.checkNewWordAndReportCollisions(wordlist, newWord, NaN, this.addWordNotifications);
 			
 			wordlist.words.push(newWord);
 			
@@ -324,20 +272,20 @@ module mag.ui {
 		onAddWordError(e: illa.Event): void {
 			this.addWordNotifications.error('Hiba történt, nem tudtam hozzáadni!');
 			
-			this.refreshWordlists();
+			Main.getInstance().refreshWordlists();
 		}
 		
 		onWordAdded(e: illa.Event): void {
 			this.addWordNotifications.success('Rendben, hozzáadtam!');
 			
-			this.addWord1In.val('');
+			this.addWord1In.val('').focus();
 			this.addWord2In.val('');
 			
-			this.refreshWordlists();
+			Main.getInstance().refreshWordlists();
 		}
 		
 		renderWords(): void {
-			var wordlist = this.getSelectedWordlist() || new data.Wordlist();
+			var wordlist = Main.getInstance().getSelectedWordlist() || new data.Wordlist();
 			
 			var arrkup: any[] = [];
 			for (var i = 0, n = wordlist.words.length; i < n; i++) {
@@ -365,11 +313,6 @@ module mag.ui {
 						['td', {'class': 'mag-cell-min'},
 							['input/', {type: 'number', 'class': 'form-control', value: word.lang2Count, min: 0, max: 9, step: 1,
 								pattern: '[0-9]{1,1}', 'data-edit-word-lang2-count-in': true}]
-						],
-						['td', {'class': 'mag-cell-min'},
-							['button', {type: 'button', 'class': 'btn btn-primary btn-block', 'data-edit-word-save-button': true, 'disabled': true},
-								['span', {'class': 'glyphicon glyphicon-floppy-disk'}], ' Mentés'
-							]
 						]
 					]
 				);
@@ -377,8 +320,9 @@ module mag.ui {
 			this.editWordsTbody.html(illa.Arrkup.createString(arrkup));
 		}
 		
-		checkNewWordAndReportCollisions(wordlist: data.Wordlist, newWord: data.Word, notifications: Notifications): void {
+		checkNewWordAndReportCollisions(wordlist: data.Wordlist, newWord: data.Word, skipId: number, notifications: Notifications): void {
 			for (var i = 0, n = wordlist.words.length; i < n; i++) {
+				if (i == skipId) continue;
 				var existingWord = wordlist.words[i];
 				if (existingWord.lang1 == newWord.lang1 || existingWord.lang2 == newWord.lang2) {
 					if (existingWord.lang1Count || existingWord.lang2Count) {
@@ -402,25 +346,11 @@ module mag.ui {
 		
 		getNewWordFromRow(row: jQuery.IInstance): data.Word {
 			var newWord = new data.Word();
-			newWord.lang1 = illa.StringUtil.trim(row.find('input[data-edit-word-lang1-in]').val());
-			newWord.lang2 = illa.StringUtil.trim(row.find('input[data-edit-word-lang2-in]').val());
+			newWord.lang1 = illa.StringUtil.removeDoubleSpaces(illa.StringUtil.trim(row.find('input[data-edit-word-lang1-in]').val()));
+			newWord.lang2 = illa.StringUtil.removeDoubleSpaces(illa.StringUtil.trim(row.find('input[data-edit-word-lang2-in]').val()));
 			newWord.lang1Count = parseInt(row.find('input[data-edit-word-lang1-count-in]').val());
 			newWord.lang2Count = parseInt(row.find('input[data-edit-word-lang2-count-in]').val());
 			return newWord;
-		}
-		
-		onEditWordsInputChanged(e: jQuery.IEvent): void {
-			this.updateEditWordsButtonState(jQuery(e.target));
-		}
-		
-		updateEditWordsButtonState(target: jQuery.IInstance): void {
-			var row = this.getRowFromTarget(target);
-			var id = this.getWordIdFromRow(row);
-			var oldWord = this.getSelectedWordlist().words[id];
-			var newWord = this.getNewWordFromRow(row);
-			
-			row.find('button[data-edit-word-save-button]').prop('disabled', newWord.lang1 == oldWord.lang1 && newWord.lang2 == oldWord.lang2 &&
-				newWord.lang1Count == oldWord.lang1Count && newWord.lang2Count == oldWord.lang2Count);
 		}
 		
 		onEditWordsSaveRequested(e: jQuery.IEvent): void {
@@ -428,21 +358,27 @@ module mag.ui {
 			
 			this.editWordsNotifications.removeAll();
 			
-			var row = this.getRowFromTarget(jQuery(e.target));
-			var id = this.getWordIdFromRow(row);
-			
-			var newWord = this.getNewWordFromRow(row);
-			
-			if (!newWord.lang1 || !newWord.lang2 || isNaN(newWord.lang1Count) || isNaN(newWord.lang2Count)) {
-				this.editWordsNotifications.warning('Kérlek tölts ki minden mezőt!');
+			var wordlist = Main.getInstance().getSelectedWordlist();
+			if (!wordlist) {
+				this.editWordsNotifications.warning('Válassz listát előbb!');
 				return;
 			}
 			
-			var wordlist = this.getSelectedWordlist();
+			var rows = this.editWordsTbody.children('tr[data-edit-word-id]');
 			
-			this.checkNewWordAndReportCollisions(wordlist, newWord, this.editWordsNotifications);
-			
-			wordlist.words.splice(id, 1, newWord);
+			for (var i = 0, n = rows.length; i < n; i++) {
+				var row = rows.eq(i);
+				var id = this.getWordIdFromRow(row);
+				var newWord = this.getNewWordFromRow(row);
+				if (!newWord.lang1 || !newWord.lang2 || isNaN(newWord.lang1Count) || isNaN(newWord.lang2Count)) {
+					row.addClass('danger');
+					this.editWordsNotifications.error([[], 'Kérlek tölts ki minden mezőt a ', ['a', {href: '#edit-word-' + (i + 1)},
+						i + 1 + '. sorban!']]);
+					return;
+				}
+				this.checkNewWordAndReportCollisions(wordlist, newWord, id, this.editWordsNotifications);
+				wordlist.words.splice(id, 1, newWord);
+			}
 			
 			this.editWordsTransaction = new adat.Transaction(Main.getDatabase(), [
 				new adat.RequestPut(Main.getDBWordlistsDesc(), wordlist)
@@ -455,13 +391,13 @@ module mag.ui {
 		onEditWordsError(id: number, e: illa.Event): void {
 			this.editWordsNotifications.error('Hiba történt, nem tudtam menteni!');
 			
-			this.updateEditWordsButtonState(this.editWordsTbody.find('button[data-edit-word-save-button]').eq(id));
+			Main.getInstance().refreshWordlists();
 		}
 		
 		onWordsEdited(id: number, e: illa.Event): void {
 			this.editWordsNotifications.success('Rendben, mentettem!');
 			
-			this.updateEditWordsButtonState(this.editWordsTbody.find('button[data-edit-word-save-button]').eq(id));
+			Main.getInstance().refreshWordlists();
 		}
 		
 		onEditWordsSelectAllChanged(e: jQuery.IEvent): void {
@@ -472,7 +408,7 @@ module mag.ui {
 			this.editWordsNotifications.removeAll();
 			
 			var checkedBoxes = this.editWordsTbody.find('input[data-edit-word-selected]:checked');
-			var wordlist = this.getSelectedWordlist();
+			var wordlist = Main.getInstance().getSelectedWordlist();
 			if (!wordlist) {
 				this.editWordsNotifications.error('Válassz listát előbb!');
 				return;
@@ -496,13 +432,13 @@ module mag.ui {
 		onDeleteWordsError(e: illa.Event): void {
 			this.editWordsNotifications.error('Hiba történt, nem tudtam törölni!');
 			
-			this.refreshWordlists();
+			Main.getInstance().refreshWordlists();
 		}
 		
 		onWordsDeleted(e: illa.Event): void {
 			this.editWordsNotifications.success('Rendben, töröltem!');
 			
-			this.refreshWordlists();
+			Main.getInstance().refreshWordlists();
 		}
 	}
 }

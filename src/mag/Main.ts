@@ -6,18 +6,29 @@
 
 /// <reference path='../../lib/illa/_module.ts'/>
 /// <reference path='../../lib/illa/Arrkup.ts'/>
+/// <reference path='../../lib/illa/EventHandler.ts'/>
 /// <reference path='../../lib/illa/Log.ts'/>
 
 /// <reference path='../../lib/jQuery.d.ts'/>
 
 /// <reference path='data/Wordlist.ts'/>
 /// <reference path='ui/EditWordlistForm.ts'/>
+/// <reference path='ui/LearningForm.ts'/>
 /// <reference path='ui/MainTabs.ts'/>
 /// <reference path='ui/NewWordlistForm.ts'/>
 /// <reference path='ui/Notifications.ts'/>
 
 module mag {
-	export class Main {
+	export class Main extends illa.EventHandler {
+		
+		static LS_KEY_SELECTION_ID = 'mag_Main_selectedWordlistId';
+		
+		static EVENT_WORDLISTS_LOAD_START = 'mag_Main_EVENT_WORDLISTS_LOAD_START';
+		static EVENT_WORDLISTS_LOADED = 'mag_Main_EVENT_WORDLISTS_LOADED';
+		static EVENT_SELECTED_WORDLIST_CHANGED = 'mag_Main_EVENT_SELECTED_WORDLIST_CHANGED';
+		
+		static PRACTICE_COUNT_DEFAULT = 1;
+		static PRACTICE_COUNT_MAX = 3;
 		
 		private static instance = new Main();
 		
@@ -25,7 +36,8 @@ module mag {
 		private startNotifications: ui.Notifications;
 		
 		private newWordlistForm: ui.NewWordlistForm;
-		private selectWordlistForm: ui.EditWordlistForm;
+		private editWordlistForm: ui.EditWordlistForm;
+		private learningForm: ui.LearningForm;
 		
 		private supportsAppCache: boolean;
 		private hasNewVersion = false;
@@ -36,7 +48,12 @@ module mag {
 		private dbWordlistsDesc: adat.ObjectStoreDescriptor<number, data.Wordlist>;
 		private dbWordlistsNameIndexDesc: adat.IndexDescriptor<number, data.Wordlist>;
 		
+		private wordlists: data.Wordlist[] = [];
+		private loadListsTransaction: adat.Transaction;
+		
 		constructor() {
+			super();
+			
 			if (this.debugModeEnabled) {
 				illa.Log.info('Debug mode enabled.');
 			}
@@ -72,8 +89,9 @@ module mag {
 		}
 		
 		onUpdateReady(e: Event): void {
-			this.hasNewVersion = true;
-			this.onAfterCache();
+//			this.hasNewVersion = true;
+//			this.onAfterCache();
+			window.location.reload();
 		}
 		
 		onError(e: Event): void {
@@ -135,7 +153,20 @@ module mag {
 			this.newWordlistForm = new ui.NewWordlistForm();
 			this.newWordlistForm.addEventCallback(ui.NewWordlistForm.EVENT_NEW_WORDLIST_CREATED, this.onNewWordlistCreated, this);
 			
-			this.selectWordlistForm = new ui.EditWordlistForm();
+			this.editWordlistForm = new ui.EditWordlistForm();
+			
+			this.learningForm = new ui.LearningForm();
+			this.learningForm.addEventCallback(ui.LearningForm.EVENT_STATE_CHANGED, this.onLearningFormStateChanged, this);
+			
+			this.addEventCallback(Main.EVENT_WORDLISTS_LOADED, this.onInitWordlistsRefreshed, this);
+			this.refreshWordlists();
+		}
+		
+		onInitWordlistsRefreshed(e: illa.Event): void {
+			
+			this.removeEventCallback(Main.EVENT_WORDLISTS_LOADED, this.onInitWordlistsRefreshed, this);
+			
+			window.location.hash = '';
 			
 			this.mainTabs.enableAllTabs();
 			this.startNotifications.success([
@@ -145,7 +176,70 @@ module mag {
 		}
 		
 		onNewWordlistCreated(e: illa.Event): void {
-			this.selectWordlistForm.refreshWordlists();
+			this.refreshWordlists();
+		}
+		
+		refreshWordlists(): void {
+			new illa.Event(Main.EVENT_WORDLISTS_LOAD_START, this).dispatch();
+			this.loadListsTransaction = new adat.Transaction(mag.Main.getDatabase(), [
+				new adat.RequestIndexCursor(mag.Main.getDBWordlistsDesc(), mag.Main.getDBWordlistsNameIndexDesc(),
+					illa.bind(this.onWordlistsReceived, this))
+			]);
+			this.loadListsTransaction.process();
+		}
+		
+		onWordlistsReceived(wordlists: data.Wordlist[]): void {
+			this.wordlists = wordlists;
+			
+			var selectedWordlist = this.getSelectedWordlist();
+			if (!selectedWordlist) {
+				this.setSelectedWordistId(NaN);
+			}
+			
+			new illa.Event(Main.EVENT_WORDLISTS_LOADED, this).dispatch();
+		}
+		
+		setSelectedWordistId(id: number): void {
+			if (!isNaN(id)) {
+				window.localStorage[Main.LS_KEY_SELECTION_ID] = id + '';
+			} else {
+				delete window.localStorage[Main.LS_KEY_SELECTION_ID];
+			}
+			new illa.Event(Main.EVENT_SELECTED_WORDLIST_CHANGED, this).dispatch();
+		}
+		
+		getSelectedWordlistId(): number {
+			return Number(window.localStorage[Main.LS_KEY_SELECTION_ID]);
+		}
+		
+		getSelectedWordlist(): data.Wordlist {
+			var result: data.Wordlist = null;
+			var id = this.getSelectedWordlistId();
+			if (!isNaN(id)) {
+				for (var i = 0, n = this.wordlists.length; i < n; i++) {
+					var wordlist = this.wordlists[i];
+					if (wordlist.id == id) {
+						result = wordlist;
+						break;
+					}
+				}
+			}
+			return result;
+		}
+		
+		getWordlists() { return this.wordlists }
+		
+		onLearningFormStateChanged(e: illa.Event): void {
+			if (this.mainTabs.getActiveTabId() === ui.MainTabIndex.LEARN) {
+				switch (this.learningForm.getState()) {
+					case ui.LearningFormState.NOT_STARTED:
+						this.mainTabs.enableAllTabs();
+						break;
+					case ui.LearningFormState.STARTED:
+						this.mainTabs.disableInactiveTabs();
+						break;
+				}
+			}
 		}
 		
 		static getInstance() { return this.instance }

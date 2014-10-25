@@ -1,6 +1,10 @@
 
 
 module mag.ui {
+	export enum MainTabIndex {
+		START, WORDLIST, LEARN
+	}
+	
 	export class MainTabs {
 		
 		private startTab: jQuery.IInstance;
