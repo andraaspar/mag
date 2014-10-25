@@ -1,18 +1,318 @@
 <!DOCTYPE html>
-<html>
+<html manifest="index.appcache">
 	<head>
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<title>mag</title>
 		
-		<link href="style/style.dfc566e164bb3ce4a0107dec0e472781.css" rel="stylesheet"/>
+		<link href="style/style.3ead5d31c3ee49b0425cb7f34edd8ade.css" rel="stylesheet"/>
 		
 		<script src="script/jquery-2.1.1.min.js"></script>
-		<script src="script/bootstrap.min.abda843684d022f3bc22bc83927fe05f.js"></script>
-		<script src="script/script.0fe891f1dc87a6518a2489f2845034fc.js"></script>
+		<script src="script/bootstrap.min.987facf80adec365394402f2026b943d.js"></script>
+		<script src="script/script.c00918524318e80101eab27dacbcb6e9.js"></script>
 	</head>
 	<body>
-		
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-12">
+					<h1 class="text-center">mag <small>szógyakorló program</small></h1>
+					<ul class="nav nav-tabs nav-justified h3" role="tablist">
+						<li id="tab-start" class="active"><a href=""><span class="glyphicon glyphicon-play-circle"></span> Indulás</a></li>
+						<li id="tab-wordlist" class="disabled"><a href=""><span class="glyphicon glyphicon-list"></span> Szófelvétel</a></li>
+						<li id="tab-learn" class="disabled"><a href=""><span class="glyphicon glyphicon-thumbs-up"></span> Tanulás</a></li>
+					</ul>
+				</div>
+			</div>
+			<div id="tab-pane-start">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2>Indulás</h2>
+						<p class="lead">Szia! Mag vagyok, egy szógyakorló program.</p>
+						<div id="notifications-start">
+							<noscript>
+								<div class="alert alert-danger" role="alert">
+									<span class="glyphicon glyphicon-warning-sign"></span> JavaScript nélkül nem működöm!
+								</div>
+							</noscript>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="tab-pane-wordlist" class="mag-template">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2>Szófelvétel</h2>
+						<h3>Új szólista létrehozás</h3>
+						<div class="form-group">
+							<label for="new-wordlist-name-in">Új lista neve</label>
+							<input type="text" class="form-control" id="new-wordlist-name-in"/>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-md-6">
+						<div class="form-group">
+							<label for="new-wordlist-lang1-name-in">Az egyik nyelv neve</label>
+							<input type="text" class="form-control" id="new-wordlist-lang1-name-in"/>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-6">
+						<div class="form-group">
+							<label for="new-wordlist-lang2-name-in">A másik nyelv neve</label>
+							<input type="text" class="form-control" id="new-wordlist-lang2-name-in"/>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="notifications-new-wordlist"></div>
+						<p>
+							<button type="button" class="btn btn-primary" id="create-new-wordlist">
+								<span class="glyphicon glyphicon-plus"></span> Új lista létrehozása
+							</button>
+						</p>
+						<h3>Szólista választás</h3>
+						<div class="form-group">
+							<label for="list-select">Szólista</label>
+							<select id="list-select" class="form-control">
+								<option>Válassz egy listát...</option>
+							</select>
+						</div>
+						<h3>Szólista szerkesztése</h3>
+						<div id="notifications-rename"></div>
+						<div class="form-group">
+							<label for="rename-list-name-in">Listanév szerkesztése</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="rename-list-name-in"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-primary" id="rename-list-button">
+										<span class="glyphicon glyphicon-pencil"></span> Átnevezés
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-md-6">
+						<div class="form-group">
+							<label for="rename-list-name-in">Az egyik nyelv nevének szerkesztése</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="rename-lang1-name-in"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-primary" id="rename-lang1-button">
+										<span class="glyphicon glyphicon-pencil"></span> Átnevezés
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-6">
+						<div class="form-group">
+							<label for="rename-list-name-in">A másik nyelv nevének szerkesztése</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="rename-lang2-name-in"/>
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-primary" id="rename-lang2-button">
+										<span class="glyphicon glyphicon-pencil"></span> Átnevezés
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<h3>Szólista törlése</h3>
+						<div id="notifications-delete"></div>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="delete-list-confirm"/> Igen, biztos vagyok benne hogy törölni akarom.
+							</label>
+						</div>
+						<div class="form-group" id="delete-list-button-group">
+							<button id="delete-list-button" type="button" class="btn btn-danger">
+								<span class="glyphicon glyphicon-remove"></span> Szólista törlése
+							</button>
+						</div>
+						<h3>Új szó hozzáadása</h3>
+						<div id="notifications-add-word"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-md-5">
+						<div class="form-group">
+							<label for="add-word-1-in" id="add-word-1-in-label"></label>
+							<input type="text" class="form-control" id="add-word-1-in"/>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-5">
+						<div class="form-group">
+							<label for="add-word-2-in" id="add-word-2-in-label"></label>
+							<input type="text" class="form-control" id="add-word-2-in"/>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-2">
+						<div class="form-group">
+							<label for="add-word-button" class="hidden-xs hidden-sm">&nbsp;</label>
+							<button id="add-word-button" type="button" class="btn btn-primary btn-block">
+								<span class="glyphicon glyphicon-plus"></span> Szó hozzáadása
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<h3>Szavak szerkesztése</h3>
+						<div class="table-responsive">
+							<table class="table table-striped table-condensed table-bordered">
+								<thead>
+									<tr>
+										<th class="mag-cell-min"><input id="edit-words-select-all" type="checkbox"/></th>
+										<th class="mag-cell-min">Szám</th>
+										<th class="mag-cell-half" id="edit-words-lang-1-th"></th>
+										<th class="mag-cell-min">Gyakorlás száma</th>
+										<th class="mag-cell-half" id="edit-words-lang-2-th"></th>
+										<th class="mag-cell-min">Gyakorlás száma</th>
+									</tr>
+								</thead>
+								<tbody id="edit-words-tbody"></tbody>
+							</table>
+						</div>
+						<div id="notifications-edit-words"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-md-6">
+						<div class="form-group">
+							<button type="button" class="btn btn-primary" id="save-words">
+								<span class="glyphicon glyphicon-ok"></span> Szavak mentése
+							</button>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-6">
+						<div class="form-group text-right">
+							<button id="delete-words" type="button" class="btn btn-danger">
+								<span class="glyphicon glyphicon-remove"></span> Kiválasztott szavak törlése
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="tab-pane-learn" class="mag-template">
+				<div class="row">
+					<div class="col-xs-12">
+						<h2>Tanulás</h2>
+					</div>
+				</div>
+				<div class="row" id="results">
+					<div class="col-xs-12">
+						<div class="table-responsive">
+							<table class="table table-striped table-condensed">
+								<thead>
+									<tr>
+										<th class="mag-cell-min">Kérdések</th>
+										<th class="mag-cell-min">Helyes válaszok</th>
+										<th class="mag-cell-min">Helytelen válaszok</th>
+										<th class="mag-cell-full">Eredményed</th>
+										<th class="mag-cell-min">Kiejtett szavak</th>
+										<th class="mag-cell-min">Maradt</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="mag-cell-min" id="results-question-count"></td>
+										<td class="mag-cell-min" id="results-correct-answers-count"></td>
+										<td class="mag-cell-min" id="results-failed-answers-count"></td>
+										<td class="mag-cell-full">
+											<span class="h1" id="results-percent"></span><span> – </span>
+											<span id="results-text"></span>
+										</td>
+										<td class="mag-cell-min"><strong id="results-drop-count"></strong></td>
+										<td class="mag-cell-min" id="results-remaining-count"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row" id="start-learning">
+					<div class="col-xs-12">
+						<div id="notifications-start-learning"></div>
+						<div class="form-group input-group">
+							<select class="form-control" id="learning-list-select"></select>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-primary" id="start-learning-button">
+									<span class="glyphicon glyphicon-thumbs-up"></span> Tanulás kezdése
+								</button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div id="learning">
+					<h3 id="learning-list-name-out"></h3>
+					<div class="row">
+						<div class="col-xs-12 col-md-6">
+							<div class="form-group has-feedback">
+								<label id="learning-lang1-in-label" for="learning-lang1-in"></label>
+								<p class="form-control-static" id="learning-lang1-static"></p>
+								<input type="text" class="form-control" id="learning-lang1-in"/>
+								<span class="glyphicon glyphicon-ok form-control-feedback" id="learning-lang1-ok"></span>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<div class="form-group has-feedback">
+								<label id="learning-lang2-in-label" for="learning-lang2-in"></label>
+								<p class="form-control-static" id="learning-lang2-static"></p>
+								<input type="text" class="form-control" id="learning-lang2-in"/>
+								<span class="glyphicon glyphicon-ok form-control-feedback" id="learning-lang2-ok"></span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12 col-md-6">
+							<div class="form-group">
+								<button type="button" class="btn btn-primary" id="learning-ok-button">
+									<span class="glyphicon glyphicon-ok"></span> Rendben
+								</button>
+								<button type="button" class="btn btn-warning" id="learning-dont-know-button">
+									<span class="glyphicon glyphicon-question-sign"></span> Nem tudom
+								</button>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<div class="form-group text-right">
+								<button type="button" class="btn btn-danger" id="learning-quit-button">
+									<span class="glyphicon glyphicon-remove"></span> Tanulás abbahagyása
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="progress">
+								<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+									style="width: 0;" id="learning-progress-bar">
+									0%
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="well well-sm" style="margin-top: 40px">
+						<small>
+							Verzió: 1.0.0 |
+							Fejlesztette: <a href="https://github.com/andraaspar">Parditka András</a> |
+							<a href="https://github.com/andraaspar/mag">Forráskód</a> |
+							<a href="https://github.com/andraaspar/mag/issues">Hibabejelentés</a>
+						</small>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
