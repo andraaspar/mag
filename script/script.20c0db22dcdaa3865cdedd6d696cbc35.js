@@ -2462,6 +2462,7 @@ var mag;
                 window.applicationCache.addEventListener('cached', illa.bind(this.onCached, this));
                 window.applicationCache.addEventListener('noupdate', illa.bind(this.onCached, this));
                 window.applicationCache.addEventListener('updateready', illa.bind(this.onUpdateReady, this));
+                window.applicationCache.addEventListener('error', illa.bind(this.onCached, this));
             } else {
                 this.onAfterCache();
             }
