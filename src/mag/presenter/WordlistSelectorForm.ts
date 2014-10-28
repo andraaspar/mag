@@ -1,6 +1,6 @@
 /// <reference path='../util/WordlistOptionRenderer.ts'/>
 
-module mag.ui {
+module mag.presenter {
 	export class WordlistSelectorForm extends illa.EventHandler {
 		
 		private selector: jQuery.IInstance;

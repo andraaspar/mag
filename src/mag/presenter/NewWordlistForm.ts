@@ -1,6 +1,6 @@
 
 
-module mag.ui {
+module mag.presenter {
 	export class NewWordlistForm extends illa.EventHandler {
 		
 		static EVENT_NEW_WORDLIST_CREATED = 'mag_ui_NewWordlistForm_EVENT_NEW_WORDLIST_CREATED';

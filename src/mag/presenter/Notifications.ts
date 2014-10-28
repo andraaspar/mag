@@ -1,6 +1,6 @@
 
 
-module mag.ui {
+module mag.presenter {
 	export class Notifications {
 		
 		

@@ -4,7 +4,7 @@
 
 /// <reference path='WordlistSelectorForm.ts'/>
 
-module mag.ui {
+module mag.presenter {
 	export enum LearningFormState {
 		NO_STATE, NOT_STARTED, STARTED
 	}

@@ -1,6 +1,6 @@
 {
 	"name": "mag",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"homepage": "https://github.com/andraaspar/mag",
 	"authors": [
 		"András Parditka"
@@ -19,6 +19,6 @@
 	],
 	"dependencies": {
 		"adat": "andraaspar/adat#v1.1",
-		"berek": "andraaspar/berek#v1.3"
+		"berek": "andraaspar/berek#v1.4"
 	}
 }

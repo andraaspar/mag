@@ -5,7 +5,7 @@
 
 /// <reference path='WordlistSelectorForm.ts'/>
 
-module mag.ui {
+module mag.presenter {
 	export class EditWordlistForm extends WordlistSelectorForm {
 		
 		private renameNotifications = new Notifications(jQuery('#notifications-rename'));
