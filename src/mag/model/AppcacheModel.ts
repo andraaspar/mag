@@ -48,5 +48,9 @@ module mag.model {
 		onAfterCache(): void {
 			new illa.Event(AppcacheModel.EVENT_READY, this).dispatch();
 		}
+		
+		getHasNewVersion() { return this.hasNewVersion }
+		getHasUpdateError() { return this.hasUpdateError }
+		getSupportsAppcache() { return this.supportsAppCache }
 	}
 }

@@ -4,7 +4,7 @@ module mag.util {
 	export class WordlistOptionRenderer {
 		
 		static getArrkup(): any[] {
-			var wordlists = Main.getInstance().getWordlists();
+			var wordlists = Main.getModel().getWordlists();
 			var arrkup: any[] = [['option', {value: 'NaN'}, 'Válassz egy listát...']];
 			for (var i = 0, n = wordlists.length; i < n; i++) {
 				var wordlist = wordlists[i];
