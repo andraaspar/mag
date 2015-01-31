@@ -1,22 +1,6 @@
 {
 	"name": "mag",
-	"version": "1.0.1",
-	"homepage": "https://github.com/andraaspar/mag",
-	"authors": [
-		"András Parditka"
-	],
-	"description": "Word learning web app.",
-	"license": "MIT",
-	"ignore": [
-		"**/.*",
-		"build",
-		"lib",
-		"node_modules",
-		"bower_components",
-		"test",
-		"Gruntfile.js",
-		"package.json"
-	],
+	"private": true,
 	"dependencies": {
 		"adat": "andraaspar/adat#v1.1",
 		"berek": "andraaspar/berek#v1.3"

@@ -1,6 +1,7 @@
 /// <reference path='../../../lib/adat/RequestDelete.ts'/>
 /// <reference path='../../../lib/adat/RequestPut.ts'/>
 
+/// <reference path='../util/StringUtil.ts'/>
 /// <reference path='../util/WordlistOptionRenderer.ts'/>
 
 /// <reference path='WordlistSelectorForm.ts'/>
@@ -346,8 +347,8 @@ module mag.ui {
 		
 		getNewWordFromRow(row: jQuery.IInstance): data.Word {
 			var newWord = new data.Word();
-			newWord.lang1 = illa.StringUtil.removeDoubleSpaces(illa.StringUtil.trim(row.find('input[data-edit-word-lang1-in]').val()));
-			newWord.lang2 = illa.StringUtil.removeDoubleSpaces(illa.StringUtil.trim(row.find('input[data-edit-word-lang2-in]').val()));
+			newWord.lang1 = mag.util.StringUtil.removeDoubleSpaces(illa.StringUtil.trim(row.find('input[data-edit-word-lang1-in]').val()));
+			newWord.lang2 = mag.util.StringUtil.removeDoubleSpaces(illa.StringUtil.trim(row.find('input[data-edit-word-lang2-in]').val()));
 			newWord.lang1Count = parseInt(row.find('input[data-edit-word-lang1-count-in]').val());
 			newWord.lang2Count = parseInt(row.find('input[data-edit-word-lang2-count-in]').val());
 			return newWord;

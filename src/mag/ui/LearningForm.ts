@@ -1,5 +1,6 @@
 /// <reference path='../data/QuestionList.ts'/>
 
+/// <reference path='../util/StringUtil.ts'/>
 /// <reference path='../util/WordlistOptionRenderer.ts'/>
 
 /// <reference path='WordlistSelectorForm.ts'/>
@@ -220,7 +221,7 @@ module mag.ui {
 		}
 		
 		onInputChanged(e?: jQuery.IEvent): void {
-			this.isCorrect = illa.StringUtil.removeDoubleSpaces(illa.StringUtil.trim(this.getCurrentInput().val())) ===
+			this.isCorrect = mag.util.StringUtil.removeDoubleSpaces(illa.StringUtil.trim(this.getCurrentInput().val())) ===
 				this.getCurrentQuestion().answer;
 			this.getCurrentOk().toggle(this.isCorrect);
 			this.getOtherOk().hide();
@@ -275,9 +276,9 @@ module mag.ui {
 					}
 				} else {
 					if (question.isLang1) {
-						Math.max(++word.lang1Count, Main.PRACTICE_COUNT_MAX);
+						word.lang1Count = Math.min(word.lang1Count + 1, Main.PRACTICE_COUNT_MAX);
 					} else {
-						Math.max(++word.lang2Count, Main.PRACTICE_COUNT_MAX);
+						word.lang2Count = Math.min(word.lang2Count + 1, Main.PRACTICE_COUNT_MAX);
 					}
 				}
 			}
