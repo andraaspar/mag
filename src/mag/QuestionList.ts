@@ -1,10 +1,10 @@
 /// <reference path='Question.ts'/>
 
-module mag.data {
+module mag {
 	export class QuestionList {
 		startTime: number;
 		endTime: number;
-		currentQuestionId = -1;
-		questions: Question[] = [];
+		currentQuestionId: number;
+		questions: Question[];
 	}
 }

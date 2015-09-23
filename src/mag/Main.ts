@@ -9,19 +9,28 @@
 /// <reference path='../../lib/illa/EventHandler.ts'/>
 /// <reference path='../../lib/illa/Log.ts'/>
 
-/// <reference path='model/MagModel.ts'/>
+/// <reference path='../../lib/berek/Widget.ts'/>
 
-/// <reference path='presenter/MagPresenter.ts'/>
+/// <reference path='../lodash.d.ts'/>
+
+/// <reference path='AppcacheModel.ts'/>
+/// <reference path='DatabaseModel.ts'/>
+/// <reference path='MainPresenter.ts'/>
+/// <reference path='StartPresenter.ts'/>
 
 module mag {
 	export class Main extends illa.EventHandler {
 		
 		private static instance = new Main();
 		
-		private model: model.MagModel;
-		private presenter: presenter.MagPresenter;
-		
 		private debugModeEnabled = window.location.hash == '#debug';
+		
+		private appcacheModel: AppcacheModel;
+		private databaseModel: DatabaseModel;
+		
+		private mainPresenter: MainPresenter;
+		
+		private nextId = 0;
 		
 		constructor() {
 			super();
@@ -33,17 +42,34 @@ module mag {
 			jQuery(window).on('load', illa.bind(this.onWindowLoaded, this));
 		}
 		
-		onWindowLoaded(): void {
+		protected onWindowLoaded(): void {
 			illa.Log.info('DOM loaded.');
 			
-			this.model = new model.MagModel();
-			this.presenter = new presenter.MagPresenter();
+			this.appcacheModel = new AppcacheModel();
+			this.appcacheModel.addEventCallback(AppcacheModel.EVENT_READY, this.onAppcacheReady, this);
+			this.appcacheModel.init();
 		}
 		
-		static getModel() { return this.instance.model }
-		static getPresenter() { return this.instance.presenter }
+		protected onAppcacheReady(e: illa.Event): void {
+			illa.Log.info('Appcache ready.');
+			
+			this.mainPresenter = new MainPresenter(null, jQuery('body'));
+			
+			this.databaseModel = new DatabaseModel();
+			this.databaseModel.addEventCallback(DatabaseModel.EVENT_READY, this.onDatabaseModelReady, this);
+			this.databaseModel.init();
+		}
+		
+		protected onDatabaseModelReady(e: illa.Event): void {
+			illa.Log.info('Database model ready.');
+			
+			
+		}
+		
 		static getDebugModeEnabled() { return this.instance.debugModeEnabled }
 		
-		static getInstance() { return this.instance }
+		static getId(): string {
+			return 'mag-id-' + (this.instance.nextId++);
+		}
 	}
 }

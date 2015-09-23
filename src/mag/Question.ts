@@ -1,12 +1,12 @@
 
 
-module mag.data {
+module mag {
 	export class Question {
 		wordId: number;
 		isLang1: boolean;
 		question: string;
 		answer: string;
-		isAnswered = false;
+		isAnswered: boolean;
 		isCorrect: boolean;
 	}
 }
