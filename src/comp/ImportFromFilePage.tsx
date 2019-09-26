@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useCallback, useContext, useRef, useState } from 'react'
 import { dictionaryFromAndroid } from '../function/dictionaryFromAndroid'
+import { dictionaryToString } from '../function/dictionaryToString'
 import { handleDictionaryImport } from '../function/handleDictionaryImport'
 import { readJsonFromFile } from '../function/readJsonFromFile'
 import { wordFromAndroid } from '../function/wordFromAndroid'
@@ -8,7 +9,6 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary, DictionaryFromAndroid } from '../model/Dictionary'
 import { Word } from '../model/Word'
 import { readDictionaries } from '../storage/readDictionaries'
-import { DictionaryComp } from './DictionaryComp'
 import { LoadableComp } from './LoadableComp'
 import { ShowMessageContext } from './ShowMessageContext'
 
@@ -189,9 +189,7 @@ export function ImportFromFilePage() {
 												key={dictionary.id}
 												value={dictionary.id}
 											>
-												<DictionaryComp
-													_dictionary={dictionary}
-												/>
+												{dictionaryToString(dictionary)}
 											</option>
 										))}
 									</select>

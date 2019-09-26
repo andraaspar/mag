@@ -1,4 +1,5 @@
 import React from 'react'
+import { dictionaryToString } from '../function/dictionaryToString'
 import { Dictionary } from '../model/Dictionary'
 
 export interface DictionaryCompProps {
@@ -6,9 +7,5 @@ export interface DictionaryCompProps {
 }
 
 export function DictionaryComp({ _dictionary }: DictionaryCompProps) {
-	return (
-		<>
-			{_dictionary.name} ({_dictionary.languages.join(', ')})
-		</>
-	)
+	return <>{dictionaryToString(_dictionary)}</>
 }

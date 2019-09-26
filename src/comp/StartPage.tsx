@@ -79,7 +79,7 @@ export function StartPage() {
 						{dictionaries.length > 0 && (
 							<>
 								<p>Válassz egy szótárat:</p>
-								<ol>
+								<ol start={$page * $pageSize + 1}>
 									{dictionaries.map(dictionary => (
 										<li key={dictionary.id}>
 											<Link
