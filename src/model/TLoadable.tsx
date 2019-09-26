@@ -1,8 +1,8 @@
 import { isNumber, isString } from 'util'
 
-export type TLoadable<T> = T | null | number | string
+export type TLoadable<T extends object> = T | null | number | string
 
-export function isLoaded<T>(o: TLoadable<T>): o is T {
+export function isLoaded<T extends object>(o: TLoadable<T>): o is T {
 	return o != null && !isNumber(o) && !isString(o)
 }
 

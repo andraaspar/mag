@@ -1,7 +1,7 @@
 import preval from 'preval.macro'
 import React, { useEffect, useState } from 'react'
 import { Route, Switch } from 'react-router'
-import { Link, NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useMessages } from '../hook/useMessages'
 import { initDb } from '../storage/Db'
 import { ImportFromFilePage } from './ImportFromFilePage'
@@ -55,22 +55,11 @@ export function AppComp() {
 				</p>
 			)}
 			{$hasDb && (
-				<>
-					<nav>
-						<NavLink
-							to='/import'
-							activeStyle={{ fontWeight: 'bold' }}
-						>
-							Tölts be szavakat
-						</NavLink>
-					</nav>
-					<hr />
-					<Switch>
-						<Route exact path='/' component={StartPage} />
-						<Route path='/import' component={ImportFromFilePage} />
-						<Route path='/' component={NotFoundPage} />
-					</Switch>
-				</>
+				<Switch>
+					<Route exact path='/' component={StartPage} />
+					<Route path='/import' component={ImportFromFilePage} />
+					<Route path='/' component={NotFoundPage} />
+				</Switch>
 			)}
 			<hr />
 			<footer>

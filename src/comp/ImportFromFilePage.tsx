@@ -6,9 +6,9 @@ import { readJsonFromFile } from '../function/readJsonFromFile'
 import { wordFromAndroid } from '../function/wordFromAndroid'
 import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary, DictionaryFromAndroid } from '../model/Dictionary'
-import { TAbort } from '../model/TAbort'
 import { Word } from '../model/Word'
 import { readDictionaries } from '../storage/readDictionaries'
+import { DictionaryComp } from './DictionaryComp'
 import { LoadableComp } from './LoadableComp'
 import { ShowMessageContext } from './ShowMessageContext'
 
@@ -35,22 +35,18 @@ export function ImportFromFilePage() {
 		}
 	}, [])
 	const loadDictionaries = useCallback(() => {
-		let abort: TAbort = null
+		let isAborted = false
 		;(async () => {
 			if (!$importableDictionary) return
-			let aborted = false
-			abort = () => {
-				aborted = true
-			}
 			const dictionaries = await readDictionaries({})
-			if (aborted) return
+			if (isAborted) return
 			set$importableDictionary({
 				...$importableDictionary,
 				dictionaries,
 			})
 		})()
 		return () => {
-			if (abort) abort()
+			isAborted = true
 		}
 	}, [$importableDictionary])
 	return (
@@ -193,11 +189,9 @@ export function ImportFromFilePage() {
 												key={dictionary.id}
 												value={dictionary.id}
 											>
-												{dictionary.name} (
-												{dictionary.languages.join(
-													', ',
-												)}
-												)
+												<DictionaryComp
+													_dictionary={dictionary}
+												/>
 											</option>
 										))}
 									</select>

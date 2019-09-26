@@ -8,14 +8,14 @@ import {
 	TLoadable,
 } from '../model/TLoadable'
 
-export interface LoadableCompProps<T> {
+export interface LoadableCompProps<T extends object> {
 	_value: TLoadable<T>
 	_load?: () => () => void
 	_debugName?: string
 	children: (value: T) => ReactNode
 }
 
-export function LoadableComp<T>({
+export function LoadableComp<T extends object>({
 	_value,
 	_load,
 	_debugName,
