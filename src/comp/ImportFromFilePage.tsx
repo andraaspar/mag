@@ -4,6 +4,7 @@ import { dictionaryFromAndroid } from '../function/dictionaryFromAndroid'
 import { handleDictionaryImport } from '../function/handleDictionaryImport'
 import { readJsonFromFile } from '../function/readJsonFromFile'
 import { wordFromAndroid } from '../function/wordFromAndroid'
+import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary, DictionaryFromAndroid } from '../model/Dictionary'
 import { TAbort } from '../model/TAbort'
 import { Word } from '../model/Word'
@@ -11,15 +12,14 @@ import { readDictionaries } from '../storage/readDictionaries'
 import { LoadableComp } from './LoadableComp'
 import { ShowMessageContext } from './ShowMessageContext'
 
-export interface ImportFromFileCompProps {}
-
 export interface ImportableDictionary {
 	dictionary: Dictionary
 	words: readonly Word[]
 	dictionaries: Dictionary[] | null
 }
 
-export function ImportFromFileComp(props: ImportFromFileCompProps) {
+export function ImportFromFilePage() {
+	usePageTitle(`Tölts be szavakat`)
 	const [
 		$importableDictionary,
 		set$importableDictionary,

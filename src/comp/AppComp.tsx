@@ -4,9 +4,9 @@ import { Route, Switch } from 'react-router'
 import { Link, NavLink } from 'react-router-dom'
 import { useMessages } from '../hook/useMessages'
 import { initDb } from '../storage/Db'
-import { ImportFromFileComp } from './ImportFromFileComp'
+import { ImportFromFilePage } from './ImportFromFilePage'
 import { MessagesComp } from './MessagesComp'
-import { PageNotFoundComp } from './PageNotFoundComp'
+import { NotFoundPage } from './NotFoundPage'
 import { ShowMessageContext } from './ShowMessageContext'
 import { StartPage } from './StartPage'
 
@@ -40,7 +40,7 @@ export function AppComp() {
 			<header>
 				<p>
 					<strong>
-						<Link to='/'>Mag</Link>
+						<Link to='/'>Mag!</Link>
 					</strong>
 				</p>
 			</header>
@@ -63,8 +63,8 @@ export function AppComp() {
 					<hr />
 					<Switch>
 						<Route exact path='/' component={StartPage} />
-						<Route path='/import' component={ImportFromFileComp} />
-						<Route path='/' component={PageNotFoundComp} />
+						<Route path='/import' component={ImportFromFilePage} />
+						<Route path='/' component={NotFoundPage} />
 					</Switch>
 				</>
 			)}
