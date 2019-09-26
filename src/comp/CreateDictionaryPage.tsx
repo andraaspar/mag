@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { url } from '../function/url'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
+import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { storeDictionary } from '../storage/storeDictionary'
@@ -10,6 +11,7 @@ import { EditDictionaryComp } from './EditDictionaryComp'
 import { LoadableComp } from './LoadableComp'
 
 export function CreateDictionaryPage() {
+	usePageTitle(`Új szótár`)
 	const [$dictionary, set$dictionary] = useState<Dictionary>({
 		name: '',
 		languages: ['', ''],
@@ -28,6 +30,7 @@ export function CreateDictionaryPage() {
 				history.push(url`/dictionary/${dictionaryId}`)
 			}}
 		>
+			<h1>Új szótár</h1>
 			<EditDictionaryComp
 				_dictionary={$dictionary}
 				_setDictionary={set$dictionary}
