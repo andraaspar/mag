@@ -49,7 +49,11 @@ export function AppComp() {
 				_messages={messages}
 				_removeMessageByIndex={removeMessageByIndex}
 			/>
-			{!$hasDb && <p>Adatbázis kő...</p>}
+			{!$hasDb && (
+				<p>
+					<em>Adatbázis kő...</em>
+				</p>
+			)}
 			{$hasDb && (
 				<>
 					<nav>
