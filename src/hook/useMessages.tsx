@@ -9,7 +9,10 @@ export function useMessages() {
 			} else {
 				console.info(message)
 			}
-			const messageString = message + ''
+			const messageString = (message + '').replace(
+				/^(Error:\s*)?(\[.*?\]\s*)?/,
+				'',
+			)
 			const lastMessage = $messages[$messages.length - 1]
 			let lastMessageCount = 1
 			const lastMessageStart = lastMessage
