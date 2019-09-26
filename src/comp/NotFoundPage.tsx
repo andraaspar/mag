@@ -6,7 +6,7 @@ export function NotFoundPage() {
 	return (
 		<>
 			<h1>Ez meg hol van?</h1>
-			<div>Há’ nem t’om hová menté’, mer’ ez nem az.</div>
+			<p>Há’ nem t’om hová menté’, mer’ ez nem az.</p>
 		</>
 	)
 }
