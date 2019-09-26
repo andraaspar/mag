@@ -6,7 +6,7 @@ export function isLoaded<T extends object>(o: TLoadable<T>): o is T {
 	return o != null && !isNumber(o) && !isString(o)
 }
 
-export function isNotLoaded(o: TLoadable<any>): o is null {
+export function hasNotStartedLoading(o: TLoadable<any>): o is null {
 	return o === null
 }
 

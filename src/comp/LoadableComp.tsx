@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { ReactNode, useEffect, useRef } from 'react'
+import { PROGRESS_CHARACTER } from '../model/constants'
 import {
 	hasLoadError,
+	hasNotStartedLoading,
 	isLoaded,
 	isLoading,
-	isNotLoaded,
 	TLoadable,
 } from '../model/TLoadable'
 
@@ -35,7 +36,8 @@ export function LoadableComp<T extends object>({
 	return (
 		<React.Fragment>
 			{isLoaded(_value) && children(_value)}
-			{(isNotLoaded(_value) || isLoading(_value)) && '⌚'}
+			{(hasNotStartedLoading(_value) || isLoading(_value)) &&
+				PROGRESS_CHARACTER}
 			{hasLoadError(_value) && (
 				<span style={{ color: `#bf0000` }}>{_value}</span>
 			)}

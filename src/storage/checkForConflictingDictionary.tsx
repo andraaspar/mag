@@ -20,6 +20,6 @@ export async function checkForConflictingDictionary({
 		.index(INDEX_DICTIONARIES_NAME)
 		.get(dictionary.name)
 	if (dictionaryWithSameName && dictionaryWithSameName.id !== dictionary.id) {
-		throw new DictionaryNameConflictError(dictionary)
+		throw new DictionaryNameConflictError(dictionaryWithSameName)
 	}
 }
