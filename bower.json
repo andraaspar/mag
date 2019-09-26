@@ -1,8 +1,0 @@
-{
-	"name": "mag",
-	"private": true,
-	"dependencies": {
-		"adat": "andraaspar/adat#v1.1",
-		"berek": "andraaspar/berek#v1.3"
-	}
-}
