@@ -2,18 +2,18 @@ import { useCallback, useState } from 'react'
 
 export function useMessages() {
 	const [$messages, set$messages] = useState<readonly string[]>([])
-	const showMessage = useCallback(
-		(message: any) => {
-			if (message instanceof Error) {
-				console.error(message)
-			} else {
-				console.info(message)
-			}
-			const messageString = (message + '').replace(
-				/^(Error:\s*)?(\[.*?\]\s*)?/,
-				'',
-			)
-			const lastMessage = $messages[$messages.length - 1]
+	const showMessage = useCallback((message: any) => {
+		if (message instanceof Error) {
+			console.error(message)
+		} else {
+			console.info(message)
+		}
+		const messageString = (message + '').replace(
+			/^(Error:\s*)?(\[.*?\]\s*)?/,
+			'',
+		)
+		set$messages(messages => {
+			const lastMessage = messages[messages.length - 1]
 			let lastMessageCount = 1
 			const lastMessageStart = lastMessage
 				? lastMessage.replace(/ \((\d+)\)$/, (match, count) => {
@@ -22,24 +22,20 @@ export function useMessages() {
 				  })
 				: undefined
 			if (messageString === lastMessageStart) {
-				set$messages([
-					...$messages.slice(0, $messages.length - 1),
+				return [
+					...messages.slice(0, messages.length - 1),
 					messageString + ` (${lastMessageCount + 1})`,
-				])
+				]
 			} else {
-				set$messages([...$messages, messageString])
+				return [...messages, messageString]
 			}
-		},
-		[$messages],
-	)
-	const removeMessageByIndex = useCallback(
-		(index: number) => {
-			set$messages([
-				...$messages.slice(0, index),
-				...$messages.slice(index + 1),
-			])
-		},
-		[$messages],
-	)
+		})
+	}, [])
+	const removeMessageByIndex = useCallback((index: number) => {
+		set$messages(messages => [
+			...messages.slice(0, index),
+			...messages.slice(index + 1),
+		])
+	}, [])
 	return { messages: $messages, showMessage, removeMessageByIndex }
 }
