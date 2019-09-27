@@ -1,7 +1,9 @@
 import { DBSchema, IDBPDatabase, IDBPTransaction, openDB } from 'idb'
 import { dateToString } from '../function/dateToString'
-import { Dictionary, Dictionary1 } from '../model/Dictionary'
+import { DbDictionary, Dictionary1 } from '../model/Dictionary'
 import { Word } from '../model/Word'
+import { storeDictionary } from './storeDictionary'
+import { storeWord } from './storeWord'
 
 export const DB_NAME = 'mag'
 export const DEPRECATED_STORE_WORDLISTS = 'wordlists'
@@ -17,7 +19,7 @@ export const INDEX_WORDS_TRANSLATION_1 = 'translation1'
 export interface Db extends DBSchema {
 	dictionaries: {
 		key: number
-		value: Dictionary
+		value: DbDictionary
 		indexes: {
 			[INDEX_DICTIONARIES_NAME]: string
 		}
@@ -54,63 +56,17 @@ export function getDb() {
 
 export async function initDb(showMessage: (message: any) => void) {
 	db = await openDB<Db>(DB_NAME, 2, {
-		async upgrade(db, oldVersion, newVersion, transaction) {
+		async upgrade(db, oldVersion, newVersion, t) {
 			try {
-				const dictionariesStore = db.createObjectStore(
-					STORE_DICTIONARIES,
-					{
-						keyPath: 'id',
-						autoIncrement: true,
-					},
-				)
-				dictionariesStore.createIndex(INDEX_DICTIONARIES_NAME, 'name', {
-					unique: true,
-				})
-				const wordsStore = db.createObjectStore(STORE_WORDS, {
-					keyPath: 'id',
-					autoIncrement: true,
-				})
-				wordsStore.createIndex(
-					INDEX_WORDS_DICTIONARY_ID,
-					'dictionaryId',
-				)
-				wordsStore.createIndex(INDEX_WORDS_COUNT_0, [
-					'dictionaryId',
-					'translation0.count',
-				])
-				wordsStore.createIndex(INDEX_WORDS_COUNT_1, [
-					'dictionaryId',
-					'translation1.count',
-				])
-				wordsStore.createIndex(
-					INDEX_WORDS_TRANSLATION_0,
-					[
-						'dictionaryId',
-						'translation0.text',
-						'translation0.description',
-					],
-					{
-						unique: true,
-					},
-				)
-				wordsStore.createIndex(
-					INDEX_WORDS_TRANSLATION_1,
-					[
-						'dictionaryId',
-						'translation1.text',
-						'translation1.description',
-					],
-					{
-						unique: true,
-					},
-				)
+				if (oldVersion < 2) {
+					await createDb2(t)
+				}
 				switch (oldVersion) {
 					case 1:
-						await upgradeDb1To2(
-							(transaction as unknown) as IDBPTransaction<
-								Db1 | Db
-							>,
-						)
+						await upgradeDb1To2((t as unknown) as IDBPTransaction<
+							Db1 | Db
+						>)
+						break
 				}
 			} catch (e) {
 				showMessage(e)
@@ -130,37 +86,75 @@ export async function initDb(showMessage: (message: any) => void) {
 	return db
 }
 
+async function createDb2(t: IDBPTransaction<Db>) {
+	const dictionariesStore = t.db.createObjectStore(STORE_DICTIONARIES, {
+		keyPath: 'id',
+		autoIncrement: true,
+	})
+	dictionariesStore.createIndex(INDEX_DICTIONARIES_NAME, 'nameForSort', {
+		unique: true,
+	})
+	const wordsStore = t.db.createObjectStore(STORE_WORDS, {
+		keyPath: 'id',
+		autoIncrement: true,
+	})
+	wordsStore.createIndex(INDEX_WORDS_DICTIONARY_ID, 'dictionaryId')
+	wordsStore.createIndex(INDEX_WORDS_COUNT_0, [
+		'dictionaryId',
+		'translation0.count',
+	])
+	wordsStore.createIndex(INDEX_WORDS_COUNT_1, [
+		'dictionaryId',
+		'translation1.count',
+	])
+	wordsStore.createIndex(
+		INDEX_WORDS_TRANSLATION_0,
+		['dictionaryId', 'translation0.text', 'translation0.description'],
+		{
+			unique: true,
+		},
+	)
+	wordsStore.createIndex(
+		INDEX_WORDS_TRANSLATION_1,
+		['dictionaryId', 'translation1.text', 'translation1.description'],
+		{
+			unique: true,
+		},
+	)
+}
+
 async function upgradeDb1To2(t: IDBPTransaction<Db1 | Db>) {
 	const wordlistsStore = t.objectStore(DEPRECATED_STORE_WORDLISTS)
-	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
-	const wordsStore = t.objectStore(STORE_WORDS)
 	let cursor = await wordlistsStore.openCursor()
 	while (cursor) {
 		const dictionary1 = cursor.value
-		const dictionaryId = await dictionariesStore.add({
-			name: dictionary1.name,
-			languages: [dictionary1.lang1Name, dictionary1.lang2Name],
+		const dictionaryId = await storeDictionary({
+			t: t as IDBPTransaction<Db>,
+			dictionary: {
+				name: dictionary1.name,
+				languages: [dictionary1.lang1Name, dictionary1.lang2Name],
+			},
 		})
 		for (const word1 of dictionary1.words) {
-			await wordsStore.add({
-				dictionaryId,
-				modifiedDate: dateToString(new Date()),
-				translations: [
-					{
+			await storeWord({
+				t: t as IDBPTransaction<Db>,
+				word: {
+					dictionaryId,
+					modifiedDate: dateToString(new Date()),
+					translation0: {
 						text: word1.lang1,
 						description: '',
 						count: word1.lang1Count,
 					},
-					{
+					translation1: {
 						text: word1.lang2,
 						description: '',
 						count: word1.lang2Count,
 					},
-				],
+				},
 			})
 		}
 		cursor = await cursor.continue()
 	}
 	t.db.deleteObjectStore(DEPRECATED_STORE_WORDLISTS)
-	await t.done
 }

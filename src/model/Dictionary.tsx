@@ -1,9 +1,21 @@
+import { stringToIdbSortable } from '../function/stringToIdbSortable'
 import { Word1, WordFromAndroid } from './Word'
 
 export interface Dictionary {
 	id?: number
 	name: string
 	languages: [string, string]
+}
+
+export interface DbDictionary extends Dictionary {
+	nameForSort: string
+}
+
+export function makeDbDictionary(o: Dictionary): DbDictionary {
+	return {
+		...o,
+		nameForSort: stringToIdbSortable(o.name),
+	}
 }
 
 export interface Dictionary1 {

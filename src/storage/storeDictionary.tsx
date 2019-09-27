@@ -1,5 +1,5 @@
 import { IDBPTransaction } from 'idb'
-import { Dictionary } from '../model/Dictionary'
+import { Dictionary, makeDbDictionary } from '../model/Dictionary'
 import { Db, getDb, STORE_DICTIONARIES } from './Db'
 
 export async function storeDictionary({
@@ -10,5 +10,5 @@ export async function storeDictionary({
 	dictionary: Dictionary
 }) {
 	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
-	return await dictionariesStore.put(dictionary)
+	return dictionariesStore.put(makeDbDictionary(dictionary))
 }
