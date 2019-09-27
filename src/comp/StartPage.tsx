@@ -1,10 +1,12 @@
+import escapeStringRegexp from 'escape-string-regexp'
 import * as React from 'react'
 import { useCallback, useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { dictionaryToString } from '../function/dictionaryToString'
 import { url } from '../function/url'
 import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
-import { TLoadable } from '../model/TLoadable'
+import { isLoaded, TLoadable } from '../model/TLoadable'
 import { selectPageCount } from '../selector/selectPageCount'
 import { countDictionaries } from '../storage/countDictionaries'
 import { getDb, STORE_DICTIONARIES } from '../storage/Db'
@@ -17,6 +19,10 @@ import { ShowMessageContext } from './ShowMessageContext'
 export function StartPage() {
 	usePageTitle(`Szia!`)
 	const [$pageSize] = useState(10)
+	const [$query, set$query] = useState('')
+	const [$totalDictionaryCount, set$totalDictionaryCount] = useState<
+		TLoadable<{ count: number }>
+	>(null)
 	const [$dictionaryCount, set$dictionaryCount] = useState<
 		TLoadable<{ count: number }>
 	>(null)
@@ -27,14 +33,34 @@ export function StartPage() {
 	const showMessage = useContext(ShowMessageContext)
 	const loadDictionariesOnPage = useCallback(() => {
 		let isAborted = false
-		set$dictionaryCount(Date.now())
+		// set$dictionaryCount(Date.now())
+		// set$totalDictionaryCount(Date.now())
 		set$dictionariesOnPage(Date.now())
 		;(async () => {
 			try {
 				const t = getDb().transaction([STORE_DICTIONARIES], 'readonly')
-				const [count, dictionaries] = await Promise.all([
+				const filter = $query
+					? (() => {
+							const queryRe = new RegExp(
+								escapeStringRegexp($query.trim()).replace(
+									/\s+/g,
+									`.*`,
+								),
+								`i`,
+							)
+							return (d: Dictionary) =>
+								queryRe.test(dictionaryToString(d))
+					  })()
+					: undefined
+				const [totalCount, count, dictionaries] = await Promise.all([
 					countDictionaries({ t }),
-					readDictionaries({ t, pageSize: $pageSize, page: $page }),
+					countDictionaries({ t, filter }),
+					readDictionaries({
+						t,
+						pageSize: $pageSize,
+						page: $page,
+						filter,
+					}),
 				])
 				if (isAborted) return
 				set$page(
@@ -47,18 +73,20 @@ export function StartPage() {
 					),
 				)
 				set$dictionaryCount({ count })
+				set$totalDictionaryCount({ count: totalCount })
 				set$dictionariesOnPage(dictionaries)
 			} catch (e) {
 				if (isAborted) return
 				showMessage(e)
 				set$dictionaryCount(e + '')
+				set$totalDictionaryCount(e + '')
 				set$dictionariesOnPage(e + '')
 			}
 		})()
 		return () => {
 			isAborted = true
 		}
-	}, [$page, $pageSize, showMessage])
+	}, [$query, $page, $pageSize, showMessage])
 	const pageCount = selectPageCount({
 		pageSize: $pageSize,
 		itemCount: $dictionaryCount,
@@ -70,13 +98,35 @@ export function StartPage() {
 				Mag vagyok, egy szógyakorló program. Magolj velem! Internet
 				nélkül is működöm!
 			</p>
+			{isLoaded($totalDictionaryCount) &&
+				$totalDictionaryCount.count > 0 && (
+					<p>
+						<input
+							placeholder='Szűrd a szótárakat'
+							value={$query}
+							onChange={e => {
+								set$query(e.target.value)
+							}}
+						/>{' '}
+						{$query && (
+							<button
+								type='button'
+								onClick={() => {
+									set$query('')
+								}}
+							>
+								×
+							</button>
+						)}
+					</p>
+				)}
 			<LoadableComp
 				_value={$dictionariesOnPage}
 				_load={loadDictionariesOnPage}
 			>
 				{dictionaries => (
 					<>
-						{dictionaries.length > 0 && (
+						{dictionaries.length > 0 ? (
 							<>
 								<p>Válassz egy szótárat:</p>
 								<ol start={$page * $pageSize + 1}>
@@ -100,6 +150,13 @@ export function StartPage() {
 									/>
 								)}
 							</>
+						) : (
+							isLoaded($totalDictionaryCount) &&
+							$totalDictionaryCount.count > 0 && (
+								<p>
+									<em>Nem találtam egy szótárat sem.</em>
+								</p>
+							)
 						)}
 						<p>
 							<Link to='/dictionary'>Új szótár</Link> •{' '}
