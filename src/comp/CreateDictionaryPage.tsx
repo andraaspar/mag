@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import { sanitizeDictionary } from '../function/sanitizeDictionary'
 import { url } from '../function/url'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
 import { usePageTitle } from '../hook/usePageTitle'
@@ -16,8 +17,11 @@ export function CreateDictionaryPage() {
 		name: '',
 		languages: ['', ''],
 	})
-	const dictionaryValidationErrors = useDictionaryValidationErrors(
+	const sanitizedDictionary = useMemo(() => sanitizeDictionary($dictionary), [
 		$dictionary,
+	])
+	const dictionaryValidationErrors = useDictionaryValidationErrors(
+		sanitizedDictionary,
 	)
 	const history = useHistory()
 	return (
@@ -25,7 +29,7 @@ export function CreateDictionaryPage() {
 			onSubmit={async e => {
 				e.preventDefault()
 				const dictionaryId = await storeDictionary({
-					dictionary: $dictionary,
+					dictionary: sanitizedDictionary,
 				})
 				history.push(url`/dictionary/${dictionaryId}`)
 			}}

@@ -19,6 +19,10 @@ export function useDictionaryValidationErrors(dictionary: Dictionary) {
 								language => !language.trim(),
 							),
 						) && `Mindkét nyelvet el kell nevezned.`,
+						dictionary.languages[0] &&
+							dictionary.languages[0] ===
+								dictionary.languages[1] &&
+							`A két nyelv neve nem lehet ugyanaz.`,
 				  ].filter(Boolean) as string[]),
 		[conflictingDictionary, dictionary],
 	)
