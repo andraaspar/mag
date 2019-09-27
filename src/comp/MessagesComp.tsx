@@ -12,7 +12,7 @@ export function MessagesComp({
 	return (
 		<>
 			{_messages.map((message, index) => (
-				<div key={index}>
+				<div key={index} style={{ whiteSpace: 'pre-wrap' }}>
 					{message}{' '}
 					<button
 						type='button'
