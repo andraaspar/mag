@@ -30,7 +30,9 @@ export function AppComp() {
 	useEffect(() => {
 		;(async () => {
 			try {
-				set$isPersistent(await navigator.storage.persist())
+				set$isPersistent(
+					!!navigator.storage && (await navigator.storage.persist()),
+				)
 			} catch (e) {
 				showMessage(e)
 			}
