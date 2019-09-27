@@ -58,4 +58,5 @@ export async function handleDictionaryImport({
 		})
 	}
 	await t.done
+	return dictionaryId
 }

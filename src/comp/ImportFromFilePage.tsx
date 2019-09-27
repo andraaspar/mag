@@ -1,9 +1,12 @@
 import * as React from 'react'
 import { useCallback, useContext, useRef, useState } from 'react'
+import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import { dictionaryFromAndroid } from '../function/dictionaryFromAndroid'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { handleDictionaryImport } from '../function/handleDictionaryImport'
 import { readJsonFromFile } from '../function/readJsonFromFile'
+import { url } from '../function/url'
 import { wordFromAndroid } from '../function/wordFromAndroid'
 import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary, DictionaryFromAndroid } from '../model/Dictionary'
@@ -20,6 +23,7 @@ export interface ImportableDictionary {
 
 export function ImportFromFilePage() {
 	usePageTitle(`Tölts be szavakat`)
+	const history = useHistory()
 	const [
 		$importableDictionary,
 		set$importableDictionary,
@@ -59,11 +63,11 @@ export function ImportFromFilePage() {
 						if (!$importableDictionary) {
 							throw new Error(`[pydz1i]`)
 						}
-						await handleDictionaryImport({
+						const dictionaryId = await handleDictionaryImport({
 							dictionary: $importableDictionary.dictionary,
 							words: $importableDictionary.words,
 						})
-						reset()
+						history.push(url`/dictionary/${dictionaryId}`)
 					} catch (e) {
 						showMessage(e)
 					}
@@ -196,14 +200,16 @@ export function ImportFromFilePage() {
 								)}
 							</LoadableComp>
 						</p>
-						<p>
-							<button>Tárold el</button>
-							<button type='button' onClick={reset}>
-								Mégse
-							</button>
-						</p>
 					</>
 				)}
+				<p>
+					{$importableDictionary && (
+						<>
+							<button>Tárold el</button> •{' '}
+						</>
+					)}
+					<Link to='/'>Mégse</Link>
+				</p>
 			</form>
 		</div>
 	)
