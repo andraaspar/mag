@@ -10,7 +10,10 @@ function createMap() {
 		arr.push(String.fromCharCode(i))
 	}
 	arr = arr.sort((a, b) => a.localeCompare(b))
-	map = new Map(arr.map((string, index) => [string, index]))
+	map = new Map()
+	for (let i = 0, n = arr.length; i < n; i++) {
+		map.set(arr[i], i)
+	}
 	firstNonLetterIndex = map.size
 	console.log(`[pyhjvs] createMap took ${performance.now() - start} ms`)
 }
