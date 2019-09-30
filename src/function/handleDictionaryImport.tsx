@@ -1,9 +1,6 @@
 import { Dictionary } from '../model/Dictionary'
 import { Word } from '../model/Word'
-import {
-	checkForConflictingDictionary,
-	DictionaryNameConflictError,
-} from '../storage/checkForConflictingDictionary'
+import { checkForConflictingDictionary } from '../storage/checkForConflictingDictionary'
 import { checkForConflictingWord } from '../storage/checkForConflictingWord'
 import { getDb, STORE_DICTIONARIES, STORE_WORDS } from '../storage/Db'
 import { storeDictionary } from '../storage/storeDictionary'
@@ -23,22 +20,14 @@ export async function handleDictionaryImport({
 		'readwrite',
 	)
 	let dictionaryId: number
-	try {
-		await checkForConflictingDictionary({
-			t,
-			dictionary,
-		})
-		dictionaryId = await storeDictionary({
-			t,
-			dictionary,
-		})
-	} catch (e) {
-		if (e instanceof DictionaryNameConflictError) {
-			dictionaryId = e.dictionary.id!
-		} else {
-			throw e
-		}
-	}
+	await checkForConflictingDictionary({
+		t,
+		dictionary,
+	})
+	dictionaryId = await storeDictionary({
+		t,
+		dictionary,
+	})
 	const wordsWithDictionaryId = words.map(word =>
 		withInterface<Word>({
 			...word,

@@ -44,9 +44,22 @@ export function ImportFromFilePage() {
 			if (!$importableDictionary) return
 			const dictionaries = await readDictionaries({})
 			if (isAborted) return
+			const dictionaryWithSameName = $importableDictionary.dictionary.id
+				? undefined
+				: dictionaries.find(
+						dictionary =>
+							dictionary.name ===
+							$importableDictionary.dictionary.name,
+				  )
 			set$importableDictionary({
 				...$importableDictionary,
 				dictionaries,
+				dictionary: {
+					...$importableDictionary.dictionary,
+					id: dictionaryWithSameName
+						? dictionaryWithSameName.id
+						: $importableDictionary.dictionary.id,
+				},
 			})
 		})()
 		return () => {

@@ -12,7 +12,7 @@ export async function readDictionaries({
 	pageSize?: number
 	page?: number
 	filter?: (d: Dictionary) => boolean
-}) {
+}): Promise<Dictionary[]> {
 	const nameIndex = t
 		.objectStore(STORE_DICTIONARIES)
 		.index(INDEX_DICTIONARIES_NAME)
