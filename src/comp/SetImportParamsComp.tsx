@@ -50,8 +50,7 @@ export function SetImportParamsComp({
 	const setDictionary = React.useCallback(
 		(dictionary: Dictionary) => {
 			_setImportParams(importParams => ({
-				swapLanguages: false,
-				...importParams,
+				...importParams!,
 				dictionary,
 			}))
 		},
@@ -77,8 +76,7 @@ export function SetImportParamsComp({
 										  )
 										: undefined
 									_setImportParams(importParams => ({
-										swapLanguages: false,
-										...importParams,
+										...importParams!,
 										dictionary:
 											dictionary ||
 											_importableDictionary.dictionary,
@@ -100,6 +98,36 @@ export function SetImportParamsComp({
 							_dictionary={_importParams.dictionary}
 							_setDictionary={setDictionary}
 						/>
+						<p>
+							Nyelvsorrend:{' '}
+							<select
+								value={_importParams.swapLanguages + ''}
+								onChange={e => {
+									const swapLanguages = JSON.parse(
+										e.target.value,
+									)
+									_setImportParams(importParams => ({
+										...importParams!,
+										swapLanguages,
+									}))
+								}}
+							>
+								<option value='false'>
+									{
+										_importableDictionary.dictionary
+											.languages[0]
+									}{' '}
+									→ {_importParams.dictionary.languages[0]}
+								</option>
+								<option value='true'>
+									{
+										_importableDictionary.dictionary
+											.languages[0]
+									}{' '}
+									→ {_importParams.dictionary.languages[1]}
+								</option>
+							</select>
+						</p>
 					</>
 				)}
 			</LoadableComp>

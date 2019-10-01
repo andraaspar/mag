@@ -58,9 +58,16 @@ export function ImportFromFilePage() {
 						if (!$importableDictionary || !$importParams) {
 							throw new Error(`[pydz1i]`)
 						}
+						const words = $importParams.swapLanguages
+							? $importableDictionary.words.map(word => ({
+									...word,
+									translation0: word.translation1,
+									translation1: word.translation0,
+							  }))
+							: $importableDictionary.words
 						const dictionaryId = await handleDictionaryImport({
 							dictionary: $importParams.dictionary,
-							words: $importableDictionary.words,
+							words,
 						})
 						history.push(url`/dictionary/${dictionaryId}`)
 					} catch (e) {
