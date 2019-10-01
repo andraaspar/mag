@@ -80,6 +80,7 @@ export function SetImportParamsComp({
 										dictionary:
 											dictionary ||
 											_importableDictionary.dictionary,
+										swapLanguages: false,
 									}))
 								}}
 							>
