@@ -9,5 +9,6 @@ export function storeWord({
 	t?: IDBPTransaction<Db>
 	word: Word
 }) {
+	if (word.id == null) delete word.id
 	return t.objectStore(STORE_WORDS).put(word)
 }

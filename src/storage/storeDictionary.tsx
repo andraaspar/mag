@@ -9,6 +9,7 @@ export async function storeDictionary({
 	t?: IDBPTransaction<Db>
 	dictionary: Dictionary
 }) {
+	if (dictionary.id == null) delete dictionary.id
 	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
 	return dictionariesStore.put(makeDbDictionary(dictionary))
 }
