@@ -8,8 +8,8 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { storeDictionary } from '../storage/storeDictionary'
+import { DictionaryValidationErrorsComp } from './DictionaryValidationErrorsComp'
 import { EditDictionaryComp } from './EditDictionaryComp'
-import { LoadableComp } from './LoadableComp'
 
 export function CreateDictionaryPage() {
 	usePageTitle(`Új szótár`)
@@ -39,22 +39,9 @@ export function CreateDictionaryPage() {
 				_dictionary={$dictionary}
 				_setDictionary={set$dictionary}
 			/>
-			<LoadableComp _value={dictionaryValidationErrors}>
-				{dictionaryValidationErrors =>
-					dictionaryValidationErrors.length > 0 && (
-						<>
-							<p>Hibák:</p>
-							<ul>
-								{dictionaryValidationErrors.map(
-									(error, index) => (
-										<li key={index}>{error}</li>
-									),
-								)}
-							</ul>
-						</>
-					)
-				}
-			</LoadableComp>
+			<DictionaryValidationErrorsComp
+				_errors={dictionaryValidationErrors}
+			/>
 			<p>
 				<button
 					disabled={

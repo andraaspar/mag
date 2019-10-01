@@ -7,7 +7,7 @@ import {
 	DictionaryNameConflictError,
 } from '../storage/checkForConflictingDictionary'
 
-export function useConflictingDictionary(dictionary: Dictionary) {
+export function useConflictingDictionary(dictionary: Dictionary | null) {
 	const [$conflictingDictionary, set$conflictingDictionary] = useState<
 		TLoadable<{ exists: boolean }>
 	>(null)
@@ -16,9 +16,11 @@ export function useConflictingDictionary(dictionary: Dictionary) {
 		let isAborted = false
 		;(async () => {
 			try {
-				set$conflictingDictionary(Date.now())
-				await checkForConflictingDictionary({ dictionary })
-				if (isAborted) return
+				if (dictionary) {
+					set$conflictingDictionary(Date.now())
+					await checkForConflictingDictionary({ dictionary })
+					if (isAborted) return
+				}
 				set$conflictingDictionary({ exists: false })
 			} catch (e) {
 				if (isAborted) return

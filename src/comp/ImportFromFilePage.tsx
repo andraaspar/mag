@@ -1,24 +1,27 @@
 import * as React from 'react'
-import { useCallback, useContext, useRef, useState } from 'react'
+import { useContext, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Link } from 'react-router-dom'
-import { dictionaryFromAndroid } from '../function/dictionaryFromAndroid'
-import { dictionaryToString } from '../function/dictionaryToString'
 import { handleDictionaryImport } from '../function/handleDictionaryImport'
-import { readJsonFromFile } from '../function/readJsonFromFile'
 import { url } from '../function/url'
-import { wordFromAndroid } from '../function/wordFromAndroid'
+import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
 import { usePageTitle } from '../hook/usePageTitle'
-import { Dictionary, DictionaryFromAndroid } from '../model/Dictionary'
+import { Dictionary } from '../model/Dictionary'
+import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
-import { readDictionaries } from '../storage/readDictionaries'
-import { LoadableComp } from './LoadableComp'
+import { DictionaryValidationErrorsComp } from './DictionaryValidationErrorsComp'
+import { GetWordsComp } from './GetWordsComp'
+import { SetImportParamsComp } from './SetImportParamsComp'
 import { ShowMessageContext } from './ShowMessageContext'
 
 export interface ImportableDictionary {
 	dictionary: Dictionary
 	words: readonly Word[]
-	dictionaries: Dictionary[] | null
+}
+
+export interface ImportParams {
+	dictionary: Dictionary
+	swapLanguages: boolean
 }
 
 export function ImportFromFilePage() {
@@ -28,44 +31,23 @@ export function ImportFromFilePage() {
 		$importableDictionary,
 		set$importableDictionary,
 	] = useState<ImportableDictionary | null>(null)
-	const [$json, set$json] = useState('')
+	const [$importParams, set$importParams] = useState<ImportParams | null>(
+		null,
+	)
+	const dictionaryValidationErrors = useDictionaryValidationErrors(
+		$importParams && $importParams.dictionary,
+	)
 	const showMessage = useContext(ShowMessageContext)
-	const fileInputRef = useRef<HTMLInputElement>(null)
-	const reset = useCallback(() => {
-		set$json('')
-		set$importableDictionary(null)
-		if (fileInputRef.current) {
-			fileInputRef.current.value = ''
-		}
-	}, [])
-	const loadDictionaries = useCallback(() => {
-		let isAborted = false
-		;(async () => {
-			if (!$importableDictionary) return
-			const dictionaries = await readDictionaries({})
-			if (isAborted) return
-			const dictionaryWithSameName = $importableDictionary.dictionary.id
-				? undefined
-				: dictionaries.find(
-						dictionary =>
-							dictionary.name ===
-							$importableDictionary.dictionary.name,
-				  )
-			set$importableDictionary({
-				...$importableDictionary,
-				dictionaries,
-				dictionary: {
-					...$importableDictionary.dictionary,
-					id: dictionaryWithSameName
-						? dictionaryWithSameName.id
-						: $importableDictionary.dictionary.id,
-				},
+	const setImportableDictionary = React.useCallback(
+		(v: ImportableDictionary) => {
+			set$importableDictionary(v)
+			set$importParams({
+				dictionary: v.dictionary,
+				swapLanguages: false,
 			})
-		})()
-		return () => {
-			isAborted = true
-		}
-	}, [$importableDictionary])
+		},
+		[],
+	)
 	return (
 		<div>
 			<h1>Tölts be szavakat</h1>
@@ -73,11 +55,11 @@ export function ImportFromFilePage() {
 				onSubmit={async e => {
 					e.preventDefault()
 					try {
-						if (!$importableDictionary) {
+						if (!$importableDictionary || !$importParams) {
 							throw new Error(`[pydz1i]`)
 						}
 						const dictionaryId = await handleDictionaryImport({
-							dictionary: $importableDictionary.dictionary,
+							dictionary: $importParams.dictionary,
 							words: $importableDictionary.words,
 						})
 						history.push(url`/dictionary/${dictionaryId}`)
@@ -87,138 +69,32 @@ export function ImportFromFilePage() {
 				}}
 			>
 				{!$importableDictionary && (
-					<>
-						<p>
-							Fájlból:{` `}
-							<input
-								type='file'
-								ref={fileInputRef}
-								onChange={async e => {
-									try {
-										const files = e.target.files
-										if (!files) {
-											reset()
-											return
-										}
-										const file = files[0]
-										if (!file) {
-											reset()
-											return
-										}
-										const dictionary = await readJsonFromFile<
-											DictionaryFromAndroid
-										>(file)
-										set$importableDictionary({
-											dictionary: dictionaryFromAndroid(
-												dictionary,
-											),
-											words: dictionary.words.map(
-												wordFromAndroid,
-											),
-											dictionaries: null,
-										})
-										if (fileInputRef.current) {
-											fileInputRef.current.value = ''
-										}
-									} catch (e) {
-										showMessage(e)
-									}
-								}}
-							/>
-						</p>
-						<p>
-							Vágólapról:{` `}
-							<textarea
-								placeholder={`Illeszd be ide...`}
-								rows={1}
-								cols={`Illeszd be ide...`.length}
-								value={$json}
-								onChange={e => {
-									try {
-										const json = e.currentTarget.value
-										set$json(json)
-										if (!json) return
-										try {
-											var dictionary = JSON.parse(json)
-										} catch (e) {
-											console.error(e)
-											throw new Error(
-												`[pyfjn5] Nem tudtam elolvasni amit beillesztettél: JSON hibát észleltem.`,
-											)
-										}
-										try {
-											set$importableDictionary({
-												dictionary: dictionaryFromAndroid(
-													dictionary,
-												),
-												words: dictionary.words.map(
-													wordFromAndroid,
-												),
-												dictionaries: null,
-											})
-										} catch (e) {
-											console.error(e)
-											throw new Error(
-												`[pyfjt9] Nem tudtam elolvasni amit beillesztettél: hibás volt a formátuma.`,
-											)
-										}
-										set$json('')
-									} catch (e) {
-										showMessage(e)
-									}
-								}}
-							></textarea>
-						</p>
-					</>
+					<GetWordsComp
+						_setImportableDictionary={setImportableDictionary}
+					/>
 				)}
-				{$importableDictionary && (
-					<>
-						<p>
-							Egyesítsd ezzel a szótárral:{' '}
-							<LoadableComp
-								_value={$importableDictionary.dictionaries}
-								_load={loadDictionaries}
-							>
-								{dictionaries => (
-									<select
-										value={
-											$importableDictionary.dictionary.id
-										}
-										onChange={e => {
-											const id = e.currentTarget.value
-												? parseInt(
-														e.currentTarget.value,
-														10,
-												  )
-												: undefined
-											set$importableDictionary({
-												...$importableDictionary,
-												dictionary: {
-													...$importableDictionary.dictionary,
-													id,
-												},
-											})
-										}}
-									>
-										<option value={''}>Új szótár</option>
-										{dictionaries.map(dictionary => (
-											<option
-												key={dictionary.id}
-												value={dictionary.id}
-											>
-												{dictionaryToString(dictionary)}
-											</option>
-										))}
-									</select>
-								)}
-							</LoadableComp>
-						</p>
-					</>
+				{$importableDictionary && $importParams && (
+					<SetImportParamsComp
+						_importableDictionary={$importableDictionary}
+						_importParams={$importParams}
+						_setImportParams={set$importParams}
+					/>
 				)}
+				<DictionaryValidationErrorsComp
+					_errors={dictionaryValidationErrors}
+				/>
 				<p>
 					{$importableDictionary && (
 						<>
-							<button>Tárold el</button> •{' '}
+							<button
+								disabled={
+									!isLoaded(dictionaryValidationErrors) ||
+									dictionaryValidationErrors.length > 0
+								}
+							>
+								Tárold el
+							</button>{' '}
+							•{' '}
 						</>
 					)}
 					<Link to='/'>Mégse</Link>
