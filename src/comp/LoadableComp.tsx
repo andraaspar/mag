@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 import { PROGRESS_CHARACTER } from '../model/constants'
 import {
 	hasLoadError,
@@ -11,7 +11,7 @@ import {
 
 export interface LoadableCompProps<T extends object> {
 	_value: TLoadable<T>
-	_load?: () => () => void
+	_load?: () => (() => void) | void
 	_debugName?: string
 	children: (value: T) => ReactNode
 }
@@ -23,20 +23,21 @@ export function LoadableComp<T extends object>({
 	children,
 }: LoadableCompProps<T>) {
 	const valueIsLoadingAt = useRef(0)
-	const [$valueNeedsLoadingAt, set$valueNeedsLoadingAt] = useState(0)
+	const hadNotStartedLoading = useRef(false)
+	const valueNeedsLoadingAt =
+		_load && !hadNotStartedLoading.current && hasNotStartedLoading(_value)
+			? Date.now()
+			: valueIsLoadingAt.current
+	if (hadNotStartedLoading.current && hasNotStartedLoading(_value)) {
+		console.warn(`[pyfh9t] Már töltöm: ${_debugName}`)
+	}
+	hadNotStartedLoading.current = hasNotStartedLoading(_value)
 	useEffect(() => {
 		if (_load) {
-			valueIsLoadingAt.current = $valueNeedsLoadingAt
+			valueIsLoadingAt.current = valueNeedsLoadingAt
 			return _load()
 		}
-	}, [_load, _debugName, $valueNeedsLoadingAt, valueIsLoadingAt])
-	if (_load && hasNotStartedLoading(_value)) {
-		if (valueIsLoadingAt.current === $valueNeedsLoadingAt) {
-			console.warn(`[pyfh9t] Már töltöm: ${_debugName}`)
-		} else {
-			set$valueNeedsLoadingAt(Date.now())
-		}
-	}
+	}, [_load, _debugName, valueNeedsLoadingAt, valueIsLoadingAt])
 	return (
 		<React.Fragment>
 			{isLoaded(_value) && children(_value)}

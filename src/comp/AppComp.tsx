@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { useMessages } from '../hook/useMessages'
 import { initDb } from '../storage/Db'
 import { CreateDictionaryPage } from './CreateDictionaryPage'
+import { DictionaryPage } from './DictionaryPage'
 import { ImportFromFilePage } from './ImportFromFilePage'
 import { MessagesComp } from './MessagesComp'
 import { NotFoundPage } from './NotFoundPage'
@@ -60,11 +61,15 @@ export function AppComp() {
 			{$hasDb && (
 				<Switch>
 					<Route exact path='/' component={StartPage} />
-					<Route path='/import' component={ImportFromFilePage} />
+					<Route path='/import/' component={ImportFromFilePage} />
 					<Route
 						exact
-						path='/dictionary'
+						path='/dictionary/'
 						component={CreateDictionaryPage}
+					/>
+					<Route
+						path='/dictionary/:dictionaryId/'
+						component={DictionaryPage}
 					/>
 					<Route path='/' component={NotFoundPage} />
 				</Switch>

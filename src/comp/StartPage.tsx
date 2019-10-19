@@ -133,7 +133,7 @@ export function StartPage() {
 									{dictionaries.map(dictionary => (
 										<li key={dictionary.id}>
 											<Link
-												to={url`/dictionary/${dictionary.id!}`}
+												to={url`/dictionary/${dictionary.id!}/`}
 											>
 												<DictionaryComp
 													_dictionary={dictionary}
@@ -159,8 +159,8 @@ export function StartPage() {
 							)
 						)}
 						<p>
-							<Link to='/dictionary'>Új szótár</Link> •{' '}
-							<Link to='/import'>Tölts be egy szótárat</Link>
+							<Link to='/dictionary/'>Új szótár</Link> •{' '}
+							<Link to='/import/'>Tölts be egy szótárat</Link>
 						</p>
 					</>
 				)}
