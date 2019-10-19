@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ReactNode, useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { PROGRESS_CHARACTER } from '../model/constants'
 import {
 	hasLoadError,
@@ -22,17 +22,21 @@ export function LoadableComp<T extends object>({
 	_debugName,
 	children,
 }: LoadableCompProps<T>) {
-	const valueIsLoading = useRef(false)
-	valueIsLoading.current = isLoading(_value)
+	const valueIsLoadingAt = useRef(0)
+	const [$valueNeedsLoadingAt, set$valueNeedsLoadingAt] = useState(0)
 	useEffect(() => {
 		if (_load) {
-			if (valueIsLoading.current) {
-				console.warn(`[pyfh9t] Már töltöm: ${_debugName}`)
-				return
-			}
+			valueIsLoadingAt.current = $valueNeedsLoadingAt
 			return _load()
 		}
-	}, [_load, _debugName, valueIsLoading])
+	}, [_load, _debugName, $valueNeedsLoadingAt, valueIsLoadingAt])
+	if (_load && hasNotStartedLoading(_value)) {
+		if (valueIsLoadingAt.current === $valueNeedsLoadingAt) {
+			console.warn(`[pyfh9t] Már töltöm: ${_debugName}`)
+		} else {
+			set$valueNeedsLoadingAt(Date.now())
+		}
+	}
 	return (
 		<React.Fragment>
 			{isLoaded(_value) && children(_value)}
