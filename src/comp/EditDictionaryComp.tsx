@@ -21,24 +21,30 @@ export function EditDictionaryComp({
 					}}
 				/>
 			</p>
-			{_dictionary.languages.map((language, index, languages) => (
-				<p key={index}>
-					{index + 1}. nyelv neve:{' '}
-					<input
-						value={language}
-						onChange={e => {
-							_setDictionary({
-								..._dictionary,
-								languages: [
-									...languages.slice(0, index),
-									e.target.value,
-									...languages.slice(index + 1),
-								] as [string, string],
-							})
-						}}
-					/>
-				</p>
-			))}
+			<p>
+				Első nyelv neve:{' '}
+				<input
+					value={_dictionary.language0}
+					onChange={e => {
+						_setDictionary({
+							..._dictionary,
+							language0: e.target.value,
+						})
+					}}
+				/>
+			</p>
+			<p>
+				Második nyelv neve:{' '}
+				<input
+					value={_dictionary.language1}
+					onChange={e => {
+						_setDictionary({
+							..._dictionary,
+							language1: e.target.value,
+						})
+					}}
+				/>
+			</p>
 		</>
 	)
 }

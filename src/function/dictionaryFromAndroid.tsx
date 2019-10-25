@@ -5,9 +5,7 @@ export function dictionaryFromAndroid(
 ): Dictionary {
 	return {
 		name: dictionaryFromAndroid.name,
-		languages: [
-			dictionaryFromAndroid.firstLanguageName,
-			dictionaryFromAndroid.secondLanguageName,
-		],
+		language0: dictionaryFromAndroid.firstLanguageName,
+		language1: dictionaryFromAndroid.secondLanguageName,
 	}
 }

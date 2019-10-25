@@ -4,6 +4,7 @@ import { sanitizeString } from './sanitizeString'
 export function sanitizeDictionary(d: Dictionary): Dictionary {
 	return {
 		name: sanitizeString(d.name),
-		languages: d.languages.map(sanitizeString) as [string, string],
+		language0: sanitizeString(d.language0),
+		language1: sanitizeString(d.language1),
 	}
 }

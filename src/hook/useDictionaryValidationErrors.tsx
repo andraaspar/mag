@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { isUndefined } from 'util'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded, TLoadable } from '../model/TLoadable'
 import { useConflictingDictionary } from './useConflictingDictionary'
@@ -18,15 +17,12 @@ export function useDictionaryValidationErrors(
 						!dictionary.name.trim() &&
 						`A név megadása kötelező.`,
 					dictionary &&
-						!isUndefined(
-							dictionary.languages.find(
-								language => !language.trim(),
-							),
-						) &&
+						(!dictionary.language0.trim() ||
+							!dictionary.language1.trim()) &&
 						`Mindkét nyelvet el kell nevezned.`,
 					dictionary &&
-						dictionary.languages[0] &&
-						dictionary.languages[0] === dictionary.languages[1] &&
+						dictionary.language0 &&
+						dictionary.language0 === dictionary.language1 &&
 						`A két nyelv neve nem lehet ugyanaz.`,
 			  ].filter(Boolean) as string[])
 	}, [conflictingDictionary, dictionary])

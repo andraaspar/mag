@@ -115,28 +115,16 @@ export function SetImportParamsComp({
 								}}
 							>
 								<option value='false'>
-									{
-										_importableDictionary.dictionary
-											.languages[0]
-									}{' '}
-									→ {_importParams.dictionary.languages[0]} és{' '}
-									{
-										_importableDictionary.dictionary
-											.languages[1]
-									}{' '}
-									→ {_importParams.dictionary.languages[1]}
+									{_importableDictionary.dictionary.language0}{' '}
+									→ {_importParams.dictionary.language0} és{' '}
+									{_importableDictionary.dictionary.language1}{' '}
+									→ {_importParams.dictionary.language1}
 								</option>
 								<option value='true'>
-									{
-										_importableDictionary.dictionary
-											.languages[0]
-									}{' '}
-									→ {_importParams.dictionary.languages[1]} és{' '}
-									{
-										_importableDictionary.dictionary
-											.languages[1]
-									}{' '}
-									→ {_importParams.dictionary.languages[0]}
+									{_importableDictionary.dictionary.language0}{' '}
+									→ {_importParams.dictionary.language1} és{' '}
+									{_importableDictionary.dictionary.language1}{' '}
+									→ {_importParams.dictionary.language0}
 								</option>
 							</select>
 						</p>

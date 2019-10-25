@@ -2,8 +2,13 @@ import preval from 'preval.macro'
 import React, { useEffect, useState } from 'react'
 import { Route, Switch } from 'react-router'
 import { Link } from 'react-router-dom'
+import { setStringToIdbSortableMap } from '../function/stringToIdbSortable'
 import { useMessages } from '../hook/useMessages'
-import { initDb } from '../storage/Db'
+import {
+	initDb,
+	KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP,
+	STORE_SETTINGS,
+} from '../storage/Db'
 import { CreateDictionaryPage } from './CreateDictionaryPage'
 import { DictionaryPage } from './DictionaryPage'
 import { ExportDictionaryPage } from './ExportDictionaryPage'
@@ -22,7 +27,14 @@ export function AppComp() {
 	useEffect(() => {
 		;(async () => {
 			try {
-				await initDb(showMessage)
+				const db = await initDb(showMessage)
+				const t = db.transaction(STORE_SETTINGS, 'readonly')
+				const settingsStore = t.objectStore(STORE_SETTINGS)
+				setStringToIdbSortableMap(
+					await settingsStore.get(
+						KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP,
+					),
+				)
 				set$hasDb(true)
 			} catch (e) {
 				showMessage(e)

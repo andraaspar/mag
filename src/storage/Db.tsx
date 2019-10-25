@@ -1,20 +1,31 @@
 import { DBSchema, IDBPDatabase, IDBPTransaction, openDB } from 'idb'
 import { dateToString } from '../function/dateToString'
+import { getStringToIdbSortableMap } from '../function/stringToIdbSortable'
 import { DbDictionary, Dictionary1 } from '../model/Dictionary'
-import { Word } from '../model/Word'
+import { DbWord } from '../model/Word'
 import { storeDictionary } from './storeDictionary'
 import { storeWord } from './storeWord'
 
 export const DB_NAME = 'mag'
+
 export const DEPRECATED_STORE_WORDLISTS = 'wordlists'
+
 export const STORE_DICTIONARIES = 'dictionaries'
-export const STORE_WORDS = 'words'
 export const INDEX_DICTIONARIES_NAME = 'name'
+export const INDEX_DICTIONARIES_LANGUAGE_0 = 'language0'
+export const INDEX_DICTIONARIES_LANGUAGE_1 = 'language1'
+
+export const STORE_WORDS = 'words'
 export const INDEX_WORDS_DICTIONARY_ID = 'dictionaryId'
 export const INDEX_WORDS_COUNT_0 = 'count0'
 export const INDEX_WORDS_COUNT_1 = 'count1'
 export const INDEX_WORDS_TRANSLATION_0 = 'translation0'
 export const INDEX_WORDS_TRANSLATION_1 = 'translation1'
+export const INDEX_WORDS_MODIFIED_DATE_0 = 'modifiedDateForSort0'
+export const INDEX_WORDS_MODIFIED_DATE_1 = 'modifiedDateForSort1'
+
+export const STORE_SETTINGS = 'settings'
+export const KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP = 'stringToIdbSortableMap'
 
 export interface Db extends DBSchema {
 	dictionaries: {
@@ -22,18 +33,38 @@ export interface Db extends DBSchema {
 		value: DbDictionary
 		indexes: {
 			[INDEX_DICTIONARIES_NAME]: string
+			[INDEX_DICTIONARIES_LANGUAGE_0]: string
+			[INDEX_DICTIONARIES_LANGUAGE_1]: string
 		}
 	}
 	words: {
 		key: number
-		value: Word
+		value: DbWord
 		indexes: {
 			[INDEX_WORDS_DICTIONARY_ID]: number
-			[INDEX_WORDS_COUNT_0]: [number, number]
-			[INDEX_WORDS_COUNT_1]: [number, number]
+			[INDEX_WORDS_COUNT_0]: [number, number, string, string]
+			[INDEX_WORDS_COUNT_1]: [number, number, string, string]
 			[INDEX_WORDS_TRANSLATION_0]: [number, string, string]
 			[INDEX_WORDS_TRANSLATION_1]: [number, string, string]
+			[INDEX_WORDS_MODIFIED_DATE_0]: [
+				number,
+				string,
+				number,
+				string,
+				string,
+			]
+			[INDEX_WORDS_MODIFIED_DATE_1]: [
+				number,
+				string,
+				number,
+				string,
+				string,
+			]
 		}
+	}
+	settings: {
+		key: string
+		value: any
 	}
 }
 
@@ -94,6 +125,15 @@ async function createDb2(t: IDBPTransaction<Db>) {
 	dictionariesStore.createIndex(INDEX_DICTIONARIES_NAME, 'nameForSort', {
 		unique: true,
 	})
+	dictionariesStore.createIndex(
+		INDEX_DICTIONARIES_LANGUAGE_0,
+		'language0ForSort',
+	)
+	dictionariesStore.createIndex(
+		INDEX_DICTIONARIES_LANGUAGE_1,
+		'language1ForSort',
+	)
+
 	const wordsStore = t.db.createObjectStore(STORE_WORDS, {
 		keyPath: 'id',
 		autoIncrement: true,
@@ -101,11 +141,29 @@ async function createDb2(t: IDBPTransaction<Db>) {
 	wordsStore.createIndex(INDEX_WORDS_DICTIONARY_ID, 'dictionaryId')
 	wordsStore.createIndex(INDEX_WORDS_COUNT_0, [
 		'dictionaryId',
-		'translation0.count',
+		'translation0.countForSort',
+		'translation0.textForSort',
+		'translation0.descriptionForSort',
 	])
 	wordsStore.createIndex(INDEX_WORDS_COUNT_1, [
 		'dictionaryId',
-		'translation1.count',
+		'translation1.countForSort',
+		'translation1.textForSort',
+		'translation1.descriptionForSort',
+	])
+	wordsStore.createIndex(INDEX_WORDS_MODIFIED_DATE_0, [
+		'dictionaryId',
+		'modifiedDateForSort',
+		'translation0.countForSort',
+		'translation0.textForSort',
+		'translation0.descriptionForSort',
+	])
+	wordsStore.createIndex(INDEX_WORDS_MODIFIED_DATE_1, [
+		'dictionaryId',
+		'modifiedDateForSort',
+		'translation1.countForSort',
+		'translation1.textForSort',
+		'translation1.descriptionForSort',
 	])
 	wordsStore.createIndex(
 		INDEX_WORDS_TRANSLATION_0,
@@ -121,6 +179,12 @@ async function createDb2(t: IDBPTransaction<Db>) {
 			unique: true,
 		},
 	)
+
+	const settingsStore = t.db.createObjectStore(STORE_SETTINGS)
+	settingsStore.put(
+		getStringToIdbSortableMap(),
+		KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP,
+	)
 }
 
 async function upgradeDb1To2(t: IDBPTransaction<Db1 | Db>) {
@@ -132,7 +196,8 @@ async function upgradeDb1To2(t: IDBPTransaction<Db1 | Db>) {
 			t: t as IDBPTransaction<Db>,
 			dictionary: {
 				name: dictionary1.name,
-				languages: [dictionary1.lang1Name, dictionary1.lang2Name],
+				language0: dictionary1.lang1Name,
+				language1: dictionary1.lang2Name,
 			},
 		})
 		for (const word1 of dictionary1.words) {

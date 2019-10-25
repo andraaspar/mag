@@ -50,7 +50,8 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 		const d: ExportedDictionary = {
 			version: 1,
 			name: $dictionary.current.name,
-			languages: $dictionary.current.languages,
+			language0: $dictionary.current.language0,
+			language1: $dictionary.current.language1,
 			words: $words.current.map(
 				(w): ExportedWord => ({
 					modifiedDate: w.modifiedDate,

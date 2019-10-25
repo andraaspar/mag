@@ -15,7 +15,8 @@ export function CreateDictionaryPage() {
 	usePageTitle(`Új szótár`)
 	const [$dictionary, set$dictionary] = useState<Dictionary>({
 		name: '',
-		languages: ['', ''],
+		language0: '',
+		language1: '',
 	})
 	const sanitizedDictionary = useMemo(() => sanitizeDictionary($dictionary), [
 		$dictionary,
