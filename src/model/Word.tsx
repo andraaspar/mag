@@ -45,7 +45,7 @@ export interface WordFromAndroid {
 
 export function wordToDb(w: Word): DbWord {
 	return {
-		id: w.id,
+		...(w.id && { id: w.id }),
 		dictionaryId: w.dictionaryId,
 		translation0: translationToDb(w.translation0),
 		translation1: translationToDb(w.translation1),

@@ -39,7 +39,7 @@ export interface DictionaryFromAndroid {
 
 export function dictionaryToDb(o: Dictionary): DbDictionary {
 	return {
-		id: o.id,
+		...(o.id && { id: o.id }),
 		language0: o.language0,
 		language1: o.language1,
 		name: o.name,
