@@ -4,6 +4,7 @@ import { useRouteMatch } from 'react-router-dom'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { url } from '../function/url'
 import { useDictionary } from '../hook/useDictionary'
+import { usePageTitle } from '../hook/usePageTitle'
 import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
 import { useWordsByDictionaryId } from '../hook/useWordsByDictionaryId'
 import { ExportedDictionary } from '../model/Dictionary'
@@ -62,6 +63,15 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 		}
 		return JSON.stringify(d)
 	}, [$words, $dictionary])
+	usePageTitle(
+		!isLoaded($dictionary)
+			? `Szótár kimentése`
+			: `${
+					$dictionary.current
+						? dictionaryToString($dictionary.current)
+						: `Ismeretlen`
+			  } szótár kimentése`,
+	)
 	return (
 		<>
 			<LoadableComp _value={$dictionary} _load={loadDictionary}>

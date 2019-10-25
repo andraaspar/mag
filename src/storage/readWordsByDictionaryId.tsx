@@ -1,5 +1,5 @@
 import { IDBPTransaction } from 'idb'
-import { Word } from '../model/Word'
+import { Word, wordFromDb } from '../model/Word'
 import { Db, getDb, INDEX_WORDS_DICTIONARY_ID, STORE_WORDS } from './Db'
 import { readItems, ReadItemsPagingParams } from './readItems'
 
@@ -14,9 +14,10 @@ export async function readWordsByDictionaryId({
 	const dictionaryIdIndex = t
 		.objectStore(STORE_WORDS)
 		.index(INDEX_WORDS_DICTIONARY_ID)
-	return readItems({
+	const words = await readItems({
 		source: dictionaryIdIndex,
 		range: IDBKeyRange.only(dictionaryId),
 		...rest,
 	})
+	return words.map(wordFromDb)
 }

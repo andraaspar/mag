@@ -1,5 +1,5 @@
 import { IDBPTransaction } from 'idb'
-import { Dictionary, makeDbDictionary } from '../model/Dictionary'
+import { Dictionary, dictionaryToDb } from '../model/Dictionary'
 import { Db, getDb, INDEX_DICTIONARIES_NAME, STORE_DICTIONARIES } from './Db'
 
 export class DictionaryNameConflictError extends Error {
@@ -15,7 +15,7 @@ export async function checkForConflictingDictionary({
 	t?: IDBPTransaction<Db>
 	dictionary: Dictionary
 }) {
-	const dbDictionary = makeDbDictionary(dictionary)
+	const dbDictionary = dictionaryToDb(dictionary)
 	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
 	const dictionaryWithSameName = await dictionariesStore
 		.index(INDEX_DICTIONARIES_NAME)

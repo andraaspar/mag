@@ -12,11 +12,21 @@ export interface DbTranslation extends Translation {
 	countForSort: number
 }
 
-export function makeDbTranslation(t: Translation): DbTranslation {
+export function translationToDb(t: Translation): DbTranslation {
 	return {
-		...t,
+		text: t.text,
+		count: t.count,
+		description: t.description,
 		textForSort: stringToIdbSortable(t.text),
 		descriptionForSort: stringToIdbSortable(t.description),
 		countForSort: t.count > 0 ? 0 : 1,
+	}
+}
+
+export function translationFromDb(t: DbTranslation): Translation {
+	return {
+		text: t.text,
+		count: t.count,
+		description: t.description,
 	}
 }

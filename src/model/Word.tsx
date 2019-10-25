@@ -1,5 +1,10 @@
 import { stringToIdbSortable } from '../function/stringToIdbSortable'
-import { DbTranslation, makeDbTranslation, Translation } from './Translation'
+import {
+	DbTranslation,
+	Translation,
+	translationFromDb,
+	translationToDb,
+} from './Translation'
 
 export interface Word {
 	id?: number
@@ -16,17 +21,6 @@ export interface DbWord {
 	translation1: DbTranslation
 	modifiedDate: string
 	modifiedDateForSort: string
-}
-
-export function makeDbWord(w: Word): DbWord {
-	return {
-		...w,
-		translation0: makeDbTranslation(w.translation0),
-		translation1: makeDbTranslation(w.translation1),
-		modifiedDateForSort: stringToIdbSortable(w.modifiedDate, {
-			reverse: true,
-		}),
-	}
 }
 
 export interface ExportedWord {
@@ -47,4 +41,27 @@ export interface WordFromAndroid {
 	firstLanguageComment: string
 	inSecondLanguage: string
 	secondLanguageComment: string
+}
+
+export function wordToDb(w: Word): DbWord {
+	return {
+		id: w.id,
+		dictionaryId: w.dictionaryId,
+		translation0: translationToDb(w.translation0),
+		translation1: translationToDb(w.translation1),
+		modifiedDate: w.modifiedDate,
+		modifiedDateForSort: stringToIdbSortable(w.modifiedDate, {
+			reverse: true,
+		}),
+	}
+}
+
+export function wordFromDb(w: DbWord): Word {
+	return {
+		id: w.id,
+		dictionaryId: w.dictionaryId,
+		translation0: translationFromDb(w.translation0),
+		translation1: translationFromDb(w.translation1),
+		modifiedDate: w.modifiedDate,
+	}
 }

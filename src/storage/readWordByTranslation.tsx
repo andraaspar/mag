@@ -1,5 +1,6 @@
 import { IDBPTransaction } from 'idb'
 import { Translation } from '../model/Translation'
+import { wordFromDb } from '../model/Word'
 import {
 	Db,
 	getDb,
@@ -20,11 +21,12 @@ export async function readWordByTranslation({
 	translation: Translation
 }) {
 	const wordsStore = t.objectStore(STORE_WORDS)
-	return wordsStore
+	const word = await wordsStore
 		.index(
 			translationIndex === 0
 				? INDEX_WORDS_TRANSLATION_0
 				: INDEX_WORDS_TRANSLATION_1,
 		)
 		.get([dictionaryId, translation.text, translation.description])
+	return word && wordFromDb(word)
 }

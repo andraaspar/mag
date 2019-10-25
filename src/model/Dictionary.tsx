@@ -22,15 +22,6 @@ export interface DbDictionary extends Dictionary {
 	language1ForSort: string
 }
 
-export function makeDbDictionary(o: Dictionary): DbDictionary {
-	return {
-		...o,
-		nameForSort: stringToIdbSortable(o.name),
-		language0ForSort: stringToIdbSortable(o.language0),
-		language1ForSort: stringToIdbSortable(o.language1),
-	}
-}
-
 export interface Dictionary1 {
 	id?: number
 	name: string
@@ -44,4 +35,25 @@ export interface DictionaryFromAndroid {
 	firstLanguageName: string
 	secondLanguageName: string
 	words: WordFromAndroid[]
+}
+
+export function dictionaryToDb(o: Dictionary): DbDictionary {
+	return {
+		id: o.id,
+		language0: o.language0,
+		language1: o.language1,
+		name: o.name,
+		nameForSort: stringToIdbSortable(o.name),
+		language0ForSort: stringToIdbSortable(o.language0),
+		language1ForSort: stringToIdbSortable(o.language1),
+	}
+}
+
+export function dictionaryFromDb(o: DbDictionary): Dictionary {
+	return {
+		id: o.id,
+		language0: o.language0,
+		language1: o.language1,
+		name: o.name,
+	}
 }

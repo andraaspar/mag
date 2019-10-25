@@ -1,5 +1,5 @@
 import { IDBPTransaction } from 'idb'
-import { Dictionary, makeDbDictionary } from '../model/Dictionary'
+import { Dictionary, dictionaryToDb } from '../model/Dictionary'
 import { Db, getDb, STORE_DICTIONARIES } from './Db'
 
 export async function storeDictionary({
@@ -11,5 +11,5 @@ export async function storeDictionary({
 }) {
 	if (dictionary.id == null) delete dictionary.id
 	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
-	return dictionariesStore.put(makeDbDictionary(dictionary))
+	return dictionariesStore.put(dictionaryToDb(dictionary))
 }
