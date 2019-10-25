@@ -8,6 +8,12 @@ export interface Word {
 	modifiedDate: string
 }
 
+export interface ExportedWord {
+	translation0: Translation
+	translation1: Translation
+	modifiedDate: string
+}
+
 export interface Word1 {
 	lang1: string
 	lang2: string

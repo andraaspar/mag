@@ -6,6 +6,7 @@ import { useMessages } from '../hook/useMessages'
 import { initDb } from '../storage/Db'
 import { CreateDictionaryPage } from './CreateDictionaryPage'
 import { DictionaryPage } from './DictionaryPage'
+import { ExportDictionaryPage } from './ExportDictionaryPage'
 import { ImportFromFilePage } from './ImportFromFilePage'
 import { MessagesComp } from './MessagesComp'
 import { NotFoundPage } from './NotFoundPage'
@@ -68,8 +69,13 @@ export function AppComp() {
 						component={CreateDictionaryPage}
 					/>
 					<Route
+						exact
 						path='/dictionary/:dictionaryId/'
 						component={DictionaryPage}
+					/>
+					<Route
+						path='/dictionary/:dictionaryId/export/'
+						component={ExportDictionaryPage}
 					/>
 					<Route path='/' component={NotFoundPage} />
 				</Switch>

@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { useContext, useState } from 'react'
 import { dictionaryFromAndroid } from '../function/dictionaryFromAndroid'
+import { dictionaryFromExport } from '../function/dictionaryFromExport'
 import { readJsonFromFile } from '../function/readJsonFromFile'
 import { wordFromAndroid } from '../function/wordFromAndroid'
-import { DictionaryFromAndroid } from '../model/Dictionary'
+import { wordFromExport } from '../function/wordFromExport'
+import { DictionaryFromAndroid, ExportedDictionary } from '../model/Dictionary'
 import { ImportableDictionary } from './ImportFromFilePage'
 import { ShowMessageContext } from './ShowMessageContext'
 
@@ -27,12 +29,25 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 							const file = files[0]
 							if (!file) return
 							const dictionary = await readJsonFromFile<
-								DictionaryFromAndroid
+								DictionaryFromAndroid | ExportedDictionary
 							>(file)
-							_setImportableDictionary({
-								dictionary: dictionaryFromAndroid(dictionary),
-								words: dictionary.words.map(wordFromAndroid),
-							})
+							if ('version' in dictionary) {
+								_setImportableDictionary({
+									dictionary: dictionaryFromExport(
+										dictionary,
+									),
+									words: dictionary.words.map(wordFromExport),
+								})
+							} else {
+								_setImportableDictionary({
+									dictionary: dictionaryFromAndroid(
+										dictionary,
+									),
+									words: dictionary.words.map(
+										wordFromAndroid,
+									),
+								})
+							}
 						} catch (e) {
 							showMessage(e)
 						}
@@ -52,7 +67,9 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 							set$json(json)
 							if (!json) return
 							try {
-								var dictionary = JSON.parse(json)
+								var dictionary:
+									| DictionaryFromAndroid
+									| ExportedDictionary = JSON.parse(json)
 							} catch (e) {
 								console.error(e)
 								throw new Error(
@@ -60,14 +77,25 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 								)
 							}
 							try {
-								_setImportableDictionary({
-									dictionary: dictionaryFromAndroid(
-										dictionary,
-									),
-									words: dictionary.words.map(
-										wordFromAndroid,
-									),
-								})
+								if ('version' in dictionary) {
+									_setImportableDictionary({
+										dictionary: dictionaryFromExport(
+											dictionary,
+										),
+										words: dictionary.words.map(
+											wordFromExport,
+										),
+									})
+								} else {
+									_setImportableDictionary({
+										dictionary: dictionaryFromAndroid(
+											dictionary,
+										),
+										words: dictionary.words.map(
+											wordFromAndroid,
+										),
+									})
+								}
 							} catch (e) {
 								console.error(e)
 								throw new Error(

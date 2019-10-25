@@ -26,6 +26,7 @@ export function SetImportParamsComp({
 	const loadDictionaries = React.useCallback(() => {
 		let isAborted = false
 		;(async () => {
+			set$dictionaries(Date.now())
 			const dictionaries = await readDictionaries({})
 			if (isAborted) return
 			set$dictionaries(dictionaries)
@@ -118,14 +119,24 @@ export function SetImportParamsComp({
 										_importableDictionary.dictionary
 											.languages[0]
 									}{' '}
-									→ {_importParams.dictionary.languages[0]}
+									→ {_importParams.dictionary.languages[0]} és{' '}
+									{
+										_importableDictionary.dictionary
+											.languages[1]
+									}{' '}
+									→ {_importParams.dictionary.languages[1]}
 								</option>
 								<option value='true'>
 									{
 										_importableDictionary.dictionary
 											.languages[0]
 									}{' '}
-									→ {_importParams.dictionary.languages[1]}
+									→ {_importParams.dictionary.languages[1]} és{' '}
+									{
+										_importableDictionary.dictionary
+											.languages[1]
+									}{' '}
+									→ {_importParams.dictionary.languages[0]}
 								</option>
 							</select>
 						</p>

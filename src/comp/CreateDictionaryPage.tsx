@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useMemo, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { sanitizeDictionary } from '../function/sanitizeDictionary'
 import { url } from '../function/url'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
@@ -31,7 +31,7 @@ export function CreateDictionaryPage() {
 				const dictionaryId = await storeDictionary({
 					dictionary: sanitizedDictionary,
 				})
-				history.push(url`/dictionary/${dictionaryId}`)
+				history.push(url`/dictionary/${dictionaryId}/`)
 			}}
 		>
 			<h1>Új szótár</h1>
@@ -50,8 +50,7 @@ export function CreateDictionaryPage() {
 					}
 				>
 					Mentsd le
-				</button>{' '}
-				• <Link to='/'>Mégse</Link>
+				</button>
 			</p>
 		</form>
 	)

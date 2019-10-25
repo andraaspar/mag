@@ -1,10 +1,17 @@
 import { stringToIdbSortable } from '../function/stringToIdbSortable'
-import { Word1, WordFromAndroid } from './Word'
+import { ExportedWord, Word1, WordFromAndroid } from './Word'
 
 export interface Dictionary {
 	id?: number
 	name: string
 	languages: [string, string]
+}
+
+export interface ExportedDictionary {
+	version: 1
+	name: string
+	languages: [string, string]
+	words: readonly ExportedWord[]
 }
 
 export interface DbDictionary extends Dictionary {

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useContext, useState } from 'react'
 import { useHistory } from 'react-router'
-import { Link } from 'react-router-dom'
 import { handleDictionaryImport } from '../function/handleDictionaryImport'
 import { url } from '../function/url'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
@@ -69,7 +68,7 @@ export function ImportFromFilePage() {
 							dictionary: $importParams.dictionary,
 							words,
 						})
-						history.push(url`/dictionary/${dictionaryId}`)
+						history.push(url`/dictionary/${dictionaryId}/`)
 					} catch (e) {
 						showMessage(e)
 					}
@@ -90,22 +89,18 @@ export function ImportFromFilePage() {
 				<DictionaryValidationErrorsComp
 					_errors={dictionaryValidationErrors}
 				/>
-				<p>
-					{$importableDictionary && (
-						<>
-							<button
-								disabled={
-									!isLoaded(dictionaryValidationErrors) ||
-									dictionaryValidationErrors.length > 0
-								}
-							>
-								Tárold el
-							</button>{' '}
-							•{' '}
-						</>
-					)}
-					<Link to='/'>Mégse</Link>
-				</p>
+				{$importableDictionary && (
+					<p>
+						<button
+							disabled={
+								!isLoaded(dictionaryValidationErrors) ||
+								dictionaryValidationErrors.length > 0
+							}
+						>
+							Tárold el
+						</button>
+					</p>
+				)}
 			</form>
 		</div>
 	)

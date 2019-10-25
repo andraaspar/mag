@@ -7,6 +7,9 @@ export interface PagingCompProps {
 }
 
 export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
+	if (_page >= _pageCount) {
+		_setPage(_pageCount - 1)
+	}
 	return (
 		<p>
 			<button
