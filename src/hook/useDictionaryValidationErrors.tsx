@@ -9,7 +9,6 @@ export function useDictionaryValidationErrors(
 ): TLoadable<string[]> {
 	const conflictingDictionary = useConflictingDictionary(dictionary)
 	const result: TLoadable<string[]> = useMemo(() => {
-		console.log(`[pzxh0f]`, dictionary)
 		return !isLoaded(conflictingDictionary)
 			? conflictingDictionary
 			: ([
