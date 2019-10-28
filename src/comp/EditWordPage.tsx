@@ -1,9 +1,11 @@
 import * as React from 'react'
+import { useCallback } from 'react'
 import { useHistory, useRouteMatch } from 'react-router'
 import { dateToString } from '../function/dateToString'
 import { useDictionary } from '../hook/useDictionary'
 import { useWord } from '../hook/useWord'
 import { DEFAULT_COUNT } from '../model/constants'
+import { isLoaded } from '../model/TLoadable'
 import { EditWordComp } from './EditWordComp'
 import { LoadableComp } from './LoadableComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
@@ -24,6 +26,13 @@ export function EditWordPage(props: EditWordPageProps) {
 			: null
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
 	const { $word, loadWord } = useWord(wordId)
+	const onSuccess = useCallback(() => {
+		if (isLoaded($word) && $word.current) {
+			history.goBack()
+		} else {
+			loadDictionary()
+		}
+	}, [$word, history, loadDictionary])
 	return (
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
 			{dictionary =>
@@ -50,13 +59,7 @@ export function EditWordPage(props: EditWordPageProps) {
 										},
 									}
 								}
-								_onSuccess={() => {
-									if (word.current) {
-										history.goBack()
-									} else {
-										loadDictionary()
-									}
-								}}
+								_onSuccess={onSuccess}
 							/>
 						)}
 					</LoadableComp>
