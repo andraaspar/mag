@@ -18,6 +18,7 @@ import { MessagesComp } from './MessagesComp'
 import { NotFoundPage } from './NotFoundPage'
 import { ShowMessageContext } from './ShowMessageContext'
 import { StartPage } from './StartPage'
+import { WordsPage } from './WordsPage'
 
 export function AppComp() {
 	const [$hasDb, set$hasDb] = useState(false)
@@ -93,6 +94,10 @@ export function AppComp() {
 					<Route
 						path='/dictionary/:dictionaryId/word/'
 						component={EditWordPage}
+					/>
+					<Route
+						path='/dictionary/:dictionaryId/words/'
+						component={WordsPage}
 					/>
 					<Route path='/' component={NotFoundPage} />
 				</Switch>

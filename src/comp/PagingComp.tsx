@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useLayoutEffect } from 'react'
 
 export interface PagingCompProps {
 	_page: number
@@ -7,9 +8,11 @@ export interface PagingCompProps {
 }
 
 export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
-	if (_page >= _pageCount) {
-		_setPage(_pageCount - 1)
-	}
+	useLayoutEffect(() => {
+		if (_page >= _pageCount) {
+			_setPage(_pageCount - 1)
+		}
+	}, [_page, _setPage, _pageCount])
 	return (
 		<p>
 			<button

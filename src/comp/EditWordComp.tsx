@@ -66,7 +66,7 @@ export function EditWordComp({
 	const validationErrors = useWordValidationErrors(word)
 	return (
 		<>
-			<h1>Adj hozzá egy szót</h1>
+			<h1>{_word.id ? `Módosítsd a szót` : `Adj hozzá egy szót`}</h1>
 			<p>
 				{_dictionary.language0}:{' '}
 				<input

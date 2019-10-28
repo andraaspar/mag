@@ -21,6 +21,7 @@ export interface DbWord {
 	translation1: DbTranslation
 	modifiedDate: string
 	modifiedDateForSort: string
+	countForSort: number
 }
 
 export interface ExportedWord {
@@ -44,15 +45,21 @@ export interface WordFromAndroid {
 }
 
 export function wordToDb(w: Word): DbWord {
+	const translation0 = translationToDb(w.translation0)
+	const translation1 = translationToDb(w.translation1)
 	return {
 		...(w.id && { id: w.id }),
 		dictionaryId: w.dictionaryId,
-		translation0: translationToDb(w.translation0),
-		translation1: translationToDb(w.translation1),
+		translation0,
+		translation1,
 		modifiedDate: w.modifiedDate,
 		modifiedDateForSort: stringToIdbSortable(w.modifiedDate, {
 			reverse: true,
 		}),
+		countForSort:
+			translation0.countForSort === 0 || translation1.countForSort === 0
+				? 0
+				: 1,
 	}
 }
 

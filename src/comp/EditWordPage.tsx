@@ -3,6 +3,7 @@ import { useCallback } from 'react'
 import { useHistory, useRouteMatch } from 'react-router'
 import { dateToString } from '../function/dateToString'
 import { useDictionary } from '../hook/useDictionary'
+import { usePageTitle } from '../hook/usePageTitle'
 import { useWord } from '../hook/useWord'
 import { DEFAULT_COUNT } from '../model/constants'
 import { isLoaded } from '../model/TLoadable'
@@ -33,6 +34,13 @@ export function EditWordPage(props: EditWordPageProps) {
 			loadDictionary()
 		}
 	}, [$word, history, loadDictionary])
+	usePageTitle(
+		!isLoaded($word)
+			? `Szó`
+			: $word.current
+			? `Módosítsd a szót`
+			: `Adj hozzá egy szót`,
+	)
 	return (
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
 			{dictionary =>

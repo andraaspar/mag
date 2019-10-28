@@ -12,6 +12,7 @@
 		"escape-string-regexp": "^2.0.0",
 		"idb": "^4.0.4",
 		"preval.macro": "^3.0.0",
+		"qs": "^6.9.0",
 		"react": "^16.9.0",
 		"react-dom": "^16.9.0",
 		"react-router-dom": "^5.1.0",
@@ -38,5 +39,8 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
+	},
+	"devDependencies": {
+		"@types/qs": "^6.5.3"
 	}
 }

@@ -16,7 +16,6 @@ export const INDEX_DICTIONARIES_LANGUAGE_0 = 'language0'
 export const INDEX_DICTIONARIES_LANGUAGE_1 = 'language1'
 
 export const STORE_WORDS = 'words'
-export const INDEX_WORDS_DICTIONARY_ID = 'dictionaryId'
 export const INDEX_WORDS_COUNT_0 = 'count0'
 export const INDEX_WORDS_COUNT_1 = 'count1'
 export const INDEX_WORDS_TRANSLATION_0 = 'translation0'
@@ -41,9 +40,8 @@ export interface Db extends DBSchema {
 		key: number
 		value: DbWord
 		indexes: {
-			[INDEX_WORDS_DICTIONARY_ID]: number
-			[INDEX_WORDS_COUNT_0]: [number, number, string, string]
-			[INDEX_WORDS_COUNT_1]: [number, number, string, string]
+			[INDEX_WORDS_COUNT_0]: [number, number]
+			[INDEX_WORDS_COUNT_1]: [number, number]
 			[INDEX_WORDS_TRANSLATION_0]: [number, string, string]
 			[INDEX_WORDS_TRANSLATION_1]: [number, string, string]
 			[INDEX_WORDS_MODIFIED_DATE_0]: [
@@ -138,30 +136,25 @@ async function createDb2(t: IDBPTransaction<Db>) {
 		keyPath: 'id',
 		autoIncrement: true,
 	})
-	wordsStore.createIndex(INDEX_WORDS_DICTIONARY_ID, 'dictionaryId')
 	wordsStore.createIndex(INDEX_WORDS_COUNT_0, [
 		'dictionaryId',
 		'translation0.countForSort',
-		'translation0.textForSort',
-		'translation0.descriptionForSort',
 	])
 	wordsStore.createIndex(INDEX_WORDS_COUNT_1, [
 		'dictionaryId',
 		'translation1.countForSort',
-		'translation1.textForSort',
-		'translation1.descriptionForSort',
 	])
 	wordsStore.createIndex(INDEX_WORDS_MODIFIED_DATE_0, [
 		'dictionaryId',
 		'modifiedDateForSort',
-		'translation0.countForSort',
+		'countForSort',
 		'translation0.textForSort',
 		'translation0.descriptionForSort',
 	])
 	wordsStore.createIndex(INDEX_WORDS_MODIFIED_DATE_1, [
 		'dictionaryId',
 		'modifiedDateForSort',
-		'translation1.countForSort',
+		'countForSort',
 		'translation1.textForSort',
 		'translation1.descriptionForSort',
 	])

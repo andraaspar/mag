@@ -1,5 +1,6 @@
 import { IDBPTransaction } from 'idb'
-import { Db, getDb, INDEX_WORDS_DICTIONARY_ID, STORE_WORDS } from './Db'
+import { MAX_KEY, MIN_KEY } from '../model/constants'
+import { Db, getDb, INDEX_WORDS_MODIFIED_DATE_0, STORE_WORDS } from './Db'
 
 export async function countWordsByDictionaryId({
 	t = getDb().transaction([STORE_WORDS], 'readonly'),
@@ -10,6 +11,11 @@ export async function countWordsByDictionaryId({
 }): Promise<number> {
 	const dictionaryIdIndex = t
 		.objectStore(STORE_WORDS)
-		.index(INDEX_WORDS_DICTIONARY_ID)
-	return dictionaryIdIndex.count(dictionaryId)
+		.index(INDEX_WORDS_MODIFIED_DATE_0)
+	return dictionaryIdIndex.count(
+		IDBKeyRange.bound(
+			[dictionaryId, MIN_KEY, MIN_KEY, MIN_KEY, MIN_KEY],
+			[dictionaryId, MAX_KEY, MAX_KEY, MAX_KEY, MAX_KEY],
+		),
+	)
 }

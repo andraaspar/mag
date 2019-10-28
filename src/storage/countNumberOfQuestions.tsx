@@ -1,5 +1,4 @@
 import { IDBPTransaction } from 'idb/build/esm/entry'
-import { MAX_KEY, MIN_KEY } from '../model/constants'
 import {
 	Db,
 	getDb,
@@ -19,16 +18,10 @@ export async function countNumberOfQuestions({
 	const index0 = wordsStore.index(INDEX_WORDS_COUNT_0)
 	const index1 = wordsStore.index(INDEX_WORDS_COUNT_1)
 	const count0 = await index0.count(
-		IDBKeyRange.bound(
-			[dictionaryId, 0, MIN_KEY, MIN_KEY],
-			[dictionaryId, 0, MAX_KEY, MAX_KEY],
-		),
+		IDBKeyRange.bound([dictionaryId, 0], [dictionaryId, 0]),
 	)
 	const count1 = await index1.count(
-		IDBKeyRange.bound(
-			[dictionaryId, 0, MIN_KEY, MIN_KEY],
-			[dictionaryId, 0, MAX_KEY, MAX_KEY],
-		),
+		IDBKeyRange.bound([dictionaryId, 0], [dictionaryId, 0]),
 	)
 	return count0 + count1
 }
