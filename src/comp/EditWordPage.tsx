@@ -1,0 +1,67 @@
+import * as React from 'react'
+import { useHistory, useRouteMatch } from 'react-router'
+import { dateToString } from '../function/dateToString'
+import { useDictionary } from '../hook/useDictionary'
+import { useWord } from '../hook/useWord'
+import { DEFAULT_COUNT } from '../model/constants'
+import { EditWordComp } from './EditWordComp'
+import { LoadableComp } from './LoadableComp'
+import { UnknownDictionaryComp } from './UnknownDictionaryComp'
+
+export interface EditWordPageProps {}
+
+export function EditWordPage(props: EditWordPageProps) {
+	const history = useHistory()
+	const routeMatch = useRouteMatch<{
+		dictionaryId: string
+		wordId: string | undefined
+	}>(`/dictionary/:dictionaryId/word/:wordId?/`)
+	const dictionaryId =
+		routeMatch && parseInt(routeMatch.params.dictionaryId, 10)
+	const wordId =
+		routeMatch && routeMatch.params.wordId != null
+			? parseInt(routeMatch.params.wordId, 10)
+			: null
+	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
+	const { $word, loadWord } = useWord(wordId)
+	return (
+		<LoadableComp _value={$dictionary} _load={loadDictionary}>
+			{dictionary =>
+				dictionary.current == null ? (
+					<UnknownDictionaryComp />
+				) : (
+					<LoadableComp _value={$word} _load={loadWord}>
+						{word => (
+							<EditWordComp
+								_dictionary={dictionary.current!}
+								_word={
+									word.current || {
+										dictionaryId: dictionary.current!.id!,
+										modifiedDate: dateToString(new Date()),
+										translation0: {
+											text: '',
+											description: '',
+											count: DEFAULT_COUNT,
+										},
+										translation1: {
+											text: '',
+											description: '',
+											count: DEFAULT_COUNT,
+										},
+									}
+								}
+								_onSuccess={() => {
+									if (word.current) {
+										history.goBack()
+									} else {
+										loadDictionary()
+									}
+								}}
+							/>
+						)}
+					</LoadableComp>
+				)
+			}
+		</LoadableComp>
+	)
+}
