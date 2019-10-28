@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react'
 import { useHistory, useLocation, useRouteMatch } from 'react-router'
 import { Link } from 'react-router-dom'
 import { dictionaryToString } from '../function/dictionaryToString'
+import { sanitizePageIndex } from '../function/sanitizePageIndex'
 import { wordToString } from '../function/wordToString'
 import { useDictionary } from '../hook/useDictionary'
 import { usePageTitle } from '../hook/usePageTitle'
@@ -32,27 +33,29 @@ export function WordsPage(props: WordsPageProps) {
 			},
 		[location.search],
 	)
-	const page =
-		query && query.page ? Math.max(0, parseInt(query.page, 10)) || 0 : 0
-	const setPage = useCallback(
-		newPage => {
-			history.replace(`?${qs.stringify({ page: newPage })}`)
-		},
-		[history],
-	)
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
-	const pageSize = 2
-	const { $words, loadWords } = useWordsByDictionaryId({
-		dictionaryId,
-		page,
-		pageSize,
-	})
+	const pageSize = 10
 	const { $wordCount, loadWordCount } = useWordCountByDictionaryId(
 		dictionaryId,
 	)
 	const pageCount = isLoaded($wordCount)
 		? Math.max(1, Math.ceil($wordCount.current / pageSize))
 		: 1
+	const page =
+		query && query.page
+			? sanitizePageIndex({ page: parseInt(query.page, 10), pageCount })
+			: 0
+	const setPage = useCallback(
+		newPage => {
+			history.replace(`?${qs.stringify({ page: newPage })}`)
+		},
+		[history],
+	)
+	const { $words, loadWords } = useWordsByDictionaryId({
+		dictionaryId,
+		page,
+		pageSize,
+	})
 	usePageTitle(
 		isLoaded($dictionary) && $dictionary.current
 			? `${dictionaryToString($dictionary.current)} szavai`
