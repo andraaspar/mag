@@ -2,21 +2,19 @@ import * as React from 'react'
 import { TLoadable } from '../model/TLoadable'
 import { LoadableComp } from './LoadableComp'
 
-export interface DictionaryValidationErrorsCompProps {
+export interface ErrorsCompProps {
 	_errors: TLoadable<string[]>
 }
 
-export function DictionaryValidationErrorsComp({
-	_errors,
-}: DictionaryValidationErrorsCompProps) {
+export function ErrorsComp({ _errors }: ErrorsCompProps) {
 	return (
 		<LoadableComp _value={_errors}>
-			{dictionaryValidationErrors =>
-				dictionaryValidationErrors.length > 0 && (
+			{errors =>
+				errors.length > 0 && (
 					<>
 						<p>Hibák:</p>
 						<ul>
-							{dictionaryValidationErrors.map((error, index) => (
+							{errors.map((error, index) => (
 								<li key={index}>{error}</li>
 							))}
 						</ul>

@@ -1,5 +1,4 @@
-import { useCallback, useContext, useState } from 'react'
-import { ShowMessageContext } from '../comp/ShowMessageContext'
+import { useCallback, useState } from 'react'
 import { Dictionary } from '../model/Dictionary'
 import { TLoadable } from '../model/TLoadable'
 import { readDictionaryById } from '../storage/readDictionaryById'
@@ -8,7 +7,6 @@ export function useDictionary(dictionaryId: number | null) {
 	const [$dictionary, set$dictionary] = useState<
 		TLoadable<{ current: Dictionary | undefined }>
 	>(null)
-	const showMessage = useContext(ShowMessageContext)
 	const loadDictionary = useCallback(() => {
 		if (dictionaryId == null) {
 			set$dictionary({ current: undefined })
@@ -21,14 +19,14 @@ export function useDictionary(dictionaryId: number | null) {
 					set$dictionary({ current: dictionary })
 				})
 				.catch(e => {
-					showMessage(e)
+					console.error(e)
 					set$dictionary(e + '')
 				})
 			return () => {
 				aborted = true
 			}
 		}
-	}, [dictionaryId, showMessage])
+	}, [dictionaryId])
 	return {
 		$dictionary,
 		set$dictionary,

@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
-import { ShowMessageContext } from '../comp/ShowMessageContext'
+import { useEffect, useState } from 'react'
 import { Dictionary } from '../model/Dictionary'
 import { TLoadable } from '../model/TLoadable'
 import {
@@ -11,7 +10,6 @@ export function useConflictingDictionary(dictionary: Dictionary | null) {
 	const [$conflictingDictionary, set$conflictingDictionary] = useState<
 		TLoadable<{ exists: boolean }>
 	>(null)
-	const showMessage = useContext(ShowMessageContext)
 	useEffect(() => {
 		let isAborted = false
 		;(async () => {
@@ -29,7 +27,7 @@ export function useConflictingDictionary(dictionary: Dictionary | null) {
 						exists: true,
 					})
 				} else {
-					showMessage(e)
+					console.error(e)
 					set$conflictingDictionary(e + '')
 				}
 			}
@@ -37,6 +35,6 @@ export function useConflictingDictionary(dictionary: Dictionary | null) {
 		return () => {
 			isAborted = true
 		}
-	}, [dictionary, showMessage])
+	}, [dictionary])
 	return $conflictingDictionary
 }

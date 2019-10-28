@@ -8,7 +8,7 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
-import { DictionaryValidationErrorsComp } from './DictionaryValidationErrorsComp'
+import { ErrorsComp } from './ErrorsComp'
 import { GetWordsComp } from './GetWordsComp'
 import { SetImportParamsComp } from './SetImportParamsComp'
 import { ShowMessageContext } from './ShowMessageContext'
@@ -86,9 +86,7 @@ export function ImportFromFilePage() {
 						_setImportParams={set$importParams}
 					/>
 				)}
-				<DictionaryValidationErrorsComp
-					_errors={dictionaryValidationErrors}
-				/>
+				<ErrorsComp _errors={dictionaryValidationErrors} />
 				{$importableDictionary && (
 					<p>
 						<button

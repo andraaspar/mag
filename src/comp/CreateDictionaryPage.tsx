@@ -8,8 +8,8 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { storeDictionary } from '../storage/storeDictionary'
-import { DictionaryValidationErrorsComp } from './DictionaryValidationErrorsComp'
 import { EditDictionaryComp } from './EditDictionaryComp'
+import { ErrorsComp } from './ErrorsComp'
 
 export function CreateDictionaryPage() {
 	usePageTitle(`Új szótár`)
@@ -32,7 +32,7 @@ export function CreateDictionaryPage() {
 				const dictionaryId = await storeDictionary({
 					dictionary: sanitizedDictionary,
 				})
-				history.push(url`/dictionary/${dictionaryId}/`)
+				history.replace(url`/dictionary/${dictionaryId}/`)
 			}}
 		>
 			<h1>Új szótár</h1>
@@ -40,9 +40,7 @@ export function CreateDictionaryPage() {
 				_dictionary={$dictionary}
 				_setDictionary={set$dictionary}
 			/>
-			<DictionaryValidationErrorsComp
-				_errors={dictionaryValidationErrors}
-			/>
+			<ErrorsComp _errors={dictionaryValidationErrors} />
 			<p>
 				<button
 					disabled={
