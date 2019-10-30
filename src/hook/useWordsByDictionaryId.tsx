@@ -2,16 +2,21 @@ import { useCallback, useContext, useState } from 'react'
 import { ShowMessageContext } from '../comp/ShowMessageContext'
 import { TLoadable } from '../model/TLoadable'
 import { Word } from '../model/Word'
-import { readWordsByDictionaryId } from '../storage/readWordsByDictionaryId'
+import {
+	readWordsByDictionaryId,
+	WordsByDictionaryIdSort,
+} from '../storage/readWordsByDictionaryId'
 
 export function useWordsByDictionaryId({
 	dictionaryId,
 	page,
 	pageSize,
+	sort,
 }: {
 	dictionaryId: number | null
 	page?: number
 	pageSize?: number
+	sort?: WordsByDictionaryIdSort
 }) {
 	const showMessage = useContext(ShowMessageContext)
 	const [$words, set$words] = useState<
@@ -27,6 +32,7 @@ export function useWordsByDictionaryId({
 				dictionaryId,
 				page,
 				pageSize,
+				sort,
 			})
 				.then(words => {
 					if (aborted) return
@@ -41,6 +47,6 @@ export function useWordsByDictionaryId({
 				aborted = true
 			}
 		}
-	}, [dictionaryId, showMessage, page, pageSize])
+	}, [dictionaryId, showMessage, page, pageSize, sort])
 	return { $words, set$words, loadWords }
 }

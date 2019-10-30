@@ -22,6 +22,8 @@ export const INDEX_WORDS_TRANSLATION_0 = 'translation0'
 export const INDEX_WORDS_TRANSLATION_1 = 'translation1'
 export const INDEX_WORDS_MODIFIED_DATE_0 = 'modifiedDateForSort0'
 export const INDEX_WORDS_MODIFIED_DATE_1 = 'modifiedDateForSort1'
+export const INDEX_WORDS_COUNT_TRANSLATION_0 = 'countTranslation0'
+export const INDEX_WORDS_COUNT_TRANSLATION_1 = 'countTranslation1'
 
 export const STORE_SETTINGS = 'settings'
 export const KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP = 'stringToIdbSortableMap'
@@ -58,6 +60,8 @@ export interface Db extends DBSchema {
 				string,
 				string,
 			]
+			[INDEX_WORDS_COUNT_TRANSLATION_0]: [number, number, string, string]
+			[INDEX_WORDS_COUNT_TRANSLATION_1]: [number, number, string, string]
 		}
 	}
 	settings: {
@@ -154,6 +158,18 @@ async function createDb2(t: IDBPTransaction<Db>) {
 	wordsStore.createIndex(INDEX_WORDS_MODIFIED_DATE_1, [
 		'dictionaryId',
 		'modifiedDateForSort',
+		'countForSort',
+		'translation1.textForSort',
+		'translation1.descriptionForSort',
+	])
+	wordsStore.createIndex(INDEX_WORDS_COUNT_TRANSLATION_0, [
+		'dictionaryId',
+		'countForSort',
+		'translation0.textForSort',
+		'translation0.descriptionForSort',
+	])
+	wordsStore.createIndex(INDEX_WORDS_COUNT_TRANSLATION_1, [
+		'dictionaryId',
 		'countForSort',
 		'translation1.textForSort',
 		'translation1.descriptionForSort',

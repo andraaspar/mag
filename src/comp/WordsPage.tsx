@@ -4,27 +4,23 @@ import { useCallback, useMemo, useState } from 'react'
 import { useHistory, useLocation, useRouteMatch } from 'react-router'
 import { Link } from 'react-router-dom'
 import { dictionaryToString } from '../function/dictionaryToString'
+import { sanitizeEnumValue } from '../function/sanitizeEnumValue'
 import { sanitizePageIndex } from '../function/sanitizePageIndex'
-import { toggle } from '../function/toggle'
 import { useDictionary } from '../hook/useDictionary'
 import { usePageTitle } from '../hook/usePageTitle'
 import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
 import { useWordsByDictionaryId } from '../hook/useWordsByDictionaryId'
 import { isLoaded } from '../model/TLoadable'
-import { deleteWords } from '../storage/deleteWords'
-import { toggleWords } from '../storage/toggleWords'
+import { TSelection } from '../model/TSelection'
+import { WordsByDictionaryIdSort } from '../storage/readWordsByDictionaryId'
 import { DictionaryComp } from './DictionaryComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
-import { TranslationComp } from './TranslationComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
-
-enum BulkActions {
-	Enable = 'Enable',
-	Disable = 'Disable',
-	Deselect = 'Deselect',
-	Delete = 'Delete',
-}
+import { WordListByDateComp } from './WordListByDateComp'
+import { WordListComp } from './WordListComp'
+import { WordsMenuComp } from './WordsMenuComp'
+import { WordsSortComp } from './WordsSortComp'
 
 export interface WordsPageProps {}
 
@@ -40,6 +36,7 @@ export function WordsPage(props: WordsPageProps) {
 		() =>
 			qs.parse(location.search.slice(1)) as {
 				page: string | undefined
+				sort: string | undefined
 			},
 		[location.search],
 	)
@@ -55,24 +52,32 @@ export function WordsPage(props: WordsPageProps) {
 		query && query.page
 			? sanitizePageIndex({ page: parseInt(query.page, 10), pageCount })
 			: 0
+	const sort =
+		query && query.sort != null
+			? sanitizeEnumValue<WordsByDictionaryIdSort>(
+					WordsByDictionaryIdSort,
+					parseInt(query.sort, 10),
+			  )
+			: WordsByDictionaryIdSort.ModifiedDate0
 	const setPage = useCallback(
-		newPage => {
-			history.replace(`?${qs.stringify({ page: newPage })}`)
+		(newPage: number) => {
+			history.replace(`?${qs.stringify({ sort, page: newPage })}`)
 		},
-		[history],
+		[history, sort],
+	)
+	const setSort = useCallback(
+		(newSort: WordsByDictionaryIdSort) => {
+			history.replace(`?${qs.stringify({ sort: newSort, page })}`)
+		},
+		[history, page],
 	)
 	const { $words, loadWords } = useWordsByDictionaryId({
 		dictionaryId,
 		page,
 		pageSize,
+		sort,
 	})
-	const [$selectedWordIds, set$selectedWordIds] = useState<{
-		readonly [k: string]: boolean
-	}>({})
-	const selectedWordsCount = useMemo(
-		() => Object.keys($selectedWordIds).length,
-		[$selectedWordIds],
-	)
+	const [$selectedWordIds, set$selectedWordIds] = useState<TSelection>({})
 	usePageTitle(
 		isLoaded($dictionary) && $dictionary.current
 			? `${dictionaryToString($dictionary.current)} szavai`
@@ -94,62 +99,58 @@ export function WordsPage(props: WordsPageProps) {
 										/>{' '}
 										szavai
 									</h1>
+									<WordsSortComp
+										_sort={sort}
+										_setSort={setSort}
+										_language0Name={
+											dictionary.current!.language0
+										}
+										_language1Name={
+											dictionary.current!.language1
+										}
+									/>
 									<LoadableComp
 										_value={$words}
 										_load={loadWords}
 									>
 										{words =>
-											words.current == null ||
-											words.current.length === 0 ? (
+											words.current == null ? (
 												<p>
 													<em>
 														Nem találtam egy szót
 														sem.
 													</em>
 												</p>
+											) : sort == null ||
+											  [
+													WordsByDictionaryIdSort.ModifiedDate0,
+													WordsByDictionaryIdSort.ModifiedDate1,
+											  ].indexOf(sort) >= 0 ? (
+												<WordListByDateComp
+													_words={words.current}
+													_firstIndex={
+														pageSize * page
+													}
+													_selectedWordIds={
+														$selectedWordIds
+													}
+													_setSelectedWordIds={
+														set$selectedWordIds
+													}
+												/>
 											) : (
-												<ol start={pageSize * page + 1}>
-													{words.current.map(word => (
-														<li key={word.id}>
-															<input
-																type='checkbox'
-																checked={
-																	!!$selectedWordIds[
-																		word.id +
-																			''
-																	]
-																}
-																onChange={e => {
-																	set$selectedWordIds(
-																		toggle(
-																			$selectedWordIds,
-																			word.id +
-																				'',
-																			e
-																				.target
-																				.checked,
-																		),
-																	)
-																}}
-															/>{' '}
-															<Link
-																to={`../word/${word.id}/`}
-															>
-																<TranslationComp
-																	_translation={
-																		word.translation0
-																	}
-																/>
-																{` = `}
-																<TranslationComp
-																	_translation={
-																		word.translation1
-																	}
-																/>
-															</Link>
-														</li>
-													))}
-												</ol>
+												<WordListComp
+													_words={words.current}
+													_firstIndex={
+														pageSize * page
+													}
+													_selectedWordIds={
+														$selectedWordIds
+													}
+													_setSelectedWordIds={
+														set$selectedWordIds
+													}
+												/>
 											)
 										}
 									</LoadableComp>
@@ -166,79 +167,12 @@ export function WordsPage(props: WordsPageProps) {
 						<p>
 							<Link to={`../word/`}>Adj hozzá egy szót</Link>
 							{' • '}
-							<select
-								value=''
-								onChange={async e => {
-									switch (e.target.value) {
-										case BulkActions.Deselect:
-											set$selectedWordIds({})
-											break
-										case BulkActions.Disable:
-											await toggleWords({
-												dictionaryId: dictionary.current!
-													.id!,
-												wordIds: Object.keys(
-													$selectedWordIds,
-												).map(_ => +_),
-												enable: false,
-											})
-											set$selectedWordIds({})
-											loadDictionary()
-											break
-										case BulkActions.Enable:
-											await toggleWords({
-												dictionaryId: dictionary.current!
-													.id!,
-												wordIds: Object.keys(
-													$selectedWordIds,
-												).map(_ => +_),
-												enable: true,
-											})
-											set$selectedWordIds({})
-											loadDictionary()
-											break
-										case BulkActions.Delete:
-											if (
-												window.confirm(
-													`Biztosan törölni akarod a kiválasztott szavakat?`,
-												)
-											) {
-												await deleteWords({
-													dictionaryId: dictionary.current!
-														.id!,
-													wordIds: Object.keys(
-														$selectedWordIds,
-													).map(_ => +_),
-												})
-												set$selectedWordIds({})
-												loadDictionary()
-											}
-											break
-									}
-								}}
-							>
-								<option value=''>
-									{selectedWordsCount
-										? `A kiválasztott szavakat...`
-										: `Az összes szót...`}
-								</option>
-								{selectedWordsCount > 0 && (
-									<option value={BulkActions.Deselect}>
-										ne válaszd ki
-									</option>
-								)}
-								<option value={BulkActions.Enable}>
-									kapcsold be
-								</option>
-								<option value={BulkActions.Disable}>
-									kapcsold ki
-								</option>
-								{selectedWordsCount > 0 && (
-									<option value={BulkActions.Delete}>
-										töröld
-									</option>
-								)}
-							</select>
+							<WordsMenuComp
+								_dictionaryId={dictionary.current.id!}
+								_selectedWordIds={$selectedWordIds}
+								_setSelectedWordIds={set$selectedWordIds}
+								_onDone={loadDictionary}
+							/>
 						</p>
 					</>
 				)

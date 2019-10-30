@@ -12,5 +12,7 @@ export async function countWordsByDictionaryId({
 	const dictionaryIdIndex = t
 		.objectStore(STORE_WORDS)
 		.index(INDEX_WORDS_MODIFIED_DATE_0)
-	return dictionaryIdIndex.count(makeKeyRangeWordsModifiedDate(dictionaryId))
+	return dictionaryIdIndex.count(
+		makeKeyRangeWordsModifiedDate({ dictionaryId }),
+	)
 }

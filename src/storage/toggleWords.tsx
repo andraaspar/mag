@@ -22,7 +22,7 @@ export async function toggleWords({
 			.objectStore(STORE_WORDS)
 			.index(INDEX_WORDS_MODIFIED_DATE_0)
 		let cursor = await wordsIndex.openCursor(
-			makeKeyRangeWordsModifiedDate(dictionaryId),
+			makeKeyRangeWordsModifiedDate({ dictionaryId }),
 		)
 		while (cursor) {
 			const word = wordFromDb(cursor.value)
