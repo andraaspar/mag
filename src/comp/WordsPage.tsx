@@ -125,7 +125,7 @@ export function WordsPage(props: WordsPageProps) {
 											  [
 													WordsByDictionaryIdSort.ModifiedDate0,
 													WordsByDictionaryIdSort.ModifiedDate1,
-											  ].indexOf(sort) >= 0 ? (
+											  ].includes(sort) ? (
 												<WordListByDateComp
 													_words={words.current}
 													_firstIndex={
@@ -137,12 +137,10 @@ export function WordsPage(props: WordsPageProps) {
 													_setSelectedWordIds={
 														set$selectedWordIds
 													}
-													_swapTranslations={
-														[
-															WordsByDictionaryIdSort.CountTranslation1,
-															WordsByDictionaryIdSort.ModifiedDate1,
-														].indexOf(sort) >= 0
-													}
+													_swapTranslations={[
+														WordsByDictionaryIdSort.CountTranslation1,
+														WordsByDictionaryIdSort.ModifiedDate1,
+													].includes(sort)}
 												/>
 											) : (
 												<WordListComp
@@ -156,12 +154,10 @@ export function WordsPage(props: WordsPageProps) {
 													_setSelectedWordIds={
 														set$selectedWordIds
 													}
-													_swapTranslations={
-														[
-															WordsByDictionaryIdSort.CountTranslation1,
-															WordsByDictionaryIdSort.ModifiedDate1,
-														].indexOf(sort) >= 0
-													}
+													_swapTranslations={[
+														WordsByDictionaryIdSort.CountTranslation1,
+														WordsByDictionaryIdSort.ModifiedDate1,
+													].includes(sort)}
 												/>
 											)
 										}

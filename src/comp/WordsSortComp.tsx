@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { getEnumValues } from '../function/getEnumValues'
 import { WordsByDictionaryIdSort } from '../storage/readWordsByDictionaryId'
 
 export interface WordsSortCompProps {
@@ -15,33 +14,60 @@ export function WordsSortComp({
 	_language0Name,
 	_language1Name,
 }: WordsSortCompProps) {
+	const sortByDate = [
+		WordsByDictionaryIdSort.ModifiedDate0,
+		WordsByDictionaryIdSort.ModifiedDate1,
+	].includes(_sort)
+	const sortByLanguage0 = [
+		WordsByDictionaryIdSort.CountTranslation0,
+		WordsByDictionaryIdSort.ModifiedDate0,
+	].includes(_sort)
 	return (
 		<p>
-			<select
-				value={_sort as number}
-				onChange={e => {
-					_setSort(parseInt(e.target.value, 10))
+			<button
+				type='button'
+				onClick={() => {
+					_setSort(
+						getSort({
+							sortByDate,
+							sortByLanguage0: !sortByLanguage0,
+						}),
+					)
 				}}
 			>
-				{getEnumValues(WordsByDictionaryIdSort).map(
-					(value: WordsByDictionaryIdSort) => (
-						<option key={value} value={value}>
-							{(() => {
-								switch (value) {
-									case WordsByDictionaryIdSort.CountTranslation0:
-										return `Rendezd „${_language0Name}” szerint`
-									case WordsByDictionaryIdSort.CountTranslation1:
-										return `Rendezd „${_language1Name}” szerint`
-									case WordsByDictionaryIdSort.ModifiedDate0:
-										return `Rendezd dátum, majd „${_language0Name}” szerint`
-									case WordsByDictionaryIdSort.ModifiedDate1:
-										return `Rendezd dátum, majd „${_language1Name}” szerint`
-								}
-							})()}
-						</option>
-					),
-				)}
-			</select>
+				{sortByLanguage0 ? _language0Name : _language1Name} A-Z
+			</button>{' '}
+			<label>
+				<input
+					type='checkbox'
+					checked={sortByDate}
+					onChange={e => {
+						_setSort(
+							getSort({
+								sortByDate: e.target.checked,
+								sortByLanguage0,
+							}),
+						)
+					}}
+				/>
+				Dátum szerint
+			</label>
 		</p>
 	)
+}
+
+function getSort({
+	sortByDate,
+	sortByLanguage0,
+}: {
+	sortByDate: boolean
+	sortByLanguage0: boolean
+}) {
+	return sortByDate
+		? sortByLanguage0
+			? WordsByDictionaryIdSort.ModifiedDate0
+			: WordsByDictionaryIdSort.ModifiedDate1
+		: sortByLanguage0
+		? WordsByDictionaryIdSort.CountTranslation0
+		: WordsByDictionaryIdSort.CountTranslation1
 }
