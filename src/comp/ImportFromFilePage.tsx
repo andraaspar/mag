@@ -68,7 +68,7 @@ export function ImportFromFilePage() {
 							dictionary: $importParams.dictionary,
 							words,
 						})
-						history.push(url`/dictionary/${dictionaryId}/`)
+						history.replace(url`/dictionary/${dictionaryId}/`)
 					} catch (e) {
 						showMessage(e)
 					}

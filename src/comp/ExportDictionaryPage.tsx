@@ -61,7 +61,7 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 				}),
 			),
 		}
-		return JSON.stringify(d)
+		return JSON.stringify(d, undefined, 2)
 	}, [$words, $dictionary])
 	usePageTitle(
 		!isLoaded($dictionary)

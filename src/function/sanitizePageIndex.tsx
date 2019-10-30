@@ -2,7 +2,7 @@ import { isNumber } from 'util'
 
 export function sanitizePageIndex({
 	page = 0,
-	pageCount = 0,
+	pageCount = 1,
 }: {
 	page: number
 	pageCount?: number
@@ -10,10 +10,7 @@ export function sanitizePageIndex({
 	if (!isNumber(page) || isNaN(page) || !isFinite(page)) {
 		page = 0
 	} else {
-		if (page >= pageCount) {
-			page = pageCount - 1
-		}
-		page = Math.max(0, page)
+		page = Math.max(0, Math.min(pageCount - 1, page))
 	}
 	return page
 }

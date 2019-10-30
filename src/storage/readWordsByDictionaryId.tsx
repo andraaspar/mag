@@ -1,7 +1,7 @@
 import { IDBPTransaction } from 'idb'
-import { MAX_KEY, MIN_KEY } from '../model/constants'
 import { Word, wordFromDb } from '../model/Word'
 import { Db, getDb, INDEX_WORDS_MODIFIED_DATE_0, STORE_WORDS } from './Db'
+import { makeKeyRangeWordsModifiedDate } from './makeKeyRangeWordsModifiedDate'
 import { readItems, ReadItemsPagingParams } from './readItems'
 
 export async function readWordsByDictionaryId({
@@ -17,10 +17,7 @@ export async function readWordsByDictionaryId({
 		.index(INDEX_WORDS_MODIFIED_DATE_0)
 	const words = await readItems({
 		source: dictionaryIdIndex,
-		range: IDBKeyRange.bound(
-			[dictionaryId, MIN_KEY, MIN_KEY, MIN_KEY, MIN_KEY],
-			[dictionaryId, MAX_KEY, MAX_KEY, MAX_KEY, MAX_KEY],
-		),
+		range: makeKeyRangeWordsModifiedDate(dictionaryId),
 		...rest,
 	})
 	return words.map(wordFromDb)
