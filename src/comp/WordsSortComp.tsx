@@ -2,13 +2,6 @@ import * as React from 'react'
 import { getEnumValues } from '../function/getEnumValues'
 import { WordsByDictionaryIdSort } from '../storage/readWordsByDictionaryId'
 
-const SORT_LABELS = {
-	[WordsByDictionaryIdSort.CountTranslation0]: `Rendezd az első nyelv szerint`,
-	[WordsByDictionaryIdSort.CountTranslation1]: `Rendezd a második nyelv szerint`,
-	[WordsByDictionaryIdSort.ModifiedDate0]: `Rendezd dátum, majd az első nyelv szerint`,
-	[WordsByDictionaryIdSort.ModifiedDate1]: `Rendezd dátum, majd a második nyelv szerint`,
-}
-
 export interface WordsSortCompProps {
 	_sort: WordsByDictionaryIdSort
 	_setSort: (v: WordsByDictionaryIdSort) => void
