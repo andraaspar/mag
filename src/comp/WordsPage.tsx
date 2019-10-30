@@ -137,6 +137,12 @@ export function WordsPage(props: WordsPageProps) {
 													_setSelectedWordIds={
 														set$selectedWordIds
 													}
+													_swapTranslations={
+														[
+															WordsByDictionaryIdSort.CountTranslation1,
+															WordsByDictionaryIdSort.ModifiedDate1,
+														].indexOf(sort) >= 0
+													}
 												/>
 											) : (
 												<WordListComp
@@ -149,6 +155,12 @@ export function WordsPage(props: WordsPageProps) {
 													}
 													_setSelectedWordIds={
 														set$selectedWordIds
+													}
+													_swapTranslations={
+														[
+															WordsByDictionaryIdSort.CountTranslation1,
+															WordsByDictionaryIdSort.ModifiedDate1,
+														].indexOf(sort) >= 0
 													}
 												/>
 											)

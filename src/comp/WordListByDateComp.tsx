@@ -15,6 +15,7 @@ export interface WordListByDateCompProps {
 	_firstIndex: number
 	_selectedWordIds: TSelection
 	_setSelectedWordIds: (v: TSelection) => void
+	_swapTranslations: boolean
 }
 
 export function WordListByDateComp({
@@ -22,6 +23,7 @@ export function WordListByDateComp({
 	_firstIndex,
 	_selectedWordIds,
 	_setSelectedWordIds,
+	_swapTranslations,
 }: WordListByDateCompProps) {
 	const wordsByDate = useMemo(
 		() =>
@@ -54,6 +56,7 @@ export function WordListByDateComp({
 						_words={list.words}
 						_selectedWordIds={_selectedWordIds}
 						_setSelectedWordIds={_setSelectedWordIds}
+						_swapTranslations={_swapTranslations}
 					/>
 				</Fragment>
 			))}
