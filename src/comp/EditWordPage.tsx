@@ -68,6 +68,7 @@ export function EditWordPage(props: EditWordPageProps) {
 									}
 								}
 								_onSuccess={onSuccess}
+								_refresh={loadDictionary}
 							/>
 						)}
 					</LoadableComp>

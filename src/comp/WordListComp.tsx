@@ -1,9 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { toggle } from '../function/toggle'
 import { TSelection } from '../model/TSelection'
 import { Word } from '../model/Word'
-import { TranslationComp } from './TranslationComp'
+import { WordComp } from './WordComp'
 
 export interface WordListCompProps {
 	_firstIndex: number
@@ -37,23 +36,10 @@ export function WordListComp({
 							)
 						}}
 					/>{' '}
-					<Link to={`../word/${word.id}/`}>
-						<TranslationComp
-							_translation={
-								_swapTranslations
-									? word.translation1
-									: word.translation0
-							}
-						/>
-						{` = `}
-						<TranslationComp
-							_translation={
-								_swapTranslations
-									? word.translation0
-									: word.translation1
-							}
-						/>
-					</Link>
+					<WordComp
+						_word={word}
+						_swapTranslations={_swapTranslations}
+					/>
 				</li>
 			))}
 		</ol>

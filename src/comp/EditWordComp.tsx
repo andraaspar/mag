@@ -3,7 +3,7 @@ import { useMemo } from 'use-memo-one'
 import { dateToString } from '../function/dateToString'
 import { sanitizeWord } from '../function/sanitizeWord'
 import { useWordValidationErrors } from '../hook/useWordValidationErrors'
-import { DEFAULT_COUNT } from '../model/constants'
+import { DEFAULT_COUNT, QUESTIONS_CHARACTER } from '../model/constants'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
@@ -16,12 +16,14 @@ import { ShowMessageContext } from './ShowMessageContext'
 export interface EditWordCompProps {
 	_dictionary: Dictionary
 	_word: Word
+	_refresh: () => void
 	_onSuccess: () => void
 }
 
 export function EditWordComp({
 	_dictionary,
 	_word,
+	_refresh,
 	_onSuccess,
 }: EditWordCompProps) {
 	const showMessage = useContext(ShowMessageContext)
@@ -37,7 +39,7 @@ export function EditWordComp({
 	const [$translation1Description, set$translation1Description] = useState(
 		_word.translation1.description,
 	)
-	const word = useMemo(
+	const sanitizedWord = useMemo(
 		() =>
 			sanitizeWord({
 				...(_word.id && { id: _word.id }),
@@ -63,7 +65,7 @@ export function EditWordComp({
 			$translation1Description,
 		],
 	)
-	const validationErrors = useWordValidationErrors(word)
+	const validationErrors = useWordValidationErrors(sanitizedWord)
 	return (
 		<>
 			<h1>{_word.id ? `Módosítsd a szót` : `Adj hozzá egy szót`}</h1>
@@ -103,6 +105,17 @@ export function EditWordComp({
 					}}
 				/>
 			</p>
+			{_word.id && (
+				<p>
+					<small>
+						Kérdések:{' '}
+						{_word.translation0.count > 0 && QUESTIONS_CHARACTER}{' '}
+						{_word.translation0.count} /{' '}
+						{_word.translation1.count > 0 && QUESTIONS_CHARACTER}{' '}
+						{_word.translation1.count}
+					</small>
+				</p>
+			)}
 			<ErrorsComp _errors={validationErrors} />
 			<p>
 				<button
@@ -112,7 +125,7 @@ export function EditWordComp({
 						validationErrors.length > 0
 					}
 					onClick={async () => {
-						if (!word) return
+						if (!sanitizedWord) return
 						const t = getDb().transaction(
 							[STORE_WORDS],
 							'readwrite',
@@ -120,11 +133,11 @@ export function EditWordComp({
 						try {
 							await checkForConflictingWord({
 								t,
-								word: word,
+								word: sanitizedWord,
 							})
 							await storeWord({
 								t,
-								word: word,
+								word: sanitizedWord,
 							})
 							_onSuccess()
 						} catch (e) {
@@ -134,6 +147,78 @@ export function EditWordComp({
 				>
 					Tárold el
 				</button>
+				{_word.id &&
+					(_word.translation0.count === 0 ||
+						_word.translation1.count === 0) && (
+						<>
+							{' '}
+							•{' '}
+							<button
+								type='button'
+								onClick={async () => {
+									try {
+										await storeWord({
+											word: {
+												..._word,
+												translation0: {
+													..._word.translation0,
+													count:
+														_word.translation0
+															.count ||
+														DEFAULT_COUNT,
+												},
+												translation1: {
+													..._word.translation1,
+													count:
+														_word.translation1
+															.count ||
+														DEFAULT_COUNT,
+												},
+											},
+										})
+										_refresh()
+									} catch (e) {
+										showMessage(e)
+									}
+								}}
+							>
+								Kapcsold be a szót
+							</button>
+						</>
+					)}
+				{_word.id &&
+					(_word.translation0.count > 0 ||
+						_word.translation1.count > 0) && (
+						<>
+							{' '}
+							•{' '}
+							<button
+								type='button'
+								onClick={async () => {
+									try {
+										await storeWord({
+											word: {
+												..._word,
+												translation0: {
+													..._word.translation0,
+													count: 0,
+												},
+												translation1: {
+													..._word.translation1,
+													count: 0,
+												},
+											},
+										})
+										_refresh()
+									} catch (e) {
+										showMessage(e)
+									}
+								}}
+							>
+								Kapcsold ki a szót
+							</button>
+						</>
+					)}
 			</p>
 		</>
 	)

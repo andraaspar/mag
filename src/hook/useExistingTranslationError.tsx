@@ -6,9 +6,9 @@ import {
 	ExistingTranslationError,
 } from '../storage/checkForConflictingWord'
 
-export function useConflictingWord(word: Word | null) {
+export function useExistingTranslationError(word: Word | null) {
 	const [$conflictingTranslations, set$conflictingTranslations] = useState<
-		TLoadable<{ current: [Word | undefined, Word | undefined] | undefined }>
+		TLoadable<{ current: ExistingTranslationError | undefined }>
 	>(null)
 	useEffect(() => {
 		let isAborted = false
@@ -23,9 +23,7 @@ export function useConflictingWord(word: Word | null) {
 			} catch (e) {
 				if (isAborted) return
 				if (e instanceof ExistingTranslationError) {
-					set$conflictingTranslations({
-						current: e.translations,
-					})
+					set$conflictingTranslations({ current: e })
 				} else {
 					console.error(e)
 					set$conflictingTranslations(e + '')

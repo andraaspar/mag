@@ -5,26 +5,26 @@ import { useConflictingDictionary } from './useConflictingDictionary'
 
 export function useDictionaryValidationErrors(
 	dictionary: Dictionary | null,
-): TLoadable<string[]> {
+): TLoadable<Error[]> {
 	const conflictingDictionary = useConflictingDictionary(dictionary)
-	const result: TLoadable<string[]> = useMemo(() => {
+	const result: TLoadable<Error[]> = useMemo(() => {
 		return !isLoaded(conflictingDictionary)
 			? conflictingDictionary
 			: ([
 					conflictingDictionary.exists &&
-						`Ezzel a névvel már létezik egy szótár.`,
+						new Error(`Ezzel a névvel már létezik egy szótár.`),
 					dictionary &&
 						!dictionary.name.trim() &&
-						`A név megadása kötelező.`,
+						new Error(`A név megadása kötelező.`),
 					dictionary &&
 						(!dictionary.language0.trim() ||
 							!dictionary.language1.trim()) &&
-						`Mindkét nyelvet el kell nevezned.`,
+						new Error(`Mindkét nyelvet el kell nevezned.`),
 					dictionary &&
 						dictionary.language0 &&
 						dictionary.language0 === dictionary.language1 &&
-						`A két nyelv neve nem lehet ugyanaz.`,
-			  ].filter(Boolean) as string[])
+						new Error(`A két nyelv neve nem lehet ugyanaz.`),
+			  ].filter(Boolean) as Error[])
 	}, [conflictingDictionary, dictionary])
 	return result
 }
