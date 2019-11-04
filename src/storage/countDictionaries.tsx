@@ -1,5 +1,6 @@
 import { IDBPTransaction } from 'idb'
-import { Dictionary } from '../model/Dictionary'
+import { DbDictionary } from '../model/Dictionary'
+import { countItems } from './countItems'
 import { Db, getDb, STORE_DICTIONARIES } from './Db'
 
 export async function countDictionaries({
@@ -7,18 +8,11 @@ export async function countDictionaries({
 	filter,
 }: {
 	t?: IDBPTransaction<Db>
-	filter?: (v: Dictionary) => boolean
+	filter?: (v: DbDictionary) => boolean
 }) {
 	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
-	if (filter) {
-		let result = 0
-		let cursor = await dictionariesStore.openCursor()
-		while (cursor) {
-			if (filter(cursor.value)) result++
-			cursor = await cursor.continue()
-		}
-		return result
-	} else {
-		return dictionariesStore.count()
-	}
+	return countItems({
+		source: dictionariesStore,
+		filter,
+	})
 }

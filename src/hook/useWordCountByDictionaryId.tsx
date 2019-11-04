@@ -1,9 +1,17 @@
-import { useCallback, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
+import { useCallback } from 'use-memo-one'
 import { ShowMessageContext } from '../comp/ShowMessageContext'
 import { TLoadable } from '../model/TLoadable'
+import { DbWord } from '../model/Word'
 import { countWordsByDictionaryId } from '../storage/countWordsByDictionaryId'
 
-export function useWordCountByDictionaryId(dictionaryId: number | null) {
+export function useWordCountByDictionaryId({
+	dictionaryId,
+	filter,
+}: {
+	dictionaryId: number | null
+	filter?: (word: DbWord) => boolean
+}) {
 	const [$wordCount, set$wordCount] = useState<
 		TLoadable<{ current: number }>
 	>(null)
@@ -14,7 +22,7 @@ export function useWordCountByDictionaryId(dictionaryId: number | null) {
 		} else {
 			let aborted = false
 			set$wordCount(Date.now())
-			countWordsByDictionaryId({ dictionaryId })
+			countWordsByDictionaryId({ dictionaryId, filter })
 				.then(count => {
 					if (aborted) return
 					set$wordCount({ current: count })
@@ -28,6 +36,6 @@ export function useWordCountByDictionaryId(dictionaryId: number | null) {
 				aborted = true
 			}
 		}
-	}, [dictionaryId, showMessage])
+	}, [dictionaryId, filter, showMessage])
 	return { $wordCount, set$wordCount, loadWordCount }
 }

@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useMemo } from 'use-memo-one'
 import { sanitizeDictionary } from '../function/sanitizeDictionary'
 import { url } from '../function/url'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'

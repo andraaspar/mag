@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
+import { useCallback } from 'use-memo-one'
 
 export function useMessages() {
 	const [$messages, set$messages] = useState<readonly string[]>([])

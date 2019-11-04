@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { toggle } from '../function/toggle'
 import { TSelection } from '../model/TSelection'

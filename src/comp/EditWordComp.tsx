@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { useContext, useMemo, useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { useMemo } from 'use-memo-one'
 import { dateToString } from '../function/dateToString'
 import { sanitizeWord } from '../function/sanitizeWord'
 import { useWordValidationErrors } from '../hook/useWordValidationErrors'

@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { useMemo, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useRouteMatch } from 'react-router-dom'
+import { useMemo } from 'use-memo-one'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { url } from '../function/url'
 import { useDictionary } from '../hook/useDictionary'
@@ -26,9 +26,9 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 		: null
 	const textAreaRef = useRef<HTMLTextAreaElement>(null)
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
-	const { $wordCount, loadWordCount } = useWordCountByDictionaryId(
+	const { $wordCount, loadWordCount } = useWordCountByDictionaryId({
 		dictionaryId,
-	)
+	})
 	const [$page, set$page] = useState(0)
 	const pageSize = 1000
 	const { $words, loadWords } = useWordsByDictionaryId({

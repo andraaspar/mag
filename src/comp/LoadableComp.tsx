@@ -1,5 +1,4 @@
-import * as React from 'react'
-import { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useRef } from 'react'
 import { usePrevious } from '../hook/usePrevious'
 import { PROGRESS_CHARACTER } from '../model/constants'
 import {

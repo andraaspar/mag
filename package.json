@@ -16,8 +16,9 @@
 		"react": "^16.9.0",
 		"react-dom": "^16.9.0",
 		"react-router-dom": "^5.1.0",
-		"react-scripts": "3.1.2",
-		"typescript": "3.6.3"
+		"react-scripts": "3.2.0",
+		"typescript": "3.6.3",
+		"use-memo-one": "^1.1.1"
 	},
 	"scripts": {
 		"start": "react-scripts start",
@@ -26,7 +27,45 @@
 		"eject": "react-scripts eject"
 	},
 	"eslintConfig": {
-		"extends": "react-app"
+		"extends": "react-app",
+		"rules": {
+			"no-restricted-imports": [
+				"error",
+				{
+					"paths": [
+						{
+							"name": "react",
+							"importNames": [
+								"useMemo",
+								"useCallback"
+							],
+							"message": "`useMemo` and `useCallback` are subject to cache busting. Please use `useMemoOne`"
+						},
+						{
+							"name": "use-memo-one",
+							"importNames": [
+								"useMemoOne",
+								"useCallbackOne"
+							],
+							"message": "use-memo-one exports `useMemo` and `useCallback` which work nicer with `eslint-plugin-react-hooks`"
+						}
+					]
+				}
+			],
+			"no-restricted-properties": [
+				2,
+				{
+					"object": "React",
+					"property": "useMemo",
+					"message": "Please use useMemo from 'use-memo-one'."
+				},
+				{
+					"object": "React",
+					"property": "useCallback",
+					"message": "Please use useCallback from 'use-memo-one'."
+				}
+			]
+		}
 	},
 	"browserslist": {
 		"production": [

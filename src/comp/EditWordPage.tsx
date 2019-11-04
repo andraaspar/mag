@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { useCallback } from 'react'
+import React from 'react'
 import { useHistory, useRouteMatch } from 'react-router'
+import { useCallback } from 'use-memo-one'
 import { dateToString } from '../function/dateToString'
 import { useDictionary } from '../hook/useDictionary'
 import { usePageTitle } from '../hook/usePageTitle'

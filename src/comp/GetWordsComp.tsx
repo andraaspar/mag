@@ -1,5 +1,4 @@
-import * as React from 'react'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { dictionaryFromAndroid } from '../function/dictionaryFromAndroid'
 import { dictionaryFromExport } from '../function/dictionaryFromExport'
 import { readJsonFromFile } from '../function/readJsonFromFile'

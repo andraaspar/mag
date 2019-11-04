@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { TLoadable } from '../model/TLoadable'
 import { LoadableComp } from './LoadableComp'
 

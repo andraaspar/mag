@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo } from 'use-memo-one'
 import { simplifyConflictingWords } from '../function/simplifyConflictingWords'
 import { wordToString } from '../function/wordToString'
 import { isLoaded, TLoadable } from '../model/TLoadable'

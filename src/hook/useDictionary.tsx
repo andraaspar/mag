@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
+import { useCallback } from 'use-memo-one'
 import { Dictionary } from '../model/Dictionary'
 import { TLoadable } from '../model/TLoadable'
 import { readDictionaryById } from '../storage/readDictionaryById'

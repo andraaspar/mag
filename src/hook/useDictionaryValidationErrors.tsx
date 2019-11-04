@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo } from 'use-memo-one'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded, TLoadable } from '../model/TLoadable'
 import { useConflictingDictionary } from './useConflictingDictionary'

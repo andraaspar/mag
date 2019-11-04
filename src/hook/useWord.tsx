@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
+import { useCallback } from 'use-memo-one'
 import { TLoadable } from '../model/TLoadable'
 import { Word } from '../model/Word'
 import { readWord } from '../storage/readWord'

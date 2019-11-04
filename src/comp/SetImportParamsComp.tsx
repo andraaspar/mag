@@ -1,4 +1,5 @@
-import * as React from 'react'
+import React from 'react'
+import { useCallback } from 'use-memo-one'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded, TLoadable } from '../model/TLoadable'
@@ -23,7 +24,7 @@ export function SetImportParamsComp({
 	const [$dictionaries, set$dictionaries] = React.useState<
 		TLoadable<Dictionary[]>
 	>(null)
-	const loadDictionaries = React.useCallback(() => {
+	const loadDictionaries = useCallback(() => {
 		let isAborted = false
 		;(async () => {
 			set$dictionaries(Date.now())
@@ -48,7 +49,7 @@ export function SetImportParamsComp({
 			isAborted = true
 		}
 	}, [_importableDictionary, _setImportParams])
-	const setDictionary = React.useCallback(
+	const setDictionary = useCallback(
 		(dictionary: Dictionary) => {
 			_setImportParams(importParams => ({
 				...importParams!,

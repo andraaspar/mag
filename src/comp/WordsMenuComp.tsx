@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { useMemo } from 'react'
+import React from 'react'
+import { useMemo } from 'use-memo-one'
 import { TSelection } from '../model/TSelection'
 import { deleteWords } from '../storage/deleteWords'
 import { toggleWords } from '../storage/toggleWords'

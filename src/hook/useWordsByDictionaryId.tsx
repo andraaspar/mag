@@ -1,7 +1,8 @@
-import { useCallback, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
+import { useCallback } from 'use-memo-one'
 import { ShowMessageContext } from '../comp/ShowMessageContext'
 import { TLoadable } from '../model/TLoadable'
-import { Word } from '../model/Word'
+import { DbWord, Word } from '../model/Word'
 import {
 	readWordsByDictionaryId,
 	WordsByDictionaryIdSort,
@@ -12,11 +13,13 @@ export function useWordsByDictionaryId({
 	page,
 	pageSize,
 	sort,
+	filter,
 }: {
 	dictionaryId: number | null
 	page?: number
 	pageSize?: number
 	sort?: WordsByDictionaryIdSort
+	filter?: (word: DbWord) => boolean
 }) {
 	const showMessage = useContext(ShowMessageContext)
 	const [$words, set$words] = useState<
@@ -33,6 +36,7 @@ export function useWordsByDictionaryId({
 				page,
 				pageSize,
 				sort,
+				filter,
 			})
 				.then(words => {
 					if (aborted) return
@@ -47,6 +51,6 @@ export function useWordsByDictionaryId({
 				aborted = true
 			}
 		}
-	}, [dictionaryId, showMessage, page, pageSize, sort])
+	}, [dictionaryId, showMessage, page, pageSize, sort, filter])
 	return { $words, set$words, loadWords }
 }

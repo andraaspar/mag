@@ -1,5 +1,5 @@
 import { IDBPTransaction } from 'idb'
-import { Word, wordFromDb } from '../model/Word'
+import { DbWord, Word, wordFromDb } from '../model/Word'
 import {
 	Db,
 	getDb,
@@ -29,7 +29,7 @@ export async function readWordsByDictionaryId({
 	t?: IDBPTransaction<Db>
 	dictionaryId: number
 	sort?: WordsByDictionaryIdSort
-} & Omit<ReadItemsPagingParams<Word>, 'range'>): Promise<Word[]> {
+} & Omit<ReadItemsPagingParams<DbWord>, 'range'>): Promise<Word[]> {
 	const dictionaryIdIndex = t
 		.objectStore(STORE_WORDS)
 		.index(getIndexName(sort))

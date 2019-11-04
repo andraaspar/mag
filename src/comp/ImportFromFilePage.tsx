@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router'
+import { useCallback } from 'use-memo-one'
 import { handleDictionaryImport } from '../function/handleDictionaryImport'
 import { url } from '../function/url'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
@@ -37,16 +37,13 @@ export function ImportFromFilePage() {
 		$importParams && $importParams.dictionary,
 	)
 	const showMessage = useContext(ShowMessageContext)
-	const setImportableDictionary = React.useCallback(
-		(v: ImportableDictionary) => {
-			set$importableDictionary(v)
-			set$importParams({
-				dictionary: v.dictionary,
-				swapLanguages: false,
-			})
-		},
-		[],
-	)
+	const setImportableDictionary = useCallback((v: ImportableDictionary) => {
+		set$importableDictionary(v)
+		set$importParams({
+			dictionary: v.dictionary,
+			swapLanguages: false,
+		})
+	}, [])
 	return (
 		<div>
 			<h1>Tölts be szavakat</h1>

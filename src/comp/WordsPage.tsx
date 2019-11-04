@@ -1,17 +1,20 @@
+import escapeStringRegexp from 'escape-string-regexp'
 import qs from 'qs'
-import * as React from 'react'
-import { useCallback, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory, useLocation, useRouteMatch } from 'react-router'
 import { Link } from 'react-router-dom'
+import { useCallback, useMemo } from 'use-memo-one'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { sanitizeEnumValue } from '../function/sanitizeEnumValue'
 import { sanitizePageIndex } from '../function/sanitizePageIndex'
+import { wordToString } from '../function/wordToString'
 import { useDictionary } from '../hook/useDictionary'
 import { usePageTitle } from '../hook/usePageTitle'
 import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
 import { useWordsByDictionaryId } from '../hook/useWordsByDictionaryId'
 import { isLoaded } from '../model/TLoadable'
 import { TSelection } from '../model/TSelection'
+import { DbWord } from '../model/Word'
 import { WordsByDictionaryIdSort } from '../storage/readWordsByDictionaryId'
 import { DictionaryComp } from './DictionaryComp'
 import { LoadableComp } from './LoadableComp'
@@ -35,16 +38,30 @@ export function WordsPage(props: WordsPageProps) {
 	const query = useMemo(
 		() =>
 			qs.parse(location.search.slice(1)) as {
+				q: string | undefined
 				page: string | undefined
 				sort: string | undefined
 			},
 		[location.search],
 	)
+	const q = query.q || ''
+	const filter = useMemo(() => {
+		const sanitizedQ = q.trim().replace(/\s+/g, ' ')
+		const qRe = sanitizedQ
+			? new RegExp(escapeStringRegexp(sanitizedQ), 'i')
+			: null
+		return qRe
+			? (word: DbWord) => {
+					return qRe.test(wordToString(word))
+			  }
+			: undefined
+	}, [q])
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
 	const pageSize = 10
-	const { $wordCount, loadWordCount } = useWordCountByDictionaryId(
+	const { $wordCount, loadWordCount } = useWordCountByDictionaryId({
 		dictionaryId,
-	)
+		filter,
+	})
 	const pageCount = isLoaded($wordCount)
 		? Math.max(1, Math.ceil($wordCount.current / pageSize))
 		: 1
@@ -59,23 +76,30 @@ export function WordsPage(props: WordsPageProps) {
 					parseInt(query.sort, 10),
 			  )
 			: WordsByDictionaryIdSort.ModifiedDate0
+	const setQ = useCallback(
+		(q: string) => {
+			history.replace(`?${qs.stringify({ q, sort, page })}`)
+		},
+		[history, page, sort],
+	)
 	const setPage = useCallback(
 		(newPage: number) => {
-			history.replace(`?${qs.stringify({ sort, page: newPage })}`)
+			history.replace(`?${qs.stringify({ q, sort, page: newPage })}`)
 		},
-		[history, sort],
+		[history, q, sort],
 	)
 	const setSort = useCallback(
 		(newSort: WordsByDictionaryIdSort) => {
-			history.replace(`?${qs.stringify({ sort: newSort, page })}`)
+			history.replace(`?${qs.stringify({ q, sort: newSort, page })}`)
 		},
-		[history, page],
+		[history, q, page],
 	)
 	const { $words, loadWords } = useWordsByDictionaryId({
 		dictionaryId,
 		page,
 		pageSize,
 		sort,
+		filter,
 	})
 	const [$selectedWordIds, set$selectedWordIds] = useState<TSelection>({})
 	usePageTitle(
@@ -90,25 +114,41 @@ export function WordsPage(props: WordsPageProps) {
 					<UnknownDictionaryComp />
 				) : (
 					<>
+						<h1>
+							<DictionaryComp _dictionary={dictionary.current!} />{' '}
+							szavai
+						</h1>
+						<p>
+							<input
+								placeholder='Szűrd a szavakat'
+								value={q}
+								onChange={e => {
+									setQ(e.target.value)
+								}}
+							/>
+							{filter && (
+								<>
+									{' '}
+									<button
+										type='button'
+										onClick={() => {
+											setQ('')
+										}}
+									>
+										×
+									</button>
+								</>
+							)}
+						</p>
+						<WordsSortComp
+							_sort={sort}
+							_setSort={setSort}
+							_language0Name={dictionary.current!.language0}
+							_language1Name={dictionary.current!.language1}
+						/>
 						<LoadableComp _value={$wordCount} _load={loadWordCount}>
 							{wordCount => (
 								<>
-									<h1>
-										<DictionaryComp
-											_dictionary={dictionary.current!}
-										/>{' '}
-										szavai
-									</h1>
-									<WordsSortComp
-										_sort={sort}
-										_setSort={setSort}
-										_language0Name={
-											dictionary.current!.language0
-										}
-										_language1Name={
-											dictionary.current!.language1
-										}
-									/>
 									<LoadableComp
 										_value={$words}
 										_load={loadWords}
