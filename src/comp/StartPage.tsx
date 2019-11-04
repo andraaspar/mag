@@ -1,8 +1,8 @@
-import escapeStringRegexp from 'escape-string-regexp'
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCallback } from 'use-memo-one'
 import { dictionaryToString } from '../function/dictionaryToString'
+import { queryToRegExp } from '../function/queryToRegExp'
 import { url } from '../function/url'
 import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
@@ -41,13 +41,7 @@ export function StartPage() {
 				const t = getDb().transaction([STORE_DICTIONARIES], 'readonly')
 				const filter = $query
 					? (() => {
-							const queryRe = new RegExp(
-								escapeStringRegexp($query.trim()).replace(
-									/\s+/g,
-									`.*`,
-								),
-								`i`,
-							)
+							const queryRe = queryToRegExp($query)
 							return (d: Dictionary) =>
 								queryRe.test(dictionaryToString(d))
 					  })()

@@ -1,10 +1,10 @@
-import escapeStringRegexp from 'escape-string-regexp'
 import qs from 'qs'
 import React, { useState } from 'react'
 import { useHistory, useLocation, useRouteMatch } from 'react-router'
 import { Link } from 'react-router-dom'
 import { useCallback, useMemo } from 'use-memo-one'
 import { dictionaryToString } from '../function/dictionaryToString'
+import { queryToRegExp } from '../function/queryToRegExp'
 import { sanitizeEnumValue } from '../function/sanitizeEnumValue'
 import { sanitizePageIndex } from '../function/sanitizePageIndex'
 import { wordToString } from '../function/wordToString'
@@ -46,10 +46,7 @@ export function WordsPage(props: WordsPageProps) {
 	)
 	const q = query.q || ''
 	const filter = useMemo(() => {
-		const sanitizedQ = q.trim().replace(/\s+/g, ' ')
-		const qRe = sanitizedQ
-			? new RegExp(escapeStringRegexp(sanitizedQ), 'i')
-			: null
+		const qRe = queryToRegExp(q)
 		return qRe
 			? (word: DbWord) => {
 					return qRe.test(wordToString(word))

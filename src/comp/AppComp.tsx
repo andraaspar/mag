@@ -14,6 +14,7 @@ import { DictionaryPage } from './DictionaryPage'
 import { EditWordPage } from './EditWordPage'
 import { ExportDictionaryPage } from './ExportDictionaryPage'
 import { ImportFromFilePage } from './ImportFromFilePage'
+import { LearnPage } from './LearnPage'
 import { MessagesComp } from './MessagesComp'
 import { NotFoundPage } from './NotFoundPage'
 import { ShowMessageContext } from './ShowMessageContext'
@@ -98,6 +99,10 @@ export function AppComp() {
 					<Route
 						path='/dictionary/:dictionaryId/words/'
 						component={WordsPage}
+					/>
+					<Route
+						path='/dictionary/:dictionaryId/learn/'
+						component={LearnPage}
 					/>
 					<Route path='/' component={NotFoundPage} />
 				</Switch>

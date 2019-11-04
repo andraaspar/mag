@@ -78,8 +78,9 @@ export function DictionaryPage(props: DictionaryPageProps) {
 							}
 						</LoadableComp>
 						<p>
-							<Link to='./words/'>Mutasd a szavakat</Link> •{' '}
+							<Link to='./learn/'>Kérdezz!</Link> •{' '}
 							<Link to='./word/'>Adj hozzá egy szót</Link> •{' '}
+							<Link to='./words/'>Mutasd a szavakat</Link> •{' '}
 							<Link to='./export/'>Mentsd ki ezt a szótárat</Link>
 						</p>
 					</>
