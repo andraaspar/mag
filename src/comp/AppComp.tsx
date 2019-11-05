@@ -11,8 +11,8 @@ import {
 	KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP,
 	STORE_SETTINGS,
 } from '../storage/Db'
-import { CreateDictionaryPage } from './CreateDictionaryPage'
 import { DictionaryPage } from './DictionaryPage'
+import { EditDictionaryPage } from './EditDictionaryPage'
 import { EditWordPage } from './EditWordPage'
 import { ExportDictionaryPage } from './ExportDictionaryPage'
 import { ImportFromFilePage } from './ImportFromFilePage'
@@ -77,7 +77,7 @@ export function AppComp() {
 					<Route
 						exact
 						path='/dictionary/'
-						component={CreateDictionaryPage}
+						component={EditDictionaryPage}
 					/>
 					<Route
 						exact
@@ -103,6 +103,10 @@ export function AppComp() {
 					<Route
 						path='/dictionary/:dictionaryId/learn/'
 						component={LearnPage}
+					/>
+					<Route
+						path='/dictionary/:dictionaryId/edit/'
+						component={EditDictionaryPage}
 					/>
 					<Route path='/' component={NotFoundPage} />
 				</Switch>

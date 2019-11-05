@@ -1,4 +1,5 @@
 import React from 'react'
+import { ERROR_CHARACTER } from '../model/constants'
 import { TLoadable } from '../model/TLoadable'
 import { Word } from '../model/Word'
 import { ExistingTranslationError } from '../storage/checkForConflictingWord'
@@ -22,7 +23,8 @@ export function ErrorsComp({ _errors }: ErrorsCompProps) {
 									{error instanceof
 									ExistingTranslationError ? (
 										<>
-											Már létező fordítás:{' '}
+											{ERROR_CHARACTER} Már létező
+											fordítás:{' '}
 											{(error.translations.filter(
 												Boolean,
 											) as Word[]).map(
@@ -35,7 +37,7 @@ export function ErrorsComp({ _errors }: ErrorsCompProps) {
 											)}
 										</>
 									) : (
-										error.message
+										`${ERROR_CHARACTER} ${error.message}`
 									)}
 								</li>
 							))}

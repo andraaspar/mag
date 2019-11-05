@@ -4,7 +4,7 @@ import { dictionaryToString } from '../function/dictionaryToString'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded, TLoadable } from '../model/TLoadable'
 import { readDictionaries } from '../storage/readDictionaries'
-import { EditDictionaryComp } from './EditDictionaryComp'
+import { DictionaryPropsComp } from './DictionaryPropsComp'
 import { ImportableDictionary, ImportParams } from './ImportFromFilePage'
 import { LoadableComp } from './LoadableComp'
 
@@ -109,7 +109,7 @@ export function SetImportParamsComp({
 								))}
 							</select>
 						</p>
-						<EditDictionaryComp
+						<DictionaryPropsComp
 							_dictionary={_importParams.dictionary}
 							_setDictionary={setDictionary}
 						/>

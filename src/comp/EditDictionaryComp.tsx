@@ -1,50 +1,55 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useMemo } from 'use-memo-one'
+import { sanitizeDictionary } from '../function/sanitizeDictionary'
+import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
 import { Dictionary } from '../model/Dictionary'
+import { isLoaded } from '../model/TLoadable'
+import { DictionaryPropsComp } from './DictionaryPropsComp'
+import { ErrorsComp } from './ErrorsComp'
 
 export interface EditDictionaryCompProps {
 	_dictionary: Dictionary
-	_setDictionary: (v: Dictionary) => void
+	_storeDictionary: (d: Dictionary) => void
 }
 
 export function EditDictionaryComp({
 	_dictionary,
-	_setDictionary,
+	_storeDictionary,
 }: EditDictionaryCompProps) {
+	const [$dictionary, set$dictionary] = useState(_dictionary)
+	const sanitizedDictionary = useMemo(() => sanitizeDictionary($dictionary), [
+		$dictionary,
+	])
+	const dictionaryValidationErrors = useDictionaryValidationErrors(
+		sanitizedDictionary,
+	)
+	const touched = !!(
+		sanitizedDictionary.language0 ||
+		sanitizedDictionary.language1 ||
+		sanitizedDictionary.name
+	)
 	return (
-		<>
+		<form
+			onSubmit={async e => {
+				e.preventDefault()
+				_storeDictionary(sanitizedDictionary)
+			}}
+		>
+			<DictionaryPropsComp
+				_dictionary={$dictionary}
+				_setDictionary={set$dictionary}
+			/>
+			{touched && <ErrorsComp _errors={dictionaryValidationErrors} />}
 			<p>
-				Név:{' '}
-				<input
-					value={_dictionary.name}
-					onChange={e => {
-						_setDictionary({ ..._dictionary, name: e.target.value })
-					}}
-				/>
+				<button
+					disabled={
+						!isLoaded(dictionaryValidationErrors) ||
+						dictionaryValidationErrors.length > 0
+					}
+				>
+					Mentsd le
+				</button>
 			</p>
-			<p>
-				Első nyelv neve:{' '}
-				<input
-					value={_dictionary.language0}
-					onChange={e => {
-						_setDictionary({
-							..._dictionary,
-							language0: e.target.value,
-						})
-					}}
-				/>
-			</p>
-			<p>
-				Második nyelv neve:{' '}
-				<input
-					value={_dictionary.language1}
-					onChange={e => {
-						_setDictionary({
-							..._dictionary,
-							language1: e.target.value,
-						})
-					}}
-				/>
-			</p>
-		</>
+		</form>
 	)
 }

@@ -91,6 +91,10 @@ export function DictionaryPage(props: DictionaryPageProps) {
 											•{' '}
 											<Link to='./import/'>
 												Tölts be szavakat
+											</Link>{' '}
+											•{' '}
+											<Link to='./edit/'>
+												Módosítsd ezt a szótárat
 											</Link>
 										</p>
 									</>
