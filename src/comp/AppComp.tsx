@@ -4,6 +4,8 @@ import { Route, Switch } from 'react-router'
 import { Link } from 'react-router-dom'
 import { setStringToIdbSortableMap } from '../function/stringToIdbSortable'
 import { useMessages } from '../hook/useMessages'
+import { usePersistentStorage } from '../hook/usePersistentStorage'
+import { WARNING_CHARACTER } from '../model/constants'
 import {
 	initDb,
 	KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP,
@@ -15,6 +17,7 @@ import { EditWordPage } from './EditWordPage'
 import { ExportDictionaryPage } from './ExportDictionaryPage'
 import { ImportFromFilePage } from './ImportFromFilePage'
 import { LearnPage } from './LearnPage'
+import { LoadableComp } from './LoadableComp'
 import { MessagesComp } from './MessagesComp'
 import { NotFoundPage } from './NotFoundPage'
 import { ShowMessageContext } from './ShowMessageContext'
@@ -23,7 +26,11 @@ import { WordsPage } from './WordsPage'
 
 export function AppComp() {
 	const [$hasDb, set$hasDb] = useState(false)
-	const [$isPersistent, set$isPersistent] = useState<boolean | null>(null)
+	const {
+		$isPersistentStorage,
+		set$isPersistentStorage,
+		loadPersistentStorage,
+	} = usePersistentStorage()
 
 	const { messages, showMessage, removeMessageByIndex } = useMessages()
 
@@ -39,17 +46,6 @@ export function AppComp() {
 					),
 				)
 				set$hasDb(true)
-			} catch (e) {
-				showMessage(e)
-			}
-		})()
-	}, [showMessage])
-	useEffect(() => {
-		;(async () => {
-			try {
-				set$isPersistent(
-					!!navigator.storage && (await navigator.storage.persist()),
-				)
 			} catch (e) {
 				showMessage(e)
 			}
@@ -117,12 +113,43 @@ export function AppComp() {
 					<small>
 						Verzió:{' '}
 						{preval`module.exports = new Date().toLocaleString()`}
-						{$isPersistent && (
-							<>
-								{' • '}
-								<strong>Maradandó tárhelyem van.</strong>
-							</>
-						)}
+						{' • '}
+						<strong>
+							<LoadableComp
+								_value={$isPersistentStorage}
+								_load={loadPersistentStorage}
+							>
+								{isPersistentStorage =>
+									isPersistentStorage.current ? (
+										<>Maradandó tárhelyem van.</>
+									) : (
+										<>
+											{WARNING_CHARACTER} Nincs maradandó
+											tárhelyem!{' '}
+											<button
+												type='button'
+												onClick={async () => {
+													if (navigator.storage) {
+														const isPersistent = await navigator.storage.persist()
+														if (isPersistent) {
+															set$isPersistentStorage(
+																null,
+															)
+														}
+													} else {
+														showMessage(
+															`Ez a böngésző nem támogatja a maradandó tárhelyet!`,
+														)
+													}
+												}}
+											>
+												Javítsd meg
+											</button>
+										</>
+									)
+								}
+							</LoadableComp>
+						</strong>
 					</small>
 				</p>
 			</footer>

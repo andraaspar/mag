@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useCallback } from 'use-memo-one'
+import { ERROR_CHARACTER } from '../model/constants'
 
 export function useMessages() {
 	const [$messages, set$messages] = useState<readonly string[]>([])
@@ -11,7 +12,7 @@ export function useMessages() {
 		}
 		const messageString = (message + '').replace(
 			/^(Error:\s*)?(\[.*?\]\s*)?/,
-			'',
+			ERROR_CHARACTER + ' ',
 		)
 		set$messages(messages => {
 			const lastMessage = messages[messages.length - 1]
