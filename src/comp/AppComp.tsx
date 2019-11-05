@@ -101,6 +101,10 @@ export function AppComp() {
 						component={WordsPage}
 					/>
 					<Route
+						path='/dictionary/:dictionaryId/import/'
+						component={ImportFromFilePage}
+					/>
+					<Route
 						path='/dictionary/:dictionaryId/learn/'
 						component={LearnPage}
 					/>

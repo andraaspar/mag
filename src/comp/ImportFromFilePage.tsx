@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useRouteMatch } from 'react-router'
 import { useCallback } from 'use-memo-one'
 import { handleDictionaryImport } from '../function/handleDictionaryImport'
 import { url } from '../function/url'
@@ -25,6 +25,11 @@ export interface ImportParams {
 
 export function ImportFromFilePage() {
 	usePageTitle(`Tölts be szavakat`)
+	const routeMatch = useRouteMatch<{ dictionaryId: string | undefined }>(
+		`/dictionary/:dictionaryId/import/`,
+	)
+	const dictionaryId =
+		routeMatch && parseInt(routeMatch.params.dictionaryId + '', 10)
 	const history = useHistory()
 	const [
 		$importableDictionary,
@@ -65,7 +70,11 @@ export function ImportFromFilePage() {
 							dictionary: $importParams.dictionary,
 							words,
 						})
-						history.replace(url`/dictionary/${dictionaryId}/`)
+						if (dictionaryId) {
+							history.goBack()
+						} else {
+							history.replace(url`/dictionary/${dictionaryId}/`)
+						}
 					} catch (e) {
 						showMessage(e)
 					}
@@ -81,6 +90,7 @@ export function ImportFromFilePage() {
 						_importableDictionary={$importableDictionary}
 						_importParams={$importParams}
 						_setImportParams={set$importParams}
+						_dictionaryId={dictionaryId}
 					/>
 				)}
 				<ErrorsComp _errors={dictionaryValidationErrors} />

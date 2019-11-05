@@ -14,12 +14,14 @@ export interface SetImportParamsCompProps {
 	_setImportParams: (
 		cb: (v: ImportParams | null) => ImportParams | null,
 	) => void
+	_dictionaryId: number | null
 }
 
 export function SetImportParamsComp({
 	_importableDictionary,
 	_importParams,
 	_setImportParams,
+	_dictionaryId,
 }: SetImportParamsCompProps) {
 	const [$dictionaries, set$dictionaries] = React.useState<
 		TLoadable<Dictionary[]>
@@ -31,7 +33,17 @@ export function SetImportParamsComp({
 			const dictionaries = await readDictionaries({})
 			if (isAborted) return
 			set$dictionaries(dictionaries)
-			if (!_importableDictionary.dictionary.id) {
+			if (_dictionaryId) {
+				const dictionaryById = dictionaries.find(
+					dictionary => dictionary.id === _dictionaryId,
+				)
+				if (dictionaryById) {
+					_setImportParams(importParams => ({
+						dictionary: dictionaryById,
+						swapLanguages: false,
+					}))
+				}
+			} else if (!_importableDictionary.dictionary.id) {
 				const dictionaryWithSameName = dictionaries.find(
 					dictionary =>
 						dictionary.name ===
@@ -48,7 +60,7 @@ export function SetImportParamsComp({
 		return () => {
 			isAborted = true
 		}
-	}, [_importableDictionary, _setImportParams])
+	}, [_importableDictionary, _setImportParams, _dictionaryId])
 	const setDictionary = useCallback(
 		(dictionary: Dictionary) => {
 			_setImportParams(importParams => ({
