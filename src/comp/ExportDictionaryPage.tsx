@@ -30,7 +30,7 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 		dictionaryId,
 	})
 	const [$page, set$page] = useState(0)
-	const pageSize = 1000
+	const pageSize = 100000
 	const { $words, loadWords } = useWordsByDictionaryId({
 		dictionaryId,
 		page: $page,
