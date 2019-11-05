@@ -19,7 +19,9 @@ export function LearnPage(props: LearnPageProps) {
 	const dictionaryId =
 		routeMatch && parseInt(routeMatch.params.dictionaryId, 10)
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
-	const { $questions, loadQuestions } = useQuestions(dictionaryId)
+	const { $questions, set$questions, loadQuestions } = useQuestions(
+		dictionaryId,
+	)
 	const [$questionsCount, set$questionsCount] = useState(0)
 	const [$questionsLearnedCount, set$questionsLearnedCount] = useState(0)
 	const progress =
@@ -34,7 +36,7 @@ export function LearnPage(props: LearnPageProps) {
 		}
 	}, [$questions, $questionsCount])
 	const [$questionIndex, set$questionIndex] = useState(0)
-	const { $word, loadWord } = useWord(
+	const { $word, set$word, loadWord } = useWord(
 		isLoaded($questions) &&
 			$questions.current &&
 			$questions.current[$questionIndex]
@@ -120,10 +122,11 @@ export function LearnPage(props: LearnPageProps) {
 		set$answerShown(false)
 		set$answer('')
 		if ($questionIndex + 1 === $questions.current.length) {
-			loadQuestions()
 			set$questionIndex(0)
+			set$questions(null)
 		} else {
 			set$questionIndex($questionIndex + 1)
+			set$word(null) // Force refresh word even if it has the same ID
 		}
 	}
 	function onShowAnswer() {
