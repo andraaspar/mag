@@ -11,7 +11,7 @@ export function useMessages() {
 			console.info(message)
 		}
 		const messageString = (message + '').replace(
-			/^(Error:\s*)?(\[.*?\]\s*)?/,
+			/^Error:\s*/,
 			ERROR_CHARACTER + ' ',
 		)
 		set$messages(messages => {

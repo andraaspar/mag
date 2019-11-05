@@ -56,7 +56,7 @@ export function AppComp() {
 			<header>
 				<p>
 					<strong>
-						<Link to='/'>Mag!</Link>
+						<Link to='/'>Mag</Link>
 					</strong>
 				</p>
 			</header>
@@ -67,7 +67,7 @@ export function AppComp() {
 			/>
 			{!$hasDb && (
 				<p>
-					<em>Adatbázis kő...</em>
+					<em>Adatbázis nélkül nem megy...</em>
 				</p>
 			)}
 			{$hasDb && (

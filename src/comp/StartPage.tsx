@@ -152,10 +152,27 @@ export function StartPage() {
 								</p>
 							)
 						)}
-						<p>
-							<Link to='/dictionary/'>Új szótár</Link> •{' '}
-							<Link to='/import/'>Tölts be egy szótárat</Link>
-						</p>
+						{isLoaded($totalDictionaryCount) &&
+						$totalDictionaryCount.count === 0 ? (
+							<p>
+								Először{' '}
+								<Link to='/dictionary/'>
+									készíts egy új szótárat
+								</Link>
+								, vagy{' '}
+								<Link to='/import/'>
+									tölts be egy szótárat!
+								</Link>
+							</p>
+						) : (
+							<p>
+								<Link to='/dictionary/'>
+									Készíts új szótárat
+								</Link>{' '}
+								•{' '}
+								<Link to='/import/'>Tölts be egy szótárat</Link>
+							</p>
+						)}
 					</>
 				)}
 			</LoadableComp>

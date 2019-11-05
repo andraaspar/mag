@@ -43,45 +43,71 @@ export function DictionaryPage(props: DictionaryPageProps) {
 							<DictionaryComp _dictionary={dictionary.current} />
 						</h1>
 						<LoadableComp _value={$wordCount} _load={loadWordCount}>
-							{wordCount => (
-								<LoadableComp
-									_value={$numberOfQuestions}
-									_load={loadNumberOfQuestions}
-								>
-									{numberOfQuestions =>
-										numberOfQuestions.current ? (
-											<p>
-												{numberOfQuestions.current}{' '}
-												kérdésem van.
-											</p>
-										) : wordCount.current ? (
-											<p>
-												Gratulálok! Mindet megtanultad!
-											</p>
-										) : (
-											<p>
-												Íme az új szótárad! Először{' '}
-												<Link to='./word/'>
-													adj hozzá szavakat!
-												</Link>
-											</p>
-										)
-									}
-								</LoadableComp>
-							)}
-						</LoadableComp>
-						<p>
-							{isLoaded($numberOfQuestions) &&
-								$numberOfQuestions.current > 0 && (
+							{wordCount =>
+								wordCount.current ? (
 									<>
-										<Link to='./learn/'>Kérdezz!</Link> •{' '}
+										<LoadableComp
+											_value={$numberOfQuestions}
+											_load={loadNumberOfQuestions}
+										>
+											{numberOfQuestions =>
+												numberOfQuestions.current ? (
+													<p>
+														{
+															numberOfQuestions.current
+														}{' '}
+														kérdésem van.
+													</p>
+												) : (
+													<p>
+														Gratulálok! Mindet
+														megtanultad!
+													</p>
+												)
+											}
+										</LoadableComp>
+										<p>
+											{isLoaded($numberOfQuestions) &&
+												$numberOfQuestions.current >
+													0 && (
+													<>
+														<Link to='./learn/'>
+															Kérdezz!
+														</Link>{' '}
+														•{' '}
+													</>
+												)}
+											<Link to='./word/'>
+												Adj hozzá egy szót
+											</Link>{' '}
+											•{' '}
+											<Link to='./words/'>
+												Mutasd a szavakat
+											</Link>{' '}
+											•{' '}
+											<Link to='./export/'>
+												Mentsd ki ezt a szótárat
+											</Link>{' '}
+											•{' '}
+											<Link to='./import/'>
+												Tölts be szavakat
+											</Link>
+										</p>
 									</>
-								)}
-							<Link to='./word/'>Adj hozzá egy szót</Link> •{' '}
-							<Link to='./words/'>Mutasd a szavakat</Link> •{' '}
-							<Link to='./export/'>Mentsd ki ezt a szótárat</Link>{' '}
-							• <Link to='./import/'>Tölts be szavakat</Link>
-						</p>
+								) : (
+									<p>
+										Íme az új szótárad! Először{' '}
+										<Link to='./word/'>
+											adj hozzá szavakat
+										</Link>
+										, vagy{' '}
+										<Link to='./import/'>
+											tölts be szavakat!
+										</Link>
+									</p>
+								)
+							}
+						</LoadableComp>
 					</>
 				) : (
 					<UnknownDictionaryComp />

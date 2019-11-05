@@ -66,14 +66,18 @@ export function ImportFromFilePage() {
 									translation1: word.translation0,
 							  }))
 							: $importableDictionary.words
-						const dictionaryId = await handleDictionaryImport({
-							dictionary: $importParams.dictionary,
-							words,
-						})
-						if (dictionaryId) {
+						const storedDictionaryId = await handleDictionaryImport(
+							{
+								dictionary: $importParams.dictionary,
+								words,
+							},
+						)
+						if (storedDictionaryId === dictionaryId) {
 							history.goBack()
 						} else {
-							history.replace(url`/dictionary/${dictionaryId}/`)
+							history.replace(
+								url`/dictionary/${storedDictionaryId}/`,
+							)
 						}
 					} catch (e) {
 						showMessage(e)

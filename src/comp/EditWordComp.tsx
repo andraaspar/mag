@@ -39,6 +39,12 @@ export function EditWordComp({
 	const [$translation1Description, set$translation1Description] = useState(
 		_word.translation1.description,
 	)
+	const touched = !!(
+		$translation0Text ||
+		$translation1Text ||
+		$translation0Description ||
+		$translation1Description
+	)
 	const sanitizedWord = useMemo(
 		() =>
 			sanitizeWord({
@@ -116,7 +122,7 @@ export function EditWordComp({
 					</small>
 				</p>
 			)}
-			<ErrorsComp _errors={validationErrors} />
+			{touched && <ErrorsComp _errors={validationErrors} />}
 			<p>
 				<button
 					type='button'
@@ -139,6 +145,7 @@ export function EditWordComp({
 								t,
 								word: sanitizedWord,
 							})
+							showMessage(`Eltároltam a szót.`)
 							_onSuccess()
 						} catch (e) {
 							showMessage(e)
