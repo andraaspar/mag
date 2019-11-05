@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Redirect, useRouteMatch } from 'react-router-dom'
 import { sanitizeString } from '../function/sanitizeString'
 import { useDictionary } from '../hook/useDictionary'
@@ -19,9 +19,11 @@ export function LearnPage(props: LearnPageProps) {
 	const dictionaryId =
 		routeMatch && parseInt(routeMatch.params.dictionaryId, 10)
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
-	const { $questions, set$questions, loadQuestions } = useQuestions(
+	const lastWordId = useRef<number | null>(null)
+	const { $questions, set$questions, loadQuestions } = useQuestions({
 		dictionaryId,
-	)
+		wordIdNotFirst: lastWordId,
+	})
 	const [$questionsCount, set$questionsCount] = useState(0)
 	const [$questionsLearnedCount, set$questionsLearnedCount] = useState(0)
 	const progress =
@@ -65,6 +67,9 @@ export function LearnPage(props: LearnPageProps) {
 			? $dictionary.current
 			: undefined
 	const word = isLoaded($word) && $word.current ? $word.current : undefined
+	if (word) {
+		lastWordId.current = word.id!
+	}
 	const questionLanguage =
 		dictionary == null
 			? null
