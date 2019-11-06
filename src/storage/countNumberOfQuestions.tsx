@@ -19,10 +19,10 @@ export async function countNumberOfQuestions({
 	const index0 = wordsStore.index(INDEX_WORDS_COUNT_0)
 	const index1 = wordsStore.index(INDEX_WORDS_COUNT_1)
 	const count0 = await index0.count(
-		makeKeyRangeWordsCount({ dictionaryId, countForSort: 0 }),
+		makeKeyRangeWordsCount({ dictionaryId, countForSort: [0, 0] }),
 	)
 	const count1 = await index1.count(
-		makeKeyRangeWordsCount({ dictionaryId, countForSort: 0 }),
+		makeKeyRangeWordsCount({ dictionaryId, countForSort: [0, 0] }),
 	)
 	return count0 + count1
 }

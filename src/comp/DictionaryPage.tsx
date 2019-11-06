@@ -1,5 +1,5 @@
-import React from 'react'
-import { useRouteMatch } from 'react-router'
+import React, { useContext } from 'react'
+import { useHistory, useRouteMatch } from 'react-router'
 import { Link } from 'react-router-dom'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { useDictionary } from '../hook/useDictionary'
@@ -7,13 +7,16 @@ import { useNumberOfQuestions } from '../hook/useNumberOfQuestions'
 import { usePageTitle } from '../hook/usePageTitle'
 import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
 import { isLoaded } from '../model/TLoadable'
+import { deleteDictionary } from '../storage/deleteDictionary'
 import { DictionaryComp } from './DictionaryComp'
 import { LoadableComp } from './LoadableComp'
+import { ShowMessageContext } from './ShowMessageContext'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
 
 export interface DictionaryPageProps {}
 
 export function DictionaryPage(props: DictionaryPageProps) {
+	const history = useHistory()
 	const routeMatch = useRouteMatch<{ dictionaryId: string }>(
 		'/dictionary/:dictionaryId/',
 	)
@@ -27,6 +30,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 	const { $wordCount, loadWordCount } = useWordCountByDictionaryId({
 		dictionaryId,
 	})
+	const showMessage = useContext(ShowMessageContext)
 	usePageTitle(
 		!isLoaded($dictionary)
 			? `Szótár`
@@ -66,37 +70,6 @@ export function DictionaryPage(props: DictionaryPageProps) {
 												)
 											}
 										</LoadableComp>
-										<p>
-											{isLoaded($numberOfQuestions) &&
-												$numberOfQuestions.current >
-													0 && (
-													<>
-														<Link to='./learn/'>
-															Kérdezz!
-														</Link>{' '}
-														•{' '}
-													</>
-												)}
-											<Link to='./word/'>
-												Adj hozzá egy szót
-											</Link>{' '}
-											•{' '}
-											<Link to='./words/'>
-												Mutasd a szavakat
-											</Link>{' '}
-											•{' '}
-											<Link to='./export/'>
-												Mentsd ki ezt a szótárat
-											</Link>{' '}
-											•{' '}
-											<Link to='./import/'>
-												Tölts be szavakat
-											</Link>{' '}
-											•{' '}
-											<Link to='./edit/'>
-												Módosítsd ezt a szótárat
-											</Link>
-										</p>
 									</>
 								) : (
 									<p>
@@ -112,6 +85,42 @@ export function DictionaryPage(props: DictionaryPageProps) {
 								)
 							}
 						</LoadableComp>
+						<p>
+							{isLoaded($numberOfQuestions) &&
+								$numberOfQuestions.current > 0 && (
+									<>
+										<Link to='./learn/'>Kérdezz!</Link> •{' '}
+									</>
+								)}
+							<Link to='./word/'>Adj hozzá egy szót</Link> •{' '}
+							<Link to='./words/'>Mutasd a szavakat</Link> •{' '}
+							<Link to='./export/'>Mentsd ki ezt a szótárat</Link>{' '}
+							• <Link to='./import/'>Tölts be szavakat</Link> •{' '}
+							<Link to='./edit/'>Módosítsd ezt a szótárat</Link>{' '}
+							• 
+							<button
+								type='button'
+								onClick={async () => {
+									if (
+										dictionaryId != null &&
+										window.confirm(
+											`Biztosan törölni akarod ezt a szótárat?`,
+										)
+									) {
+										try {
+											await deleteDictionary({
+												dictionaryId,
+											})
+											history.goBack()
+										} catch (e) {
+											showMessage(e)
+										}
+									}
+								}}
+							>
+								Töröld ezt a szótárat
+							</button>
+						</p>
 					</>
 				) : (
 					<UnknownDictionaryComp />

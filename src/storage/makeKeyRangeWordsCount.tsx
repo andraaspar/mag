@@ -1,14 +1,15 @@
-import { MAX_KEY, MIN_KEY } from '../model/constants'
+import { MIN_MAX_RANGE } from '../model/constants'
+import { TKeyLimits } from '../model/TKeyLimits'
 
 export function makeKeyRangeWordsCount({
 	dictionaryId,
-	countForSort,
+	countForSort = MIN_MAX_RANGE,
 }: {
 	dictionaryId: number
-	countForSort?: number
+	countForSort?: TKeyLimits<number>
 }) {
 	return IDBKeyRange.bound(
-		[dictionaryId, countForSort == null ? MIN_KEY : countForSort],
-		[dictionaryId, countForSort == null ? MAX_KEY : countForSort],
+		[dictionaryId, countForSort[0]],
+		[dictionaryId, countForSort[1]],
 	)
 }

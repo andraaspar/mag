@@ -24,7 +24,7 @@ export async function readQuestions({
 		...(await translation0Index.getAllKeys(
 			makeKeyRangeWordsCount({
 				dictionaryId,
-				countForSort: 0,
+				countForSort: [0, 0],
 			}),
 		)).map(wordId =>
 			withInterface<Question>({
@@ -35,7 +35,7 @@ export async function readQuestions({
 		...(await translation1Index.getAllKeys(
 			makeKeyRangeWordsCount({
 				dictionaryId,
-				countForSort: 0,
+				countForSort: [0, 0],
 			}),
 		)).map(wordId =>
 			withInterface<Question>({
