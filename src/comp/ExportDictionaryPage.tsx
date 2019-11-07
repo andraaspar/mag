@@ -11,6 +11,7 @@ import { ExportedDictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { ExportedWord } from '../model/Word'
 import { DictionaryComp } from './DictionaryComp'
+import { FocusRefComp } from './FocusRefComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
@@ -72,6 +73,7 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 						: `Ismeretlen`
 			  } szótár kimentése`,
 	)
+	const downloadLinkRef = useRef<HTMLAnchorElement>(null)
 	return (
 		<>
 			<LoadableComp _value={$dictionary} _load={loadDictionary}>
@@ -125,6 +127,9 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 														</button>{' '}
 														•{' '}
 														<a
+															ref={
+																downloadLinkRef
+															}
 															download={`${dictionaryToString(
 																dictionary.current!,
 															)}${
@@ -137,6 +142,11 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 														>
 															Mentsd ki
 														</a>
+														<FocusRefComp
+															_focusThis={
+																downloadLinkRef
+															}
+														/>
 													</p>
 												</>
 											)}
