@@ -4,19 +4,19 @@ import { Dictionary } from '../model/Dictionary'
 import { Word } from '../model/Word'
 import { storeWord } from '../storage/storeWord'
 
-export interface LearnComp2Props {
+export interface LearnCompProps {
 	_dictionary: Dictionary
 	_word: Word
 	_translationId: 0 | 1
 	_next: (p: { success: boolean }) => void
 }
 
-export function LearnComp2({
+export function LearnComp({
 	_dictionary,
 	_word,
 	_translationId,
 	_next,
-}: LearnComp2Props) {
+}: LearnCompProps) {
 	const inputRef = useRef<HTMLInputElement>(null)
 	const questionLanguage =
 		_translationId === 0 ? _dictionary.language0 : _dictionary.language1

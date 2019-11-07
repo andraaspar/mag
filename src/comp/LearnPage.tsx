@@ -6,7 +6,7 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { useQuestions } from '../hook/useQuestions'
 import { useWord } from '../hook/useWord'
 import { isLoaded } from '../model/TLoadable'
-import { LearnComp2 } from './LearnComp'
+import { LearnComp } from './LearnComp'
 import { LoadableComp } from './LoadableComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
 
@@ -111,7 +111,7 @@ export function LearnPage(props: LearnPageProps) {
 												word.current == null ? (
 													<></>
 												) : (
-													<LearnComp2
+													<LearnComp
 														_dictionary={
 															dictionary.current!
 														}
