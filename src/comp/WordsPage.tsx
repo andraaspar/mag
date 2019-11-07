@@ -117,6 +117,7 @@ export function WordsPage(props: WordsPageProps) {
 						</h1>
 						<p>
 							<input
+								autoFocus
 								placeholder='Szűrd a szavakat'
 								value={q}
 								onChange={e => {
