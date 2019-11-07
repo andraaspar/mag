@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useRef } from 'react'
 import { useHistory, useRouteMatch } from 'react-router'
 import { Link } from 'react-router-dom'
 import { dictionaryToString } from '../function/dictionaryToString'
@@ -9,6 +9,7 @@ import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
 import { isLoaded } from '../model/TLoadable'
 import { deleteDictionary } from '../storage/deleteDictionary'
 import { DictionaryComp } from './DictionaryComp'
+import { FocusRefComp } from './FocusRefComp'
 import { LoadableComp } from './LoadableComp'
 import { ShowMessageContext } from './ShowMessageContext'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
@@ -31,6 +32,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 		dictionaryId,
 	})
 	const showMessage = useContext(ShowMessageContext)
+	const askLinkRef = useRef<HTMLAnchorElement>(null)
 	usePageTitle(
 		!isLoaded($dictionary)
 			? `Szótár`
@@ -89,7 +91,14 @@ export function DictionaryPage(props: DictionaryPageProps) {
 							{isLoaded($numberOfQuestions) &&
 								$numberOfQuestions.current > 0 && (
 									<>
-										<Link to='./learn/'>Kérdezz!</Link> •{' '}
+										<Link
+											to='./learn/'
+											innerRef={askLinkRef}
+										>
+											Kérdezz!
+										</Link>
+										<FocusRefComp _focusThis={askLinkRef} />{' '}
+										•{' '}
 									</>
 								)}
 							<Link to='./word/'>Adj hozzá egy szót</Link> •{' '}
