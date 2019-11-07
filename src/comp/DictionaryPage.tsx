@@ -33,6 +33,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 	})
 	const showMessage = useContext(ShowMessageContext)
 	const askLinkRef = useRef<HTMLAnchorElement>(null)
+	const addAWordLinkRef = useRef<HTMLAnchorElement>(null)
 	usePageTitle(
 		!isLoaded($dictionary)
 			? `Szótár`
@@ -76,9 +77,15 @@ export function DictionaryPage(props: DictionaryPageProps) {
 								) : (
 									<p>
 										Íme az új szótárad! Először{' '}
-										<Link to='./word/'>
+										<Link
+											to='./word/'
+											innerRef={addAWordLinkRef}
+										>
 											adj hozzá szavakat
 										</Link>
+										<FocusRefComp
+											_focusThis={addAWordLinkRef}
+										/>
 										, vagy{' '}
 										<Link to='./import/'>
 											tölts be szavakat!

@@ -20,6 +20,7 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 			<p>
 				Fájlból:{` `}
 				<input
+					autoFocus
 					type='file'
 					onChange={async e => {
 						try {

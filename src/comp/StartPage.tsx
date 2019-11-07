@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCallback } from 'use-memo-one'
 import { dictionaryToString } from '../function/dictionaryToString'
@@ -12,6 +12,7 @@ import { countDictionaries } from '../storage/countDictionaries'
 import { getDb, STORE_DICTIONARIES } from '../storage/Db'
 import { readDictionaries } from '../storage/readDictionaries'
 import { DictionaryComp } from './DictionaryComp'
+import { FocusRefComp } from './FocusRefComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { ShowMessageContext } from './ShowMessageContext'
@@ -85,6 +86,7 @@ export function StartPage() {
 		pageSize: $pageSize,
 		itemCount: $dictionaryCount,
 	})
+	const makeADictionaryLinkRef = useRef<HTMLAnchorElement>(null)
 	return (
 		<div>
 			<h1>Szia!</h1>
@@ -96,6 +98,7 @@ export function StartPage() {
 				$totalDictionaryCount.count > 0 && (
 					<p>
 						<input
+							autoFocus
 							placeholder='Szűrd a szótárakat'
 							value={$query}
 							onChange={e => {
@@ -156,9 +159,15 @@ export function StartPage() {
 						$totalDictionaryCount.count === 0 ? (
 							<p>
 								Először{' '}
-								<Link to='/dictionary/'>
+								<Link
+									to='/dictionary/'
+									innerRef={makeADictionaryLinkRef}
+								>
 									készíts egy új szótárat
 								</Link>
+								<FocusRefComp
+									_focusThis={makeADictionaryLinkRef}
+								/>
 								, vagy{' '}
 								<Link to='/import/'>
 									tölts be egy szótárat!

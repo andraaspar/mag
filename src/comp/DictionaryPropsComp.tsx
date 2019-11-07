@@ -15,6 +15,7 @@ export function DictionaryPropsComp({
 			<p>
 				Név:{' '}
 				<input
+					autoFocus
 					value={_dictionary.name}
 					onChange={e => {
 						_setDictionary({ ..._dictionary, name: e.target.value })
