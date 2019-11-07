@@ -1,70 +1,8 @@
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent, useRef, useState } from 'react'
 import { sanitizeString } from '../function/sanitizeString'
 import { Dictionary } from '../model/Dictionary'
-import { Translation } from '../model/Translation'
 import { Word } from '../model/Word'
 import { storeWord } from '../storage/storeWord'
-
-export interface LearnCompProps {
-	_questionLanguage: string
-	_question: Translation
-	_answerLanguage: string
-	_answer: string
-	_setAnswer: (v: string) => void
-	_isAnswerCorrect: boolean
-	_answerShown: boolean
-	_onSubmit: () => void
-	_onShowAnswer: () => void
-}
-
-export function LearnComp({
-	_questionLanguage,
-	_question,
-	_answerLanguage,
-	_answer,
-	_setAnswer,
-	_isAnswerCorrect,
-	_answerShown,
-	_onSubmit,
-	_onShowAnswer,
-}: LearnCompProps) {
-	return (
-		<>
-			<p>
-				{_questionLanguage}: {_question.text}
-			</p>
-			{_question.description && (
-				<p>Megjegyzés: {_question.description}</p>
-			)}
-			<p>
-				{_answerLanguage}:{' '}
-				<input
-					value={_answer}
-					onChange={e => {
-						_setAnswer(e.target.value)
-					}}
-				/>
-			</p>
-			<p>
-				<button
-					type='button'
-					onClick={_onSubmit}
-					disabled={!_isAnswerCorrect}
-				>
-					Rendben
-				</button>{' '}
-				•{' '}
-				<button
-					type='button'
-					onClick={_onShowAnswer}
-					disabled={_answerShown}
-				>
-					Mutasd a választ
-				</button>
-			</p>
-		</>
-	)
-}
 
 export interface LearnComp2Props {
 	_dictionary: Dictionary
@@ -79,6 +17,7 @@ export function LearnComp2({
 	_translationId,
 	_next,
 }: LearnComp2Props) {
+	const inputRef = useRef<HTMLInputElement>(null)
 	const questionLanguage =
 		_translationId === 0 ? _dictionary.language0 : _dictionary.language1
 	const answerLanguage =
@@ -123,6 +62,7 @@ export function LearnComp2({
 		if (correctAnswer == null) return
 		set$answerShown(true)
 		set$answer(correctAnswer)
+		inputRef.current!.focus()
 	}
 
 	return (
@@ -134,6 +74,8 @@ export function LearnComp2({
 			<p>
 				{answerLanguage}:{' '}
 				<input
+					ref={inputRef}
+					autoFocus
 					value={$answer}
 					onChange={e => {
 						set$answer(e.target.value)
