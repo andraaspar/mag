@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { useMemo } from 'use-memo-one'
+import React, { FormEvent, useContext, useState } from 'react'
+import { useCallback, useMemo } from 'use-memo-one'
 import { dateToString } from '../function/dateToString'
 import { sanitizeWord } from '../function/sanitizeWord'
 import { useWordValidationErrors } from '../hook/useWordValidationErrors'
@@ -72,12 +72,35 @@ export function EditWordComp({
 		],
 	)
 	const validationErrors = useWordValidationErrors(sanitizedWord)
+	const onSubmit = useCallback(
+		async (e: FormEvent) => {
+			e.preventDefault()
+			if (!sanitizedWord) return
+			const t = getDb().transaction([STORE_WORDS], 'readwrite')
+			try {
+				await checkForConflictingWord({
+					t,
+					word: sanitizedWord,
+				})
+				await storeWord({
+					t,
+					word: sanitizedWord,
+				})
+				showMessage(`Eltároltam a szót.`)
+				_onSuccess()
+			} catch (e) {
+				showMessage(e)
+			}
+		},
+		[sanitizedWord, _onSuccess, showMessage],
+	)
 	return (
-		<>
+		<form onSubmit={onSubmit}>
 			<h1>{_word.id ? `Módosítsd a szót` : `Adj hozzá egy szót`}</h1>
 			<p>
 				{_dictionary.language0}:{' '}
 				<input
+					autoFocus
 					value={$translation0Text}
 					onChange={e => {
 						set$translation0Text(e.target.value)
@@ -125,32 +148,10 @@ export function EditWordComp({
 			{touched && <ErrorsComp _errors={validationErrors} />}
 			<p>
 				<button
-					type='button'
 					disabled={
 						!isLoaded(validationErrors) ||
 						validationErrors.length > 0
 					}
-					onClick={async () => {
-						if (!sanitizedWord) return
-						const t = getDb().transaction(
-							[STORE_WORDS],
-							'readwrite',
-						)
-						try {
-							await checkForConflictingWord({
-								t,
-								word: sanitizedWord,
-							})
-							await storeWord({
-								t,
-								word: sanitizedWord,
-							})
-							showMessage(`Eltároltam a szót.`)
-							_onSuccess()
-						} catch (e) {
-							showMessage(e)
-						}
-					}}
 				>
 					Tárold el
 				</button>
@@ -227,6 +228,6 @@ export function EditWordComp({
 						</>
 					)}
 			</p>
-		</>
+		</form>
 	)
 }
