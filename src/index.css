@@ -92,6 +92,7 @@ select {
 	text-align: center;
 	cursor: pointer;
 	text-decoration: none;
+	min-width: 2.5em;
 }
 
 button:hover,

@@ -4,6 +4,7 @@ import { sanitizeDictionary } from '../function/sanitizeDictionary'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
+import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { DictionaryPropsComp } from './DictionaryPropsComp'
 import { ErrorsComp } from './ErrorsComp'
@@ -42,7 +43,7 @@ export function EditDictionaryComp({
 					_setDictionary={set$dictionary}
 				/>
 				{touched && <ErrorsComp _errors={dictionaryValidationErrors} />}
-				<div>
+				<ButtonRowComp>
 					<button
 						disabled={
 							!isLoaded(dictionaryValidationErrors) ||
@@ -51,7 +52,7 @@ export function EditDictionaryComp({
 					>
 						Tárold el
 					</button>
-				</div>
+				</ButtonRowComp>
 			</ContentRowComp>
 		</form>
 	)

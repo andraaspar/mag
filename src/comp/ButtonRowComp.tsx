@@ -5,7 +5,7 @@ export interface ButtonRowCompProps {}
 
 export function ButtonRowComp(props: PropsWithChildren<ButtonRowCompProps>) {
 	return (
-		<RowComp _gap={5} _wrap>
+		<RowComp _gap={5} _wrap _fill>
 			{props.children}
 		</RowComp>
 	)

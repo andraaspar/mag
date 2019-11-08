@@ -8,6 +8,7 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
+import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
 import { GetWordsComp } from './GetWordsComp'
@@ -101,7 +102,7 @@ export function ImportFromFilePage() {
 					)}
 					<ErrorsComp _errors={dictionaryValidationErrors} />
 					{$importableDictionary && (
-						<div>
+						<ButtonRowComp>
 							<button
 								disabled={
 									!isLoaded(dictionaryValidationErrors) ||
@@ -110,7 +111,7 @@ export function ImportFromFilePage() {
 							>
 								Tárold el
 							</button>
-						</div>
+						</ButtonRowComp>
 					)}
 				</ContentRowComp>
 			</form>

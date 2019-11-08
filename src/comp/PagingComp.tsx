@@ -13,6 +13,7 @@ export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
 		<ButtonRowComp>
 			<button
 				type='button'
+				className='does-not-expand'
 				disabled={_page === 0}
 				onClick={() => {
 					_setPage(_page - 1)
@@ -25,6 +26,7 @@ export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
 			</LabelComp>
 			<button
 				type='button'
+				className='does-not-expand'
 				disabled={_page === _pageCount - 1}
 				onClick={() => {
 					_setPage(_page + 1)
