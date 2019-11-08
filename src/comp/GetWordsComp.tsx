@@ -5,7 +5,10 @@ import { readJsonFromFile } from '../function/readJsonFromFile'
 import { wordFromAndroid } from '../function/wordFromAndroid'
 import { wordFromExport } from '../function/wordFromExport'
 import { DictionaryFromAndroid, ExportedDictionary } from '../model/Dictionary'
+import { ContentRowComp } from './ContentRowComp'
+import { FormRowComp } from './FormRowComp'
 import { ImportableDictionary } from './ImportFromFilePage'
+import { LabelComp } from './LabelComp'
 import { ShowMessageContext } from './ShowMessageContext'
 
 export interface GetWordsCompProps {
@@ -16,9 +19,9 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 	const [$json, set$json] = useState('')
 	const showMessage = useContext(ShowMessageContext)
 	return (
-		<>
-			<p>
-				Fájlból:{` `}
+		<ContentRowComp>
+			<FormRowComp>
+				<LabelComp>Fájlból</LabelComp>
 				<input
 					autoFocus
 					type='file'
@@ -53,9 +56,9 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 						}
 					}}
 				/>
-			</p>
-			<p>
-				Vágólapról:{` `}
+			</FormRowComp>
+			<FormRowComp>
+				<LabelComp>Vágólapról</LabelComp>
 				<textarea
 					placeholder={`Illeszd be ide...`}
 					rows={1}
@@ -108,7 +111,7 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 						}
 					}}
 				></textarea>
-			</p>
-		</>
+			</FormRowComp>
+		</ContentRowComp>
 	)
 }

@@ -6,6 +6,8 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { useQuestions } from '../hook/useQuestions'
 import { useWord } from '../hook/useWord'
 import { isLoaded } from '../model/TLoadable'
+import { ContentRowComp } from './ContentRowComp'
+import { FormRowComp } from './FormRowComp'
 import { LearnComp } from './LearnComp'
 import { LoadableComp } from './LoadableComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
@@ -89,7 +91,7 @@ export function LearnPage(props: LearnPageProps) {
 				dictionary.current == null ? (
 					<UnknownDictionaryComp />
 				) : (
-					<>
+					<ContentRowComp>
 						<h1>Tanulás</h1>
 						<LoadableComp _value={$questions} _load={loadQuestions}>
 							{questions =>
@@ -98,11 +100,11 @@ export function LearnPage(props: LearnPageProps) {
 									<Redirect to={`../`} />
 								) : (
 									<>
-										<p>
+										<FormRowComp>
 											<progress value={progress}>
 												{Math.round(progress * 100)}%
 											</progress>
-										</p>
+										</FormRowComp>
 										<LoadableComp
 											_value={$word}
 											_load={loadWord}
@@ -128,7 +130,7 @@ export function LearnPage(props: LearnPageProps) {
 								)
 							}
 						</LoadableComp>
-					</>
+					</ContentRowComp>
 				)
 			}
 		</LoadableComp>

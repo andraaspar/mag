@@ -3,6 +3,10 @@ import { sanitizeString } from '../function/sanitizeString'
 import { Dictionary } from '../model/Dictionary'
 import { Word } from '../model/Word'
 import { storeWord } from '../storage/storeWord'
+import { ButtonRowComp } from './ButtonRowComp'
+import { ContentRowComp } from './ContentRowComp'
+import { FormRowComp } from './FormRowComp'
+import { LabelComp } from './LabelComp'
 
 export interface LearnCompProps {
 	_dictionary: Dictionary
@@ -67,31 +71,35 @@ export function LearnComp({
 
 	return (
 		<form onSubmit={onSubmit}>
-			<p>
-				{questionLanguage}: {question.text}
-			</p>
-			{question.description && <p>Megjegyzés: {question.description}</p>}
-			<p>
-				{answerLanguage}:{' '}
-				<input
-					ref={inputRef}
-					autoFocus
-					value={$answer}
-					onChange={e => {
-						set$answer(e.target.value)
-					}}
-				/>
-			</p>
-			<p>
-				<button disabled={!isAnswerCorrect}>Rendben</button> •{' '}
-				<button
-					type='button'
-					onClick={onShowAnswer}
-					disabled={$answerShown}
-				>
-					Mutasd a választ
-				</button>
-			</p>
+			<ContentRowComp>
+				<div>
+					{questionLanguage}: {question.text}
+				</div>
+				{question.description && (
+					<div>Megjegyzés: {question.description}</div>
+				)}
+				<FormRowComp>
+					<LabelComp _required>{answerLanguage}</LabelComp>
+					<input
+						ref={inputRef}
+						autoFocus
+						value={$answer}
+						onChange={e => {
+							set$answer(e.target.value)
+						}}
+					/>
+				</FormRowComp>
+				<ButtonRowComp>
+					<button disabled={!isAnswerCorrect}>Rendben</button>
+					<button
+						type='button'
+						onClick={onShowAnswer}
+						disabled={$answerShown}
+					>
+						Mutasd a választ
+					</button>
+				</ButtonRowComp>
+			</ContentRowComp>
 		</form>
 	)
 }

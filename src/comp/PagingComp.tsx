@@ -1,4 +1,6 @@
 import React from 'react'
+import { ButtonRowComp } from './ButtonRowComp'
+import { LabelComp } from './LabelComp'
 
 export interface PagingCompProps {
 	_page: number
@@ -8,7 +10,7 @@ export interface PagingCompProps {
 
 export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
 	return (
-		<p>
+		<ButtonRowComp>
 			<button
 				type='button'
 				disabled={_page === 0}
@@ -17,10 +19,10 @@ export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
 				}}
 			>
 				«
-			</button>{' '}
-			<span>
+			</button>
+			<LabelComp>
 				{_page + 1} / {_pageCount}
-			</span>{' '}
+			</LabelComp>
 			<button
 				type='button'
 				disabled={_page === _pageCount - 1}
@@ -30,6 +32,6 @@ export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
 			>
 				»
 			</button>
-		</p>
+		</ButtonRowComp>
 	)
 }

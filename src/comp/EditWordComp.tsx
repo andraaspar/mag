@@ -10,7 +10,11 @@ import { Word } from '../model/Word'
 import { checkForConflictingWord } from '../storage/checkForConflictingWord'
 import { getDb, STORE_WORDS } from '../storage/Db'
 import { storeWord } from '../storage/storeWord'
+import { ButtonRowComp } from './ButtonRowComp'
+import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
+import { FormRowComp } from './FormRowComp'
+import { LabelComp } from './LabelComp'
 import { ShowMessageContext } from './ShowMessageContext'
 
 export interface EditWordCompProps {
@@ -96,71 +100,71 @@ export function EditWordComp({
 	)
 	return (
 		<form onSubmit={onSubmit}>
-			<h1>{_word.id ? `Módosítsd a szót` : `Adj hozzá egy szót`}</h1>
-			<p>
-				{_dictionary.language0}:{' '}
-				<input
-					autoFocus
-					value={$translation0Text}
-					onChange={e => {
-						set$translation0Text(e.target.value)
-					}}
-				/>
-			</p>
-			<p>
-				Magyarázat:{' '}
-				<input
-					value={$translation0Description}
-					onChange={e => {
-						set$translation0Description(e.target.value)
-					}}
-				/>
-			</p>
-			<p>
-				{_dictionary.language1}:{' '}
-				<input
-					value={$translation1Text}
-					onChange={e => {
-						set$translation1Text(e.target.value)
-					}}
-				/>
-			</p>
-			<p>
-				Magyarázat:{' '}
-				<input
-					value={$translation1Description}
-					onChange={e => {
-						set$translation1Description(e.target.value)
-					}}
-				/>
-			</p>
-			{_word.id && (
-				<p>
-					<small>
-						Kérdések:{' '}
-						{_word.translation0.count > 0 && QUESTIONS_CHARACTER}{' '}
-						{_word.translation0.count} /{' '}
-						{_word.translation1.count > 0 && QUESTIONS_CHARACTER}{' '}
-						{_word.translation1.count}
-					</small>
-				</p>
-			)}
-			{touched && <ErrorsComp _errors={validationErrors} />}
-			<p>
-				<button
-					disabled={
-						!isLoaded(validationErrors) ||
-						validationErrors.length > 0
-					}
-				>
-					Tárold el
-				</button>
-				{_word.id &&
-					(_word.translation0.count === 0 ||
-						_word.translation1.count === 0) && (
-						<>
-							{' '}
-							•{' '}
+			<ContentRowComp>
+				<h1>{_word.id ? `Módosítsd a szót` : `Adj hozzá egy szót`}</h1>
+				<FormRowComp>
+					<LabelComp _required>{_dictionary.language0}</LabelComp>
+					<input
+						autoFocus
+						value={$translation0Text}
+						onChange={e => {
+							set$translation0Text(e.target.value)
+						}}
+					/>
+				</FormRowComp>
+				<FormRowComp>
+					<LabelComp>Magyarázat</LabelComp>
+					<input
+						value={$translation0Description}
+						onChange={e => {
+							set$translation0Description(e.target.value)
+						}}
+					/>
+				</FormRowComp>
+				<FormRowComp>
+					<LabelComp _required>{_dictionary.language1}</LabelComp>
+					<input
+						value={$translation1Text}
+						onChange={e => {
+							set$translation1Text(e.target.value)
+						}}
+					/>
+				</FormRowComp>
+				<FormRowComp>
+					<LabelComp>Magyarázat</LabelComp>
+					<input
+						value={$translation1Description}
+						onChange={e => {
+							set$translation1Description(e.target.value)
+						}}
+					/>
+				</FormRowComp>
+				{_word.id && (
+					<FormRowComp>
+						<small>
+							Kérdések:{' '}
+							{_word.translation0.count > 0 &&
+								QUESTIONS_CHARACTER}{' '}
+							{_word.translation0.count} /{' '}
+							{_word.translation1.count > 0 &&
+								QUESTIONS_CHARACTER}{' '}
+							{_word.translation1.count}
+						</small>
+					</FormRowComp>
+				)}
+				{touched && <ErrorsComp _errors={validationErrors} />}
+				<ButtonRowComp>
+					<button
+						disabled={
+							!isLoaded(validationErrors) ||
+							validationErrors.length > 0
+						}
+					>
+						Tárold el
+					</button>
+					{_word.id &&
+						(_word.translation0.count === 0 ||
+							_word.translation1.count === 0) && (
 							<button
 								type='button'
 								onClick={async () => {
@@ -192,14 +196,10 @@ export function EditWordComp({
 							>
 								Kapcsold be a szót
 							</button>
-						</>
-					)}
-				{_word.id &&
-					(_word.translation0.count > 0 ||
-						_word.translation1.count > 0) && (
-						<>
-							{' '}
-							•{' '}
+						)}
+					{_word.id &&
+						(_word.translation0.count > 0 ||
+							_word.translation1.count > 0) && (
 							<button
 								type='button'
 								onClick={async () => {
@@ -225,9 +225,9 @@ export function EditWordComp({
 							>
 								Kapcsold ki a szót
 							</button>
-						</>
-					)}
-			</p>
+						)}
+				</ButtonRowComp>
+			</ContentRowComp>
 		</form>
 	)
 }

@@ -1,5 +1,7 @@
 import React from 'react'
 import { WordsByDictionaryIdSort } from '../storage/readWordsByDictionaryId'
+import { LabelComp } from './LabelComp'
+import { RowComp } from './RowComp'
 
 export interface WordsSortCompProps {
 	_sort: WordsByDictionaryIdSort
@@ -23,7 +25,7 @@ export function WordsSortComp({
 		WordsByDictionaryIdSort.ModifiedDate0,
 	].includes(_sort)
 	return (
-		<p>
+		<RowComp _gap={5}>
 			<button
 				type='button'
 				onClick={() => {
@@ -36,8 +38,8 @@ export function WordsSortComp({
 				}}
 			>
 				{sortByLanguage0 ? _language0Name : _language1Name} A-Z
-			</button>{' '}
-			<label>
+			</button>
+			<LabelComp>
 				<input
 					type='checkbox'
 					checked={sortByDate}
@@ -49,10 +51,10 @@ export function WordsSortComp({
 							}),
 						)
 					}}
-				/>
+				/>{' '}
 				Dátum szerint
-			</label>
-		</p>
+			</LabelComp>
+		</RowComp>
 	)
 }
 

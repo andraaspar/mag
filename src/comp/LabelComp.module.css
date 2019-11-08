@@ -1,0 +1,13 @@
+.label {
+	flex: 0 0 auto;
+	padding: var(--button-padding-y) 0;
+	border: 1px solid transparent;
+}
+
+.required {
+	color: var(--red-4);
+	position: relative;
+	bottom: 0.3em;
+	font-weight: bold;
+	margin: 0 0.15em;
+}

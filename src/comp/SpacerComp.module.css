@@ -1,0 +1,4 @@
+.spacer:not(#__NEVER__) {
+	flex: 1 0 0;
+	margin: 0;
+}

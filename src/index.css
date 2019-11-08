@@ -1,3 +1,183 @@
 @import '~sanitize.css';
 @import '~sanitize.css/forms.css';
 @import '~sanitize.css/typography.css';
+
+:root {
+	--white-1: rgba(255, 255, 255, 0.1);
+	--white-2: rgba(255, 255, 255, 0.2);
+	--white-3: rgba(255, 255, 255, 0.3);
+	--white-4: rgba(255, 255, 255, 0.5);
+	--white-5: rgba(255, 255, 255, 0.7);
+	--white-6: rgba(255, 255, 255, 0.8);
+	--white-7: rgba(255, 255, 255, 0.9);
+
+	--black-1: rgba(0, 0, 0, 0.1);
+	--black-2: rgba(0, 0, 0, 0.2);
+	--black-3: rgba(0, 0, 0, 0.3);
+	--black-4: rgba(0, 0, 0, 0.5);
+	--black-5: rgba(0, 0, 0, 0.7);
+	--black-6: rgba(0, 0, 0, 0.8);
+	--black-7: rgba(0, 0, 0, 0.9);
+
+	--red-1: #330514;
+	--red-2: #551228;
+	--red-3: #772741;
+	--red-4: #99445f;
+	--red-5: #bb6983;
+	--red-6: #dd96ac;
+	--red-7: #ffcadb;
+
+	--gray-1: #151619;
+	--gray-2: #35393f;
+	--gray-3: #575d65;
+	--gray-4: #7a818c;
+	--gray-5: #9ea6b2;
+	--gray-6: #c3ccd9;
+	--gray-7: #e9f2ff;
+
+	--teal-1: #001617;
+	--teal-2: #053b3e;
+	--teal-3: #125f65;
+	--teal-4: #2c838b;
+	--teal-5: #52a8b2;
+	--teal-6: #86d0d8;
+	--teal-7: #c8f9ff;
+
+	--border-radius: 3px;
+
+	--shadow-1: 0 2px 4px var(--black-3);
+
+	--button-padding-x: 0.375em;
+	--button-padding-y: 0.25em;
+	--button-padding: var(--button-padding-x) var(--button-padding-y);
+}
+
+html {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+body {
+	flex: 1 0 auto;
+	display: flex;
+	flex-direction: column;
+
+	background-color: var(--gray-1);
+	color: white;
+}
+
+a {
+	color: var(--teal-6);
+	font-weight: bold;
+}
+
+#root {
+	flex: 1 0 auto;
+	display: flex;
+	flex-direction: column;
+}
+
+button,
+a[role='button'],
+select {
+	flex: 1 1 auto;
+	display: inline-block;
+	padding: var(--button-padding);
+	border: 1px solid transparent;
+	border-radius: var(--border-radius);
+	background-color: var(--white-1);
+	color: var(--teal-6);
+	font-weight: bold;
+	text-align: center;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+button:hover,
+a[role='button']:hover,
+select:hover {
+	background-color: var(--white-2);
+	color: var(--teal-7);
+	box-shadow: var(--shadow-1);
+}
+
+button:active,
+a[role='button']:active,
+select:active {
+	background-color: var(--black-5);
+}
+
+button:focus,
+a[role='button']:focus {
+	outline: 0;
+	border-color: var(--teal-4);
+}
+
+button:disabled,
+a[role='button']:not([href]),
+select:disabled {
+	color: var(--white-4);
+	background-color: var(--white-1);
+	box-shadow: none;
+}
+
+input:not([type]),
+textarea {
+	flex: 1 0 50px;
+	width: 50px;
+	border-radius: var(--border-radius);
+	background-color: black;
+	border: 1px solid var(--gray-2);
+	box-shadow: var(--shadow-1);
+}
+
+button:focus,
+input:not([type]):focus,
+textarea:focus,
+select:focus {
+	outline: 0;
+	border-color: var(--teal-4);
+}
+
+input[type='file'] {
+	border: 1px solid transparent;
+	padding: 0;
+	width: 100%;
+}
+
+select:not(#__NEVER__) {
+	padding-right: 20px;
+}
+
+option {
+	color: var(--teal-6);
+	background-color: black;
+}
+
+option:checked {
+	color: white;
+	background-color: var(--gray-2);
+}
+
+option:hover {
+	color: var(--teal-7);
+	background-color: var(--gray-1);
+}
+
+progress {
+	flex: 0 1 100%;
+	width: 100%;
+	height: calc(var(--border-radius) * 2);
+	color: var(--red-3);
+}
+progress::-moz-progress-bar {
+	background: #8b002c;
+}
+progress::-webkit-progress-value {
+	background: #8b002c;
+}
+
+.does-not-expand {
+	flex: 0 0 auto;
+}

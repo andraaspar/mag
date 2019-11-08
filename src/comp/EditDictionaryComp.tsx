@@ -4,6 +4,7 @@ import { sanitizeDictionary } from '../function/sanitizeDictionary'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
+import { ContentRowComp } from './ContentRowComp'
 import { DictionaryPropsComp } from './DictionaryPropsComp'
 import { ErrorsComp } from './ErrorsComp'
 
@@ -35,21 +36,23 @@ export function EditDictionaryComp({
 				_storeDictionary(sanitizedDictionary)
 			}}
 		>
-			<DictionaryPropsComp
-				_dictionary={$dictionary}
-				_setDictionary={set$dictionary}
-			/>
-			{touched && <ErrorsComp _errors={dictionaryValidationErrors} />}
-			<p>
-				<button
-					disabled={
-						!isLoaded(dictionaryValidationErrors) ||
-						dictionaryValidationErrors.length > 0
-					}
-				>
-					Mentsd le
-				</button>
-			</p>
+			<ContentRowComp>
+				<DictionaryPropsComp
+					_dictionary={$dictionary}
+					_setDictionary={set$dictionary}
+				/>
+				{touched && <ErrorsComp _errors={dictionaryValidationErrors} />}
+				<div>
+					<button
+						disabled={
+							!isLoaded(dictionaryValidationErrors) ||
+							dictionaryValidationErrors.length > 0
+						}
+					>
+						Tárold el
+					</button>
+				</div>
+			</ContentRowComp>
 		</form>
 	)
 }

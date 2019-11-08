@@ -1,5 +1,8 @@
 import React from 'react'
 import { Dictionary } from '../model/Dictionary'
+import { ContentRowComp } from './ContentRowComp'
+import { FormRowComp } from './FormRowComp'
+import { LabelComp } from './LabelComp'
 
 export interface DictionaryPropsCompProps {
 	_dictionary: Dictionary
@@ -11,9 +14,9 @@ export function DictionaryPropsComp({
 	_setDictionary,
 }: DictionaryPropsCompProps) {
 	return (
-		<>
-			<p>
-				Név:{' '}
+		<ContentRowComp>
+			<FormRowComp>
+				<LabelComp _required>Név</LabelComp>
 				<input
 					autoFocus
 					value={_dictionary.name}
@@ -21,9 +24,9 @@ export function DictionaryPropsComp({
 						_setDictionary({ ..._dictionary, name: e.target.value })
 					}}
 				/>
-			</p>
-			<p>
-				Első nyelv neve:{' '}
+			</FormRowComp>
+			<FormRowComp>
+				<LabelComp _required>Első nyelv neve</LabelComp>
 				<input
 					value={_dictionary.language0}
 					onChange={e => {
@@ -33,9 +36,9 @@ export function DictionaryPropsComp({
 						})
 					}}
 				/>
-			</p>
-			<p>
-				Második nyelv neve:{' '}
+			</FormRowComp>
+			<FormRowComp>
+				<LabelComp _required>Második nyelv neve</LabelComp>
 				<input
 					value={_dictionary.language1}
 					onChange={e => {
@@ -45,7 +48,7 @@ export function DictionaryPropsComp({
 						})
 					}}
 				/>
-			</p>
-		</>
+			</FormRowComp>
+		</ContentRowComp>
 	)
 }

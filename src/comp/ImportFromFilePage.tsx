@@ -8,6 +8,7 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
+import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
 import { GetWordsComp } from './GetWordsComp'
 import { SetImportParamsComp } from './SetImportParamsComp'
@@ -50,7 +51,7 @@ export function ImportFromFilePage() {
 		})
 	}, [])
 	return (
-		<div>
+		<ContentRowComp>
 			<h1>Tölts be szavakat</h1>
 			<form
 				onSubmit={async e => {
@@ -84,33 +85,35 @@ export function ImportFromFilePage() {
 					}
 				}}
 			>
-				{!$importableDictionary && (
-					<GetWordsComp
-						_setImportableDictionary={setImportableDictionary}
-					/>
-				)}
-				{$importableDictionary && $importParams && (
-					<SetImportParamsComp
-						_importableDictionary={$importableDictionary}
-						_importParams={$importParams}
-						_setImportParams={set$importParams}
-						_dictionaryId={dictionaryId}
-					/>
-				)}
-				<ErrorsComp _errors={dictionaryValidationErrors} />
-				{$importableDictionary && (
-					<p>
-						<button
-							disabled={
-								!isLoaded(dictionaryValidationErrors) ||
-								dictionaryValidationErrors.length > 0
-							}
-						>
-							Tárold el
-						</button>
-					</p>
-				)}
+				<ContentRowComp>
+					{!$importableDictionary && (
+						<GetWordsComp
+							_setImportableDictionary={setImportableDictionary}
+						/>
+					)}
+					{$importableDictionary && $importParams && (
+						<SetImportParamsComp
+							_importableDictionary={$importableDictionary}
+							_importParams={$importParams}
+							_setImportParams={set$importParams}
+							_dictionaryId={dictionaryId}
+						/>
+					)}
+					<ErrorsComp _errors={dictionaryValidationErrors} />
+					{$importableDictionary && (
+						<div>
+							<button
+								disabled={
+									!isLoaded(dictionaryValidationErrors) ||
+									dictionaryValidationErrors.length > 0
+								}
+							>
+								Tárold el
+							</button>
+						</div>
+					)}
+				</ContentRowComp>
 			</form>
-		</div>
+		</ContentRowComp>
 	)
 }

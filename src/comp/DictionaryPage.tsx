@@ -8,6 +8,8 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
 import { isLoaded } from '../model/TLoadable'
 import { deleteDictionary } from '../storage/deleteDictionary'
+import { ButtonRowComp } from './ButtonRowComp'
+import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
 import { LoadableComp } from './LoadableComp'
@@ -45,7 +47,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
 			{dictionary =>
 				dictionary.current ? (
-					<>
+					<ContentRowComp>
 						<h1>
 							<DictionaryComp _dictionary={dictionary.current} />
 						</h1>
@@ -94,26 +96,35 @@ export function DictionaryPage(props: DictionaryPageProps) {
 								)
 							}
 						</LoadableComp>
-						<p>
+						<ButtonRowComp>
 							{isLoaded($numberOfQuestions) &&
 								$numberOfQuestions.current > 0 && (
 									<>
 										<Link
 											to='./learn/'
 											innerRef={askLinkRef}
+											role='button'
 										>
 											Kérdezz!
 										</Link>
-										<FocusRefComp _focusThis={askLinkRef} />{' '}
-										•{' '}
+										<FocusRefComp _focusThis={askLinkRef} />
 									</>
 								)}
-							<Link to='./word/'>Adj hozzá egy szót</Link> •{' '}
-							<Link to='./words/'>Mutasd a szavakat</Link> •{' '}
-							<Link to='./export/'>Mentsd ki ezt a szótárat</Link>{' '}
-							• <Link to='./import/'>Tölts be szavakat</Link> •{' '}
-							<Link to='./edit/'>Módosítsd ezt a szótárat</Link>{' '}
-							• 
+							<Link to='./word/' role='button'>
+								Adj hozzá egy szót
+							</Link>
+							<Link to='./words/' role='button'>
+								Mutasd a szavakat
+							</Link>
+							<Link to='./export/' role='button'>
+								Mentsd ki ezt a szótárat
+							</Link>
+							<Link to='./import/' role='button'>
+								Tölts be szavakat
+							</Link>
+							<Link to='./edit/' role='button'>
+								Módosítsd ezt a szótárat
+							</Link>
 							<button
 								type='button'
 								onClick={async () => {
@@ -136,8 +147,8 @@ export function DictionaryPage(props: DictionaryPageProps) {
 							>
 								Töröld ezt a szótárat
 							</button>
-						</p>
-					</>
+						</ButtonRowComp>
+					</ContentRowComp>
 				) : (
 					<UnknownDictionaryComp />
 				)

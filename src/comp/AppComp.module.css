@@ -1,0 +1,12 @@
+.header {
+	border-bottom: 3px solid black;
+	padding-bottom: 20px;
+	text-align: center;
+}
+.footer {
+	border-top: 3px solid black;
+	padding-top: 20px;
+	text-align: center;
+	font-size: small;
+	color: var(--white-6);
+}

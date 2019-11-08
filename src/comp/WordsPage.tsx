@@ -16,7 +16,10 @@ import { isLoaded } from '../model/TLoadable'
 import { TSelection } from '../model/TSelection'
 import { DbWord } from '../model/Word'
 import { WordsByDictionaryIdSort } from '../storage/readWordsByDictionaryId'
+import { ButtonRowComp } from './ButtonRowComp'
+import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
+import { FormRowComp } from './FormRowComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
@@ -110,12 +113,12 @@ export function WordsPage(props: WordsPageProps) {
 				dictionary.current == null ? (
 					<UnknownDictionaryComp />
 				) : (
-					<>
+					<ContentRowComp>
 						<h1>
 							<DictionaryComp _dictionary={dictionary.current!} />{' '}
 							szavai
 						</h1>
-						<p>
+						<FormRowComp>
 							<input
 								autoFocus
 								placeholder='Szűrd a szavakat'
@@ -125,19 +128,17 @@ export function WordsPage(props: WordsPageProps) {
 								}}
 							/>
 							{filter && (
-								<>
-									{' '}
-									<button
-										type='button'
-										onClick={() => {
-											setQ('')
-										}}
-									>
-										×
-									</button>
-								</>
+								<button
+									type='button'
+									className='does-not-expand'
+									onClick={() => {
+										setQ('')
+									}}
+								>
+									×
+								</button>
 							)}
-						</p>
+						</FormRowComp>
 						<WordsSortComp
 							_sort={sort}
 							_setSort={setSort}
@@ -210,17 +211,18 @@ export function WordsPage(props: WordsPageProps) {
 								</>
 							)}
 						</LoadableComp>
-						<p>
-							<Link to={`../word/`}>Adj hozzá egy szót</Link>
-							{' • '}
+						<ButtonRowComp>
+							<Link to={`../word/`} role='button'>
+								Adj hozzá egy szót
+							</Link>
 							<WordsMenuComp
 								_dictionaryId={dictionary.current.id!}
 								_selectedWordIds={$selectedWordIds}
 								_setSelectedWordIds={set$selectedWordIds}
 								_onDone={loadDictionary}
 							/>
-						</p>
-					</>
+						</ButtonRowComp>
+					</ContentRowComp>
 				)
 			}
 		</LoadableComp>

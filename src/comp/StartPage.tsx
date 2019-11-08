@@ -11,8 +11,11 @@ import { selectPageCount } from '../selector/selectPageCount'
 import { countDictionaries } from '../storage/countDictionaries'
 import { getDb, STORE_DICTIONARIES } from '../storage/Db'
 import { readDictionaries } from '../storage/readDictionaries'
+import { ButtonRowComp } from './ButtonRowComp'
+import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
+import { FormRowComp } from './FormRowComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { ShowMessageContext } from './ShowMessageContext'
@@ -88,7 +91,7 @@ export function StartPage() {
 	})
 	const makeADictionaryLinkRef = useRef<HTMLAnchorElement>(null)
 	return (
-		<div>
+		<ContentRowComp>
 			<h1>Szia!</h1>
 			<p>
 				Mag vagyok, egy szógyakorló program. Magolj velem! Internet
@@ -96,7 +99,7 @@ export function StartPage() {
 			</p>
 			{isLoaded($totalDictionaryCount) &&
 				$totalDictionaryCount.count > 0 && (
-					<p>
+					<FormRowComp>
 						<input
 							autoFocus
 							placeholder='Szűrd a szótárakat'
@@ -104,10 +107,11 @@ export function StartPage() {
 							onChange={e => {
 								set$query(e.target.value)
 							}}
-						/>{' '}
+						/>
 						{$query && (
 							<button
 								type='button'
+								className='does-not-expand'
 								onClick={() => {
 									set$query('')
 								}}
@@ -115,7 +119,7 @@ export function StartPage() {
 								×
 							</button>
 						)}
-					</p>
+					</FormRowComp>
 				)}
 			<LoadableComp
 				_value={$dictionariesOnPage}
@@ -174,17 +178,18 @@ export function StartPage() {
 								</Link>
 							</p>
 						) : (
-							<p>
-								<Link to='/dictionary/'>
+							<ButtonRowComp>
+								<Link to='/dictionary/' role='button'>
 									Készíts új szótárat
 								</Link>{' '}
-								•{' '}
-								<Link to='/import/'>Tölts be egy szótárat</Link>
-							</p>
+								<Link to='/import/' role='button'>
+									Tölts be egy szótárat
+								</Link>
+							</ButtonRowComp>
 						)}
 					</>
 				)}
 			</LoadableComp>
-		</div>
+		</ContentRowComp>
 	)
 }

@@ -8,6 +8,7 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { storeDictionary } from '../storage/storeDictionary'
+import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { EditDictionaryComp } from './EditDictionaryComp'
 import { LoadableComp } from './LoadableComp'
@@ -42,7 +43,7 @@ export function EditDictionaryPage() {
 		<>
 			<LoadableComp _value={$dictionary} _load={loadDictionary}>
 				{dictionary => (
-					<>
+					<ContentRowComp>
 						<h1>
 							{dictionary.current ? (
 								<>
@@ -65,7 +66,7 @@ export function EditDictionaryPage() {
 							}
 							_storeDictionary={finish}
 						/>
-					</>
+					</ContentRowComp>
 				)}
 			</LoadableComp>
 		</>

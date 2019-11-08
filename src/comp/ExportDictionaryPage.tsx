@@ -10,8 +10,11 @@ import { useWordsByDictionaryId } from '../hook/useWordsByDictionaryId'
 import { ExportedDictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { ExportedWord } from '../model/Word'
+import { ButtonRowComp } from './ButtonRowComp'
+import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
+import { FormRowComp } from './FormRowComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
@@ -62,7 +65,7 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 				}),
 			),
 		}
-		return JSON.stringify(d, undefined, 2)
+		return JSON.stringify(d, undefined, '\t')
 	}, [$words, $dictionary])
 	usePageTitle(
 		!isLoaded($dictionary)
@@ -75,98 +78,89 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 	)
 	const downloadLinkRef = useRef<HTMLAnchorElement>(null)
 	return (
-		<>
-			<LoadableComp _value={$dictionary} _load={loadDictionary}>
-				{dictionary =>
-					dictionary.current ? (
-						<>
-							<h1>
-								<DictionaryComp
-									_dictionary={dictionary.current}
-								/>{' '}
-								szótár kimentése
-							</h1>
-							<LoadableComp
-								_value={$wordCount}
-								_load={loadWordCount}
-							>
-								{wordCount => (
-									<>
-										<LoadableComp
-											_value={$words}
-											_load={loadWords}
-										>
-											{words => (
-												<>
-													<p>
-														<textarea
-															ref={textAreaRef}
-															value={$json}
-															readOnly
-														></textarea>
-													</p>
-													<p>
-														<button
-															type='button'
-															onClick={() => {
-																if (
-																	textAreaRef.current
-																) {
-																	textAreaRef.current.focus()
-																	textAreaRef.current.setSelectionRange(
-																		0,
-																		$json.length,
-																	)
-																	document.execCommand(
-																		'copy',
-																	)
-																}
-															}}
-														>
-															Másold
-														</button>{' '}
-														•{' '}
-														<a
-															ref={
-																downloadLinkRef
+		<LoadableComp _value={$dictionary} _load={loadDictionary}>
+			{dictionary =>
+				dictionary.current ? (
+					<ContentRowComp>
+						<h1>
+							<DictionaryComp _dictionary={dictionary.current} />{' '}
+							szótár kimentése
+						</h1>
+						<LoadableComp _value={$wordCount} _load={loadWordCount}>
+							{wordCount => (
+								<>
+									<LoadableComp
+										_value={$words}
+										_load={loadWords}
+									>
+										{words => (
+											<>
+												<FormRowComp>
+													<textarea
+														ref={textAreaRef}
+														value={$json}
+														readOnly
+													></textarea>
+												</FormRowComp>
+												<ButtonRowComp>
+													<button
+														type='button'
+														onClick={() => {
+															if (
+																textAreaRef.current
+															) {
+																textAreaRef.current.focus()
+																textAreaRef.current.setSelectionRange(
+																	0,
+																	$json.length,
+																)
+																document.execCommand(
+																	'copy',
+																)
 															}
-															download={`${dictionaryToString(
-																dictionary.current!,
-															)}${
-																pageCount > 1
-																	? `-${$page +
-																			1}`
-																	: ''
-															}.json`}
-															href={url`data:text/json;charset=utf-8,${$json}`}
-														>
-															Mentsd ki
-														</a>
-														<FocusRefComp
-															_focusThis={
-																downloadLinkRef
-															}
-														/>
-													</p>
-												</>
-											)}
-										</LoadableComp>
-										{pageCount > 1 && (
-											<PagingComp
-												_page={$page}
-												_setPage={set$page}
-												_pageCount={pageCount}
-											/>
+														}}
+													>
+														Másold
+													</button>
+													<a
+														role='button'
+														ref={downloadLinkRef}
+														download={`${dictionaryToString(
+															dictionary.current!,
+														)}${
+															pageCount > 1
+																? `-${$page +
+																		1}`
+																: ''
+														}.json`}
+														href={url`data:text/json;charset=utf-8,${$json}`}
+													>
+														Tárold el
+													</a>
+													<FocusRefComp
+														_focusThis={
+															downloadLinkRef
+														}
+													/>
+												</ButtonRowComp>
+											</>
 										)}
-									</>
-								)}
-							</LoadableComp>
-						</>
-					) : (
-						<UnknownDictionaryComp />
-					)
-				}
-			</LoadableComp>
-		</>
+									</LoadableComp>
+									{pageCount > 1 && (
+										<PagingComp
+											_page={$page}
+											_setPage={set$page}
+											_pageCount={pageCount}
+										/>
+									)}
+								</>
+							)}
+						</LoadableComp>
+					</ContentRowComp>
+				) : (
+					<UnknownDictionaryComp />
+				)
+			}
+		</LoadableComp>
 	)
 }
