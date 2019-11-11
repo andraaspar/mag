@@ -1,0 +1,20 @@
+.message {
+	display: flex;
+	padding: 10px;
+	background-color: black;
+	color: white;
+	border-radius: var(--border-radius);
+}
+
+.content {
+	flex: 1 0 auto;
+	white-space: pre-wrap;
+	padding: var(--button-padding-y) 0;
+	border: 1px solid transparent;
+	border-left: 0;
+	border-right: 0;
+}
+
+.button {
+	flex: 0 0 auto;
+}

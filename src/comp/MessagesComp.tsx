@@ -1,4 +1,6 @@
 import React from 'react'
+import { CLOSE_CHARACTER } from '../model/constants'
+import styles from './MessagesComp.module.css'
 
 export interface MessagesCompProps {
 	_messages: readonly string[]
@@ -12,15 +14,16 @@ export function MessagesComp({
 	return (
 		<>
 			{_messages.map((message, index) => (
-				<div key={index} style={{ whiteSpace: 'pre-wrap' }}>
-					{message}{' '}
+				<div key={index} className={styles.message}>
+					<div className={styles.content}>{message}</div>
 					<button
 						type='button'
+						className={styles.button}
 						onClick={() => {
 							_removeMessageByIndex(index)
 						}}
 					>
-						×
+						{CLOSE_CHARACTER}
 					</button>
 				</div>
 			))}
