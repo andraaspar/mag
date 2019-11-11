@@ -8,8 +8,9 @@ import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
 import { checkForConflictingWord } from '../storage/checkForConflictingWord'
-import { getDb, STORE_WORDS } from '../storage/Db'
+import { getDb, STORE_DICTIONARIES, STORE_WORDS } from '../storage/Db'
 import { storeWord } from '../storage/storeWord'
+import { updateDictionaryCount } from '../storage/updateDictionaryCount'
 import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
@@ -82,7 +83,10 @@ export function EditWordComp({
 		async (e: FormEvent) => {
 			e.preventDefault()
 			if (!sanitizedWord) return
-			const t = getDb().transaction([STORE_WORDS], 'readwrite')
+			const t = getDb().transaction(
+				[STORE_DICTIONARIES, STORE_WORDS],
+				'readwrite',
+			)
 			showShield('q0t1ec')
 			try {
 				await checkForConflictingWord({
@@ -92,6 +96,10 @@ export function EditWordComp({
 				await storeWord({
 					t,
 					word: sanitizedWord,
+				})
+				await updateDictionaryCount({
+					t,
+					dictionaryId: sanitizedWord.dictionaryId,
 				})
 				showMessage(`Eltároltam a szót.`)
 				_onSuccess()
@@ -173,7 +181,12 @@ export function EditWordComp({
 								type='button'
 								onClick={async () => {
 									try {
+										const t = getDb().transaction(
+											[STORE_DICTIONARIES, STORE_WORDS],
+											'readwrite',
+										)
 										await storeWord({
+											t,
 											word: {
 												..._word,
 												translation0: {
@@ -192,6 +205,10 @@ export function EditWordComp({
 												},
 											},
 										})
+										await updateDictionaryCount({
+											t,
+											dictionaryId: _word.dictionaryId,
+										})
 										_refresh()
 									} catch (e) {
 										showMessage(e)
@@ -208,6 +225,10 @@ export function EditWordComp({
 								type='button'
 								onClick={async () => {
 									try {
+										const t = getDb().transaction(
+											[STORE_DICTIONARIES, STORE_WORDS],
+											'readwrite',
+										)
 										await storeWord({
 											word: {
 												..._word,
@@ -220,6 +241,10 @@ export function EditWordComp({
 													count: 0,
 												},
 											},
+										})
+										await updateDictionaryCount({
+											t,
+											dictionaryId: _word.dictionaryId,
 										})
 										_refresh()
 									} catch (e) {

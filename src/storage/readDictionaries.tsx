@@ -1,6 +1,11 @@
 import { IDBPTransaction } from 'idb'
 import { Dictionary, dictionaryFromDb } from '../model/Dictionary'
-import { Db, getDb, INDEX_DICTIONARIES_NAME, STORE_DICTIONARIES } from './Db'
+import {
+	Db,
+	getDb,
+	INDEX_DICTIONARIES_COUNT_NAME,
+	STORE_DICTIONARIES,
+} from './Db'
 import { readItems, ReadItemsPagingParams } from './readItems'
 
 export async function readDictionaries({
@@ -11,7 +16,7 @@ export async function readDictionaries({
 } & ReadItemsPagingParams<Dictionary>): Promise<Dictionary[]> {
 	const nameIndex = t
 		.objectStore(STORE_DICTIONARIES)
-		.index(INDEX_DICTIONARIES_NAME)
+		.index(INDEX_DICTIONARIES_COUNT_NAME)
 	const dictionaries = await readItems({
 		source: nameIndex,
 		...rest,

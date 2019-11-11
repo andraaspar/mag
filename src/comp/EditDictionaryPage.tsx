@@ -66,6 +66,7 @@ export function EditDictionaryPage() {
 									name: '',
 									language0: '',
 									language1: '',
+									count: 0,
 								}
 							}
 							_storeDictionary={finish}

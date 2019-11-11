@@ -6,6 +6,7 @@ export interface Dictionary {
 	name: string
 	language0: string
 	language1: string
+	count: number
 }
 
 export interface ExportedDictionary {
@@ -20,6 +21,7 @@ export interface DbDictionary extends Dictionary {
 	nameForSort: string
 	language0ForSort: string
 	language1ForSort: string
+	countForSort: number
 }
 
 export interface Dictionary1 {
@@ -46,6 +48,8 @@ export function dictionaryToDb(o: Dictionary): DbDictionary {
 		nameForSort: stringToIdbSortable(o.name),
 		language0ForSort: stringToIdbSortable(o.language0),
 		language1ForSort: stringToIdbSortable(o.language1),
+		count: o.count || 0,
+		countForSort: o.count ? 0 : 1,
 	}
 }
 
@@ -55,5 +59,6 @@ export function dictionaryFromDb(o: DbDictionary): Dictionary {
 		language0: o.language0,
 		language1: o.language1,
 		name: o.name,
+		count: o.count || 0,
 	}
 }

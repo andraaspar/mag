@@ -5,6 +5,7 @@ import { checkForConflictingWord } from '../storage/checkForConflictingWord'
 import { getDb, STORE_DICTIONARIES, STORE_WORDS } from '../storage/Db'
 import { storeDictionary } from '../storage/storeDictionary'
 import { storeWord } from '../storage/storeWord'
+import { updateDictionaryCount } from '../storage/updateDictionaryCount'
 import { asyncFilter } from './asyncFilter'
 import { withInterface } from './withInterface'
 
@@ -46,6 +47,7 @@ export async function handleDictionaryImport({
 			word,
 		})
 	}
+	await updateDictionaryCount({ t, dictionaryId })
 	await t.done
 	return dictionaryId
 }
