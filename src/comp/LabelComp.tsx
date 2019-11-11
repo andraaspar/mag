@@ -14,7 +14,16 @@ export function LabelComp({
 	return (
 		<label htmlFor={_for} className={styles.label}>
 			{children}
-			{_required && <span className={styles.required}>•</span>}:
+			{_required && (
+				<span
+					className={styles.required}
+					role='img'
+					aria-label=' (kötelező kitölteni) '
+				>
+					•
+				</span>
+			)}
+			:
 		</label>
 	)
 }
