@@ -146,29 +146,32 @@ export function AppComp() {
 							{isPersistentStorage =>
 								isPersistentStorage.current ? (
 									<>Maradandó tárhelyem van.</>
-								) : (
+								) : navigator.storage ? (
 									<>
 										{WARNING_CHARACTER} Nincs maradandó
 										tárhelyem!{' '}
 										<button
 											type='button'
 											onClick={async () => {
-												if (navigator.storage) {
-													const isPersistent = await navigator.storage.persist()
-													if (isPersistent) {
-														set$isPersistentStorage(
-															null,
-														)
-													}
+												const isPersistent = await navigator.storage.persist()
+												if (isPersistent) {
+													set$isPersistentStorage(
+														null,
+													)
 												} else {
 													showMessage(
-														`Ez a böngésző nem támogatja a maradandó tárhelyet!`,
+														`Nem kaptam maradandó tárhelyet. Próbáld meg később!`,
 													)
 												}
 											}}
 										>
 											Javítsd meg
 										</button>
+									</>
+								) : (
+									<>
+										Ez a böngésző nem támogatja a maradandó
+										tárhelyet.
 									</>
 								)
 							}
