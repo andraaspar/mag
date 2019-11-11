@@ -2,6 +2,7 @@ import { DBSchema, IDBPDatabase, IDBPTransaction, openDB } from 'idb'
 import { isNumber } from 'util'
 import { dateToString } from '../function/dateToString'
 import { getStringToIdbSortableMap } from '../function/stringToIdbSortable'
+import { ERROR_CHARACTER } from '../model/constants'
 import { DbDictionary, Dictionary1, dictionaryToDb } from '../model/Dictionary'
 import { DbWord, wordToDb } from '../model/Word'
 import { updateDictionaryCount } from './updateDictionaryCount'
@@ -112,12 +113,12 @@ export async function initDb(showMessage: (message: any) => void) {
 		},
 		blocked() {
 			showMessage(
-				`[pycho4] Az adatbázist nem tudom a szükséges szintre fejleszteni, mert egy másik fülön nyitva van.`,
+				`${ERROR_CHARACTER} [pycho4] Az adatbázist nem tudom a szükséges szintre fejleszteni, mert egy másik fülön nyitva van.`,
 			)
 		},
 		blocking() {
 			showMessage(
-				`[pychpy] Egy másik fül szeretné az adatbázist fejleszteni, de nem képes rá, mert ez a fül nyitva van.`,
+				`${ERROR_CHARACTER} [pychpy] Egy másik fül szeretné az adatbázist fejleszteni, de nem képes rá, mert ez a fül nyitva van.`,
 			)
 		},
 	})

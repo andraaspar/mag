@@ -15,6 +15,7 @@ import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
 import { FormRowComp } from './FormRowComp'
+import { IconComp } from './IconComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
@@ -120,6 +121,7 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 															}
 														}}
 													>
+														<IconComp _icon='📋' />{' '}
 														Másold
 													</button>
 													<a
@@ -135,6 +137,7 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 														}.json`}
 														href={url`data:text/json;charset=utf-8,${$json}`}
 													>
+														<IconComp _icon='💾' />{' '}
 														Tárold el
 													</a>
 													<FocusRefComp

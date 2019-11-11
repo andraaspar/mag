@@ -12,6 +12,7 @@ import { useDictionary } from '../hook/useDictionary'
 import { usePageTitle } from '../hook/usePageTitle'
 import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
 import { useWordsByDictionaryId } from '../hook/useWordsByDictionaryId'
+import { CLOSE_CHARACTER } from '../model/constants'
 import { isLoaded } from '../model/TLoadable'
 import { TSelection } from '../model/TSelection'
 import { DbWord } from '../model/Word'
@@ -20,6 +21,7 @@ import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FormRowComp } from './FormRowComp'
+import { IconComp } from './IconComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
@@ -135,7 +137,7 @@ export function WordsPage(props: WordsPageProps) {
 										setQ('')
 									}}
 								>
-									×
+									{CLOSE_CHARACTER}
 								</button>
 							)}
 						</FormRowComp>
@@ -153,9 +155,11 @@ export function WordsPage(props: WordsPageProps) {
 										_load={loadWords}
 									>
 										{words =>
-											words.current == null ? (
+											words.current == null ||
+											words.current.length === 0 ? (
 												<p>
 													<em>
+														<IconComp _icon='🙈' />{' '}
 														Nem találtam egy szót
 														sem.
 													</em>
@@ -213,7 +217,7 @@ export function WordsPage(props: WordsPageProps) {
 						</LoadableComp>
 						<ButtonRowComp>
 							<Link to={`../word/`} role='button'>
-								Adj hozzá egy szót
+								<IconComp _icon='➕' /> Adj hozzá egy szót
 							</Link>
 							<WordsMenuComp
 								_dictionaryId={dictionary.current.id!}

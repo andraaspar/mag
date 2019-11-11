@@ -12,4 +12,15 @@ ReactDOM.render(
 	document.getElementById('root'),
 )
 
-serviceWorker.register()
+serviceWorker.register({
+	onSuccess: () => {
+		if (globalThis.setIsCached) {
+			globalThis.setIsCached(true)
+		}
+	},
+	onUpdate: () => {
+		if (globalThis.setHasUpdate) {
+			globalThis.setHasUpdate(true)
+		}
+	},
+})

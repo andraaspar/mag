@@ -7,7 +7,11 @@ import { setStringToIdbSortableMap } from '../function/stringToIdbSortable'
 import { useMessages } from '../hook/useMessages'
 import { usePersistentStorage } from '../hook/usePersistentStorage'
 import { useShield } from '../hook/useShield'
-import { WARNING_CHARACTER } from '../model/constants'
+import {
+	ERROR_CHARACTER,
+	SUCCESS_CHARACTER,
+	WARNING_CHARACTER,
+} from '../model/constants'
 import {
 	initDb,
 	KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP,
@@ -43,6 +47,19 @@ export function AppComp() {
 
 	const { $shieldKeys, shieldContextValue } = useShield()
 	const { showShield, hideShield } = shieldContextValue
+
+	useEffect(() => {
+		globalThis.setIsCached = flag => {
+			if (flag) {
+				showMessage(`${SUCCESS_CHARACTER} Internet nélkül is működöm!`)
+			}
+		}
+		globalThis.setHasUpdate = flag => {
+			if (flag) {
+				showMessage(`⬆️ Kész az új verzióm! Indíts újra, és telepítem.`)
+			}
+		}
+	}, [showMessage])
 
 	useEffect(() => {
 		showShield('q0t0sl')
@@ -101,46 +118,39 @@ export function AppComp() {
 						)}
 						{$hasDb && (
 							<Switch>
-								<Route exact path='/' component={StartPage} />
-								<Route
-									path='/import/'
-									component={ImportFromFilePage}
-								/>
-								<Route
-									exact
-									path='/dictionary/'
-									component={EditDictionaryPage}
-								/>
-								<Route
-									exact
-									path='/dictionary/:dictionaryId/'
-									component={DictionaryPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/export/'
-									component={ExportDictionaryPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/word/'
-									component={EditWordPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/words/'
-									component={WordsPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/import/'
-									component={ImportFromFilePage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/learn/'
-									component={LearnPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/edit/'
-									component={EditDictionaryPage}
-								/>
-								<Route path='/' component={NotFoundPage} />
+								<Route exact path='/'>
+									<StartPage />
+								</Route>
+								<Route path='/import/'>
+									<ImportFromFilePage />
+								</Route>
+								<Route exact path='/dictionary/'>
+									<EditDictionaryPage />
+								</Route>
+								<Route exact path='/dictionary/:dictionaryId/'>
+									<DictionaryPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/export/'>
+									<ExportDictionaryPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/word/'>
+									<EditWordPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/words/'>
+									<WordsPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/import/'>
+									<ImportFromFilePage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/learn/'>
+									<LearnPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/edit/'>
+									<EditDictionaryPage />
+								</Route>
+								<Route path='/'>
+									<NotFoundPage />
+								</Route>
 							</Switch>
 						)}
 					</RowComp>
@@ -172,7 +182,7 @@ export function AppComp() {
 														)
 													} else {
 														showMessage(
-															`Nem kaptam maradandó tárhelyet. Próbáld meg később!`,
+															`${ERROR_CHARACTER} Nem kaptam maradandó tárhelyet. Próbáld meg később!`,
 														)
 													}
 													hideShield('q0t0uo')

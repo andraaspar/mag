@@ -5,6 +5,7 @@ import { dictionaryToString } from '../function/dictionaryToString'
 import { queryToRegExp } from '../function/queryToRegExp'
 import { url } from '../function/url'
 import { usePageTitle } from '../hook/usePageTitle'
+import { CLOSE_CHARACTER } from '../model/constants'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded, TLoadable } from '../model/TLoadable'
 import { selectPageCount } from '../selector/selectPageCount'
@@ -16,11 +17,14 @@ import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
 import { FormRowComp } from './FormRowComp'
+import { IconComp } from './IconComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { ShowMessageContext } from './ShowMessageContext'
 
-export function StartPage() {
+export interface StartPageProps {}
+
+export function StartPage(props: StartPageProps) {
 	usePageTitle(`Szia!`)
 	const [$pageSize] = useState(10)
 	const [$query, set$query] = useState('')
@@ -93,10 +97,7 @@ export function StartPage() {
 	return (
 		<ContentRowComp>
 			<h1>Szia!</h1>
-			<p>
-				Mag vagyok, egy szógyakorló program. Magolj velem! Internet
-				nélkül is működöm!
-			</p>
+			<p>Mag vagyok, egy szógyakorló program. Magolj velem!</p>
 			{isLoaded($totalDictionaryCount) &&
 				$totalDictionaryCount.count > 0 && (
 					<FormRowComp>
@@ -116,7 +117,7 @@ export function StartPage() {
 									set$query('')
 								}}
 							>
-								×
+								{CLOSE_CHARACTER}
 							</button>
 						)}
 					</FormRowComp>
@@ -155,7 +156,10 @@ export function StartPage() {
 							isLoaded($totalDictionaryCount) &&
 							$totalDictionaryCount.count > 0 && (
 								<p>
-									<em>Nem találtam egy szótárat sem.</em>
+									<em>
+										<IconComp _icon='🙈' /> Nem találtam egy
+										szótárat sem.
+									</em>
 								</p>
 							)
 						)}
@@ -167,23 +171,26 @@ export function StartPage() {
 									to='/dictionary/'
 									innerRef={makeADictionaryLinkRef}
 								>
-									készíts egy új szótárat
+									<IconComp _icon='✨' /> készíts egy új
+									szótárat
 								</Link>
 								<FocusRefComp
 									_focusThis={makeADictionaryLinkRef}
 								/>
 								, vagy{' '}
 								<Link to='/import/'>
-									tölts be egy szótárat!
+									<IconComp _icon='📂' /> tölts be egy
+									szótárat!
 								</Link>
 							</p>
 						) : (
 							<ButtonRowComp>
 								<Link to='/dictionary/' role='button'>
-									Készíts új szótárat
+									<IconComp _icon='✨' /> Készíts új szótárat
 								</Link>{' '}
 								<Link to='/import/' role='button'>
-									Tölts be egy szótárat
+									<IconComp _icon='📂' /> Tölts be egy
+									szótárat
 								</Link>
 							</ButtonRowComp>
 						)}
