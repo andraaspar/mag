@@ -1,0 +1,15 @@
+.outer {
+	position: relative;
+	display: flex;
+	width: 100%;
+	height: calc(var(--border-radius) * 2);
+	background-color: black;
+	border-radius: var(--border-radius);
+}
+
+.inner {
+	flex: 0 0 0;
+	background-color: #d60044;
+	border-radius: var(--border-radius);
+	transition: flex-basis 1s;
+}

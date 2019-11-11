@@ -10,6 +10,7 @@ import { ContentRowComp } from './ContentRowComp'
 import { FormRowComp } from './FormRowComp'
 import { LearnComp } from './LearnComp'
 import { LoadableComp } from './LoadableComp'
+import { ProgressComp } from './ProgressComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
 
 export interface LearnPageProps {}
@@ -29,7 +30,9 @@ export function LearnPage(props: LearnPageProps) {
 	const [$questionsCount, set$questionsCount] = useState(0)
 	const [$questionsLearnedCount, set$questionsLearnedCount] = useState(0)
 	const progress =
-		$questionsCount > 0 ? $questionsLearnedCount / $questionsCount : 0
+		$questionsCount > 0
+			? $questionsLearnedCount / Math.max(1, $questionsCount - 1)
+			: 0
 	useEffect(() => {
 		if (
 			isLoaded($questions) &&
@@ -101,9 +104,9 @@ export function LearnPage(props: LearnPageProps) {
 								) : (
 									<>
 										<FormRowComp>
-											<progress value={progress}>
-												{Math.round(progress * 100)}%
-											</progress>
+											<ProgressComp
+												_progress={progress}
+											/>
 										</FormRowComp>
 										<LoadableComp
 											_value={$word}
