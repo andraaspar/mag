@@ -101,46 +101,39 @@ export function AppComp() {
 						)}
 						{$hasDb && (
 							<Switch>
-								<Route exact path='/' component={StartPage} />
-								<Route
-									path='/import/'
-									component={ImportFromFilePage}
-								/>
-								<Route
-									exact
-									path='/dictionary/'
-									component={EditDictionaryPage}
-								/>
-								<Route
-									exact
-									path='/dictionary/:dictionaryId/'
-									component={DictionaryPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/export/'
-									component={ExportDictionaryPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/word/'
-									component={EditWordPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/words/'
-									component={WordsPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/import/'
-									component={ImportFromFilePage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/learn/'
-									component={LearnPage}
-								/>
-								<Route
-									path='/dictionary/:dictionaryId/edit/'
-									component={EditDictionaryPage}
-								/>
-								<Route path='/' component={NotFoundPage} />
+								<Route exact path='/'>
+									<StartPage />
+								</Route>
+								<Route path='/import/'>
+									<ImportFromFilePage />
+								</Route>
+								<Route exact path='/dictionary/'>
+									<EditDictionaryPage />
+								</Route>
+								<Route exact path='/dictionary/:dictionaryId/'>
+									<DictionaryPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/export/'>
+									<ExportDictionaryPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/word/'>
+									<EditWordPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/words/'>
+									<WordsPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/import/'>
+									<ImportFromFilePage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/learn/'>
+									<LearnPage />
+								</Route>
+								<Route path='/dictionary/:dictionaryId/edit/'>
+									<EditDictionaryPage />
+								</Route>
+								<Route path='/'>
+									<NotFoundPage />
+								</Route>
 							</Switch>
 						)}
 					</RowComp>
