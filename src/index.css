@@ -183,3 +183,8 @@ progress::-webkit-progress-value {
 .does-not-expand {
 	flex: 0 0 auto;
 }
+
+.button-padding-y {
+	padding-top: var(--button-padding-y);
+	padding-bottom: var(--button-padding-y);
+}

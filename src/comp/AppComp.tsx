@@ -58,7 +58,25 @@ export function AppComp() {
 		<ShowMessageContext.Provider value={showMessage}>
 			<RowComp _isVertical _gap={20} _padding={20} _fill>
 				<div className={styles.header}>
-					<Link to='/'>Mag</Link>
+					<button
+						type='button'
+						onClick={() => {
+							window.history.back()
+						}}
+					>
+						←
+					</button>
+					<Link to='/' className='button-padding-y'>
+						Mag
+					</Link>
+					<button
+						type='button'
+						onClick={() => {
+							window.history.forward()
+						}}
+					>
+						→
+					</button>
 				</div>
 				<RowComp _isVertical>
 					<MessagesComp
