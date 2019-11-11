@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { useCallback } from 'use-memo-one'
 import { dictionaryToString } from '../function/dictionaryToString'
@@ -12,6 +12,7 @@ import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { EditDictionaryComp } from './EditDictionaryComp'
 import { LoadableComp } from './LoadableComp'
+import { ShieldContext } from './ShieldContext'
 
 export function EditDictionaryPage() {
 	const routeMatch = useRouteMatch<{ dictionaryId: string | undefined }>(
@@ -21,18 +22,21 @@ export function EditDictionaryPage() {
 		routeMatch && parseInt(routeMatch.params.dictionaryId + '', 10)
 	const history = useHistory()
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
+	const { showShield, hideShield } = useContext(ShieldContext)
 	const finish = useCallback(
 		async (dictionary: Dictionary) => {
+			showShield('q0t143')
 			const storedDictionaryId = await storeDictionary({
 				dictionary,
 			})
+			hideShield('q0t143')
 			if (dictionaryId === storedDictionaryId) {
 				history.goBack()
 			} else {
 				history.replace(url`/dictionary/${storedDictionaryId}/`)
 			}
 		},
-		[history, dictionaryId],
+		[history, dictionaryId, showShield, hideShield],
 	)
 	usePageTitle(
 		isLoaded($dictionary) && $dictionary.current

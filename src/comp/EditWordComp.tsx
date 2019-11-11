@@ -15,6 +15,7 @@ import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
 import { FormRowComp } from './FormRowComp'
 import { LabelComp } from './LabelComp'
+import { ShieldContext } from './ShieldContext'
 import { ShowMessageContext } from './ShowMessageContext'
 
 export interface EditWordCompProps {
@@ -76,11 +77,13 @@ export function EditWordComp({
 		],
 	)
 	const validationErrors = useWordValidationErrors(sanitizedWord)
+	const { showShield, hideShield } = useContext(ShieldContext)
 	const onSubmit = useCallback(
 		async (e: FormEvent) => {
 			e.preventDefault()
 			if (!sanitizedWord) return
 			const t = getDb().transaction([STORE_WORDS], 'readwrite')
+			showShield('q0t1ec')
 			try {
 				await checkForConflictingWord({
 					t,
@@ -95,8 +98,9 @@ export function EditWordComp({
 			} catch (e) {
 				showMessage(e)
 			}
+			hideShield('q0t1ec')
 		},
-		[sanitizedWord, _onSuccess, showMessage],
+		[sanitizedWord, _onSuccess, showMessage, showShield, hideShield],
 	)
 	return (
 		<form onSubmit={onSubmit}>
