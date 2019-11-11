@@ -1,10 +1,10 @@
 import { DBSchema, IDBPDatabase, IDBPTransaction, openDB } from 'idb'
+import { isNumber } from 'util'
 import { dateToString } from '../function/dateToString'
 import { getStringToIdbSortableMap } from '../function/stringToIdbSortable'
-import { DbDictionary, Dictionary1 } from '../model/Dictionary'
-import { DbWord } from '../model/Word'
-import { storeDictionary } from './storeDictionary'
-import { storeWord } from './storeWord'
+import { DbDictionary, Dictionary1, dictionaryToDb } from '../model/Dictionary'
+import { DbWord, wordToDb } from '../model/Word'
+import { updateDictionaryCount } from './updateDictionaryCount'
 
 export const DB_NAME = 'mag'
 
@@ -14,6 +14,7 @@ export const STORE_DICTIONARIES = 'dictionaries'
 export const INDEX_DICTIONARIES_NAME = 'name'
 export const INDEX_DICTIONARIES_LANGUAGE_0 = 'language0'
 export const INDEX_DICTIONARIES_LANGUAGE_1 = 'language1'
+export const INDEX_DICTIONARIES_COUNT_NAME = 'countName'
 
 export const STORE_WORDS = 'words'
 export const INDEX_WORDS_COUNT_0 = 'count0'
@@ -36,6 +37,7 @@ export interface Db extends DBSchema {
 			[INDEX_DICTIONARIES_NAME]: string
 			[INDEX_DICTIONARIES_LANGUAGE_0]: string
 			[INDEX_DICTIONARIES_LANGUAGE_1]: string
+			[INDEX_DICTIONARIES_COUNT_NAME]: [number, string]
 		}
 	}
 	words: {
@@ -88,7 +90,7 @@ export function getDb() {
 }
 
 export async function initDb(showMessage: (message: any) => void) {
-	db = await openDB<Db>(DB_NAME, 2, {
+	db = await openDB<Db>(DB_NAME, 3, {
 		async upgrade(db, oldVersion, newVersion, t) {
 			try {
 				if (oldVersion < 2) {
@@ -100,6 +102,9 @@ export async function initDb(showMessage: (message: any) => void) {
 							Db1 | Db
 						>)
 						break
+				}
+				if (oldVersion < 3) {
+					await upgradeDb2To3(t)
 				}
 			} catch (e) {
 				showMessage(e)
@@ -197,38 +202,54 @@ async function createDb2(t: IDBPTransaction<Db>) {
 }
 
 async function upgradeDb1To2(t: IDBPTransaction<Db1 | Db>) {
+	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
+	const wordsStore = t.objectStore(STORE_WORDS)
 	const wordlistsStore = t.objectStore(DEPRECATED_STORE_WORDLISTS)
 	let cursor = await wordlistsStore.openCursor()
 	while (cursor) {
 		const dictionary1 = cursor.value
-		const dictionaryId = await storeDictionary({
-			t: t as IDBPTransaction<Db>,
-			dictionary: {
+		const dictionaryId = await dictionariesStore.put(
+			dictionaryToDb({
 				name: dictionary1.name,
 				language0: dictionary1.lang1Name,
 				language1: dictionary1.lang2Name,
-			},
-		})
-		for (const word1 of dictionary1.words) {
-			await storeWord({
-				t: t as IDBPTransaction<Db>,
-				word: {
-					dictionaryId,
-					modifiedDate: dateToString(new Date()),
-					translation0: {
-						text: word1.lang1,
-						description: '',
-						count: word1.lang1Count,
-					},
-					translation1: {
-						text: word1.lang2,
-						description: '',
-						count: word1.lang2Count,
-					},
-				},
-			})
+				count: 0,
+			}),
+		)
+		if (isNumber(dictionaryId)) {
+			for (const word1 of dictionary1.words) {
+				await wordsStore.put(
+					wordToDb({
+						dictionaryId,
+						modifiedDate: dateToString(new Date()),
+						translation0: {
+							text: word1.lang1,
+							description: '',
+							count: word1.lang1Count,
+						},
+						translation1: {
+							text: word1.lang2,
+							description: '',
+							count: word1.lang2Count,
+						},
+					}),
+				)
+			}
 		}
 		cursor = await cursor.continue()
 	}
 	t.db.deleteObjectStore(DEPRECATED_STORE_WORDLISTS)
+}
+
+async function upgradeDb2To3(t: IDBPTransaction<Db>) {
+	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
+	let cursor = await dictionariesStore.openKeyCursor()
+	while (cursor) {
+		await updateDictionaryCount({ t, dictionaryId: cursor.primaryKey })
+		cursor = await cursor.continue()
+	}
+	dictionariesStore.createIndex(INDEX_DICTIONARIES_COUNT_NAME, [
+		'countForSort',
+		'nameForSort',
+	])
 }

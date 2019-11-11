@@ -7,5 +7,6 @@ export function sanitizeDictionary(d: Dictionary): Dictionary {
 		name: sanitizeString(d.name),
 		language0: sanitizeString(d.language0),
 		language1: sanitizeString(d.language1),
+		count: d.count,
 	}
 }

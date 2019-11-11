@@ -8,13 +8,15 @@ import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
 import { checkForConflictingWord } from '../storage/checkForConflictingWord'
-import { getDb, STORE_WORDS } from '../storage/Db'
+import { getDb, STORE_DICTIONARIES, STORE_WORDS } from '../storage/Db'
 import { storeWord } from '../storage/storeWord'
+import { updateDictionaryCount } from '../storage/updateDictionaryCount'
 import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
 import { FormRowComp } from './FormRowComp'
 import { LabelComp } from './LabelComp'
+import { ShieldContext } from './ShieldContext'
 import { ShowMessageContext } from './ShowMessageContext'
 
 export interface EditWordCompProps {
@@ -76,11 +78,16 @@ export function EditWordComp({
 		],
 	)
 	const validationErrors = useWordValidationErrors(sanitizedWord)
+	const { showShield, hideShield } = useContext(ShieldContext)
 	const onSubmit = useCallback(
 		async (e: FormEvent) => {
 			e.preventDefault()
 			if (!sanitizedWord) return
-			const t = getDb().transaction([STORE_WORDS], 'readwrite')
+			const t = getDb().transaction(
+				[STORE_DICTIONARIES, STORE_WORDS],
+				'readwrite',
+			)
+			showShield('q0t1ec')
 			try {
 				await checkForConflictingWord({
 					t,
@@ -90,13 +97,18 @@ export function EditWordComp({
 					t,
 					word: sanitizedWord,
 				})
+				await updateDictionaryCount({
+					t,
+					dictionaryId: sanitizedWord.dictionaryId,
+				})
 				showMessage(`Eltároltam a szót.`)
 				_onSuccess()
 			} catch (e) {
 				showMessage(e)
 			}
+			hideShield('q0t1ec')
 		},
-		[sanitizedWord, _onSuccess, showMessage],
+		[sanitizedWord, _onSuccess, showMessage, showShield, hideShield],
 	)
 	return (
 		<form onSubmit={onSubmit}>
@@ -169,7 +181,12 @@ export function EditWordComp({
 								type='button'
 								onClick={async () => {
 									try {
+										const t = getDb().transaction(
+											[STORE_DICTIONARIES, STORE_WORDS],
+											'readwrite',
+										)
 										await storeWord({
+											t,
 											word: {
 												..._word,
 												translation0: {
@@ -188,6 +205,10 @@ export function EditWordComp({
 												},
 											},
 										})
+										await updateDictionaryCount({
+											t,
+											dictionaryId: _word.dictionaryId,
+										})
 										_refresh()
 									} catch (e) {
 										showMessage(e)
@@ -204,6 +225,10 @@ export function EditWordComp({
 								type='button'
 								onClick={async () => {
 									try {
+										const t = getDb().transaction(
+											[STORE_DICTIONARIES, STORE_WORDS],
+											'readwrite',
+										)
 										await storeWord({
 											word: {
 												..._word,
@@ -216,6 +241,10 @@ export function EditWordComp({
 													count: 0,
 												},
 											},
+										})
+										await updateDictionaryCount({
+											t,
+											dictionaryId: _word.dictionaryId,
 										})
 										_refresh()
 									} catch (e) {

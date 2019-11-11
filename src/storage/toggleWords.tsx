@@ -1,13 +1,20 @@
 import { IDBPTransaction } from 'idb'
 import { DEFAULT_COUNT } from '../model/constants'
 import { Word, wordFromDb, wordToDb } from '../model/Word'
-import { Db, getDb, INDEX_WORDS_MODIFIED_DATE_0, STORE_WORDS } from './Db'
+import {
+	Db,
+	getDb,
+	INDEX_WORDS_MODIFIED_DATE_0,
+	STORE_DICTIONARIES,
+	STORE_WORDS,
+} from './Db'
 import { makeKeyRangeWordsModifiedDate } from './makeKeyRangeWordsModifiedDate'
 import { readWord } from './readWord'
 import { storeWord } from './storeWord'
+import { updateDictionaryCount } from './updateDictionaryCount'
 
 export async function toggleWords({
-	t = getDb().transaction([STORE_WORDS], 'readwrite'),
+	t = getDb().transaction([STORE_DICTIONARIES, STORE_WORDS], 'readwrite'),
 	dictionaryId,
 	wordIds,
 	enable,
@@ -38,6 +45,10 @@ export async function toggleWords({
 			await storeWord({ t, word })
 		}
 	}
+	await updateDictionaryCount({
+		t,
+		dictionaryId,
+	})
 }
 
 export function updateWord(word: Word, enable: boolean) {

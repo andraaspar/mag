@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useMemo } from 'use-memo-one'
 import { TSelection } from '../model/TSelection'
 import { deleteWords } from '../storage/deleteWords'
 import { toggleWords } from '../storage/toggleWords'
+import { ShieldContext } from './ShieldContext'
 
 enum BulkActions {
 	Enable = 'Enable',
@@ -28,6 +29,7 @@ export function WordsMenuComp({
 		() => Object.keys(_selectedWordIds).length,
 		[_selectedWordIds],
 	)
+	const { showShield, hideShield } = useContext(ShieldContext)
 	return (
 		<select
 			value=''
@@ -37,20 +39,24 @@ export function WordsMenuComp({
 						_setSelectedWordIds({})
 						break
 					case BulkActions.Disable:
+						showShield('q0t1hz')
 						await toggleWords({
 							dictionaryId: _dictionaryId,
 							wordIds: Object.keys(_selectedWordIds).map(_ => +_),
 							enable: false,
 						})
+						hideShield('q0t1hz')
 						_setSelectedWordIds({})
 						_onDone()
 						break
 					case BulkActions.Enable:
+						showShield('q0t1iw')
 						await toggleWords({
 							dictionaryId: _dictionaryId,
 							wordIds: Object.keys(_selectedWordIds).map(_ => +_),
 							enable: true,
 						})
+						hideShield('q0t1iw')
 						_setSelectedWordIds({})
 						_onDone()
 						break
@@ -60,12 +66,14 @@ export function WordsMenuComp({
 								`Biztosan törölni akarod a kiválasztott szavakat?`,
 							)
 						) {
+							showShield('q0t1je')
 							await deleteWords({
 								dictionaryId: _dictionaryId,
 								wordIds: Object.keys(_selectedWordIds).map(
 									_ => +_,
 								),
 							})
+							hideShield('q0t1je')
 							_setSelectedWordIds({})
 							_onDone()
 						}

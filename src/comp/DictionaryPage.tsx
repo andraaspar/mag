@@ -13,6 +13,7 @@ import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
 import { LoadableComp } from './LoadableComp'
+import { ShieldContext } from './ShieldContext'
 import { ShowMessageContext } from './ShowMessageContext'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
 
@@ -36,6 +37,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 	const showMessage = useContext(ShowMessageContext)
 	const askLinkRef = useRef<HTMLAnchorElement>(null)
 	const addAWordLinkRef = useRef<HTMLAnchorElement>(null)
+	const { showShield, hideShield } = useContext(ShieldContext)
 	usePageTitle(
 		!isLoaded($dictionary)
 			? `Szótár`
@@ -134,6 +136,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 											`Biztosan törölni akarod ezt a szótárat?`,
 										)
 									) {
+										showShield('q0t19b')
 										try {
 											await deleteDictionary({
 												dictionaryId,
@@ -142,6 +145,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 										} catch (e) {
 											showMessage(e)
 										}
+										hideShield('q0t19b')
 									}
 								}}
 							>

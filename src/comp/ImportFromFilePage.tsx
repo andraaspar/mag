@@ -13,6 +13,7 @@ import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
 import { GetWordsComp } from './GetWordsComp'
 import { SetImportParamsComp } from './SetImportParamsComp'
+import { ShieldContext } from './ShieldContext'
 import { ShowMessageContext } from './ShowMessageContext'
 
 export interface ImportableDictionary {
@@ -51,12 +52,14 @@ export function ImportFromFilePage() {
 			swapLanguages: false,
 		})
 	}, [])
+	const { showShield, hideShield } = useContext(ShieldContext)
 	return (
 		<ContentRowComp>
 			<h1>Tölts be szavakat</h1>
 			<form
 				onSubmit={async e => {
 					e.preventDefault()
+					showShield('q0t0z5')
 					try {
 						if (!$importableDictionary || !$importParams) {
 							throw new Error(`[pydz1i]`)
@@ -84,6 +87,7 @@ export function ImportFromFilePage() {
 					} catch (e) {
 						showMessage(e)
 					}
+					hideShield('q0t0z5')
 				}}
 			>
 				<ContentRowComp>
