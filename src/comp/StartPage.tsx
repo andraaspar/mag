@@ -5,6 +5,7 @@ import { dictionaryToString } from '../function/dictionaryToString'
 import { queryToRegExp } from '../function/queryToRegExp'
 import { url } from '../function/url'
 import { usePageTitle } from '../hook/usePageTitle'
+import { CLOSE_CHARACTER } from '../model/constants'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded, TLoadable } from '../model/TLoadable'
 import { selectPageCount } from '../selector/selectPageCount'
@@ -20,7 +21,9 @@ import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { ShowMessageContext } from './ShowMessageContext'
 
-export function StartPage() {
+export interface StartPageProps {}
+
+export function StartPage(props: StartPageProps) {
 	usePageTitle(`Szia!`)
 	const [$pageSize] = useState(10)
 	const [$query, set$query] = useState('')
@@ -93,10 +96,7 @@ export function StartPage() {
 	return (
 		<ContentRowComp>
 			<h1>Szia!</h1>
-			<p>
-				Mag vagyok, egy szógyakorló program. Magolj velem! Internet
-				nélkül is működöm!
-			</p>
+			<p>Mag vagyok, egy szógyakorló program. Magolj velem!</p>
 			{isLoaded($totalDictionaryCount) &&
 				$totalDictionaryCount.count > 0 && (
 					<FormRowComp>
@@ -116,7 +116,7 @@ export function StartPage() {
 									set$query('')
 								}}
 							>
-								×
+								{CLOSE_CHARACTER}
 							</button>
 						)}
 					</FormRowComp>

@@ -12,6 +12,7 @@ import { useDictionary } from '../hook/useDictionary'
 import { usePageTitle } from '../hook/usePageTitle'
 import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
 import { useWordsByDictionaryId } from '../hook/useWordsByDictionaryId'
+import { CLOSE_CHARACTER } from '../model/constants'
 import { isLoaded } from '../model/TLoadable'
 import { TSelection } from '../model/TSelection'
 import { DbWord } from '../model/Word'
@@ -135,7 +136,7 @@ export function WordsPage(props: WordsPageProps) {
 										setQ('')
 									}}
 								>
-									×
+									{CLOSE_CHARACTER}
 								</button>
 							)}
 						</FormRowComp>

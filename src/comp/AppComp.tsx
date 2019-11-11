@@ -7,7 +7,11 @@ import { setStringToIdbSortableMap } from '../function/stringToIdbSortable'
 import { useMessages } from '../hook/useMessages'
 import { usePersistentStorage } from '../hook/usePersistentStorage'
 import { useShield } from '../hook/useShield'
-import { WARNING_CHARACTER } from '../model/constants'
+import {
+	ERROR_CHARACTER,
+	SUCCESS_CHARACTER,
+	WARNING_CHARACTER,
+} from '../model/constants'
 import {
 	initDb,
 	KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP,
@@ -43,6 +47,19 @@ export function AppComp() {
 
 	const { $shieldKeys, shieldContextValue } = useShield()
 	const { showShield, hideShield } = shieldContextValue
+
+	useEffect(() => {
+		globalThis.setIsCached = flag => {
+			if (flag) {
+				showMessage(`${SUCCESS_CHARACTER} Internet nélkül is működöm!`)
+			}
+		}
+		globalThis.setHasUpdate = flag => {
+			if (flag) {
+				showMessage(`⬆️ Kész az új verzióm! Indíts újra, és telepítem.`)
+			}
+		}
+	}, [showMessage])
 
 	useEffect(() => {
 		showShield('q0t0sl')
@@ -165,7 +182,7 @@ export function AppComp() {
 														)
 													} else {
 														showMessage(
-															`Nem kaptam maradandó tárhelyet. Próbáld meg később!`,
+															`${ERROR_CHARACTER} Nem kaptam maradandó tárhelyet. Próbáld meg később!`,
 														)
 													}
 													hideShield('q0t0uo')

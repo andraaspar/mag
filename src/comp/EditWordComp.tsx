@@ -101,7 +101,6 @@ export function EditWordComp({
 					t,
 					dictionaryId: sanitizedWord.dictionaryId,
 				})
-				showMessage(`Eltároltam a szót.`)
 				_onSuccess()
 			} catch (e) {
 				showMessage(e)
