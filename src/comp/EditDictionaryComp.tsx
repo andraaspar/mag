@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { useMemo } from 'use-memo-one'
 import { sanitizeDictionary } from '../function/sanitizeDictionary'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
+import { SUCCESS_CHARACTER } from '../model/constants'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { DictionaryPropsComp } from './DictionaryPropsComp'
 import { ErrorsComp } from './ErrorsComp'
+import { IconComp } from './IconComp'
 
 export interface EditDictionaryCompProps {
 	_dictionary: Dictionary
@@ -50,7 +52,7 @@ export function EditDictionaryComp({
 							dictionaryValidationErrors.length > 0
 						}
 					>
-						Tárold el
+						<IconComp _icon={SUCCESS_CHARACTER} /> Tárold el
 					</button>
 				</ButtonRowComp>
 			</ContentRowComp>

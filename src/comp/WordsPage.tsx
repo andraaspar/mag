@@ -21,6 +21,7 @@ import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FormRowComp } from './FormRowComp'
+import { IconComp } from './IconComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { UnknownDictionaryComp } from './UnknownDictionaryComp'
@@ -154,9 +155,11 @@ export function WordsPage(props: WordsPageProps) {
 										_load={loadWords}
 									>
 										{words =>
-											words.current == null ? (
+											words.current == null ||
+											words.current.length === 0 ? (
 												<p>
 													<em>
+														<IconComp _icon='🙈' />{' '}
 														Nem találtam egy szót
 														sem.
 													</em>
@@ -214,7 +217,7 @@ export function WordsPage(props: WordsPageProps) {
 						</LoadableComp>
 						<ButtonRowComp>
 							<Link to={`../word/`} role='button'>
-								Adj hozzá egy szót
+								<IconComp _icon='➕' /> Adj hozzá egy szót
 							</Link>
 							<WordsMenuComp
 								_dictionaryId={dictionary.current.id!}

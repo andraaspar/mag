@@ -187,4 +187,6 @@ progress::-webkit-progress-value {
 .button-padding-y {
 	padding-top: var(--button-padding-y);
 	padding-bottom: var(--button-padding-y);
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
 }

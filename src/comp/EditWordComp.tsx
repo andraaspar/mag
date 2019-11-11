@@ -3,7 +3,12 @@ import { useCallback, useMemo } from 'use-memo-one'
 import { dateToString } from '../function/dateToString'
 import { sanitizeWord } from '../function/sanitizeWord'
 import { useWordValidationErrors } from '../hook/useWordValidationErrors'
-import { DEFAULT_COUNT, QUESTIONS_CHARACTER } from '../model/constants'
+import {
+	DEFAULT_COUNT,
+	NO_QUESTIONS_CHARACTER,
+	QUESTIONS_CHARACTER,
+	SUCCESS_CHARACTER,
+} from '../model/constants'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
@@ -15,6 +20,7 @@ import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
 import { FormRowComp } from './FormRowComp'
+import { IconComp } from './IconComp'
 import { LabelComp } from './LabelComp'
 import { ShieldContext } from './ShieldContext'
 import { ShowMessageContext } from './ShowMessageContext'
@@ -171,7 +177,7 @@ export function EditWordComp({
 							validationErrors.length > 0
 						}
 					>
-						Tárold el
+						<IconComp _icon={SUCCESS_CHARACTER} /> Tárold el
 					</button>
 					{_word.id &&
 						(_word.translation0.count === 0 ||
@@ -214,6 +220,7 @@ export function EditWordComp({
 									}
 								}}
 							>
+								<IconComp _icon={QUESTIONS_CHARACTER} />{' '}
 								Kapcsold be a szót
 							</button>
 						)}
@@ -229,6 +236,7 @@ export function EditWordComp({
 											'readwrite',
 										)
 										await storeWord({
+											t,
 											word: {
 												..._word,
 												translation0: {
@@ -251,6 +259,7 @@ export function EditWordComp({
 									}
 								}}
 							>
+								<IconComp _icon={NO_QUESTIONS_CHARACTER} />{' '}
 								Kapcsold ki a szót
 							</button>
 						)}

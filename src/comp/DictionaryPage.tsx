@@ -6,12 +6,14 @@ import { useDictionary } from '../hook/useDictionary'
 import { useNumberOfQuestions } from '../hook/useNumberOfQuestions'
 import { usePageTitle } from '../hook/usePageTitle'
 import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
+import { ERROR_CHARACTER } from '../model/constants'
 import { isLoaded } from '../model/TLoadable'
 import { deleteDictionary } from '../storage/deleteDictionary'
 import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
+import { IconComp } from './IconComp'
 import { LoadableComp } from './LoadableComp'
 import { ShieldContext } from './ShieldContext'
 import { ShowMessageContext } from './ShowMessageContext'
@@ -107,25 +109,25 @@ export function DictionaryPage(props: DictionaryPageProps) {
 											innerRef={askLinkRef}
 											role='button'
 										>
-											Kérdezz!
+											<IconComp _icon='❓' /> Kérdezz!
 										</Link>
 										<FocusRefComp _focusThis={askLinkRef} />
 									</>
 								)}
 							<Link to='./word/' role='button'>
-								Adj hozzá egy szót
+								<IconComp _icon='➕' /> Adj hozzá egy szót
 							</Link>
 							<Link to='./words/' role='button'>
-								Mutasd a szavakat
+								<IconComp _icon='👀' /> Mutasd a szavakat
 							</Link>
 							<Link to='./export/' role='button'>
-								Mentsd ki ezt a szótárat
+								<IconComp _icon='💾' /> Mentsd ki ezt a szótárat
 							</Link>
 							<Link to='./import/' role='button'>
-								Tölts be szavakat
+								<IconComp _icon='📂' /> Tölts be szavakat
 							</Link>
 							<Link to='./edit/' role='button'>
-								Módosítsd ezt a szótárat
+								<IconComp _icon='✏️' /> Módosítsd ezt a szótárat
 							</Link>
 							<button
 								type='button'
@@ -149,7 +151,8 @@ export function DictionaryPage(props: DictionaryPageProps) {
 									}
 								}}
 							>
-								Töröld ezt a szótárat
+								<IconComp _icon={ERROR_CHARACTER} /> Töröld ezt
+								a szótárat
 							</button>
 						</ButtonRowComp>
 					</ContentRowComp>

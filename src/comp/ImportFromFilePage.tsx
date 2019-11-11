@@ -5,6 +5,7 @@ import { handleDictionaryImport } from '../function/handleDictionaryImport'
 import { url } from '../function/url'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
 import { usePageTitle } from '../hook/usePageTitle'
+import { SUCCESS_CHARACTER } from '../model/constants'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
@@ -12,6 +13,7 @@ import { ButtonRowComp } from './ButtonRowComp'
 import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
 import { GetWordsComp } from './GetWordsComp'
+import { IconComp } from './IconComp'
 import { SetImportParamsComp } from './SetImportParamsComp'
 import { ShieldContext } from './ShieldContext'
 import { ShowMessageContext } from './ShowMessageContext'
@@ -113,7 +115,7 @@ export function ImportFromFilePage() {
 									dictionaryValidationErrors.length > 0
 								}
 							>
-								Tárold el
+								<IconComp _icon={SUCCESS_CHARACTER} /> Tárold el
 							</button>
 						</ButtonRowComp>
 					)}

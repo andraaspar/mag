@@ -1,6 +1,5 @@
 import React from 'react'
 import { ButtonRowComp } from './ButtonRowComp'
-import { LabelComp } from './LabelComp'
 
 export interface PagingCompProps {
 	_page: number
@@ -21,9 +20,9 @@ export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
 			>
 				«
 			</button>
-			<LabelComp>
+			<div className='button-padding-y'>
 				{_page + 1} / {_pageCount}
-			</LabelComp>
+			</div>
 			<button
 				type='button'
 				className='does-not-expand'

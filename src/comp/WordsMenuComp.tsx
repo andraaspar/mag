@@ -1,5 +1,11 @@
 import React, { useContext } from 'react'
 import { useMemo } from 'use-memo-one'
+import {
+	CHECKBOX_CHARACTER,
+	ERROR_CHARACTER,
+	NO_QUESTIONS_CHARACTER,
+	QUESTIONS_CHARACTER,
+} from '../model/constants'
 import { TSelection } from '../model/TSelection'
 import { deleteWords } from '../storage/deleteWords'
 import { toggleWords } from '../storage/toggleWords'
@@ -87,12 +93,20 @@ export function WordsMenuComp({
 					: `Az összes szót...`}
 			</option>
 			{selectedWordsCount > 0 && (
-				<option value={BulkActions.Deselect}>ne válaszd ki</option>
+				<option value={BulkActions.Deselect}>
+					{CHECKBOX_CHARACTER} ne válaszd ki
+				</option>
 			)}
-			<option value={BulkActions.Enable}>kapcsold be</option>
-			<option value={BulkActions.Disable}>kapcsold ki</option>
+			<option value={BulkActions.Enable}>
+				{QUESTIONS_CHARACTER} kapcsold be
+			</option>
+			<option value={BulkActions.Disable}>
+				{NO_QUESTIONS_CHARACTER} kapcsold ki
+			</option>
 			{selectedWordsCount > 0 && (
-				<option value={BulkActions.Delete}>töröld</option>
+				<option value={BulkActions.Delete}>
+					{ERROR_CHARACTER} töröld
+				</option>
 			)}
 		</select>
 	)

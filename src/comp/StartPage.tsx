@@ -17,6 +17,7 @@ import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
 import { FormRowComp } from './FormRowComp'
+import { IconComp } from './IconComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
 import { ShowMessageContext } from './ShowMessageContext'
@@ -155,7 +156,10 @@ export function StartPage(props: StartPageProps) {
 							isLoaded($totalDictionaryCount) &&
 							$totalDictionaryCount.count > 0 && (
 								<p>
-									<em>Nem találtam egy szótárat sem.</em>
+									<em>
+										<IconComp _icon='🙈' /> Nem találtam egy
+										szótárat sem.
+									</em>
 								</p>
 							)
 						)}
@@ -167,23 +171,26 @@ export function StartPage(props: StartPageProps) {
 									to='/dictionary/'
 									innerRef={makeADictionaryLinkRef}
 								>
-									készíts egy új szótárat
+									<IconComp _icon='✨' /> készíts egy új
+									szótárat
 								</Link>
 								<FocusRefComp
 									_focusThis={makeADictionaryLinkRef}
 								/>
 								, vagy{' '}
 								<Link to='/import/'>
-									tölts be egy szótárat!
+									<IconComp _icon='📂' /> tölts be egy
+									szótárat!
 								</Link>
 							</p>
 						) : (
 							<ButtonRowComp>
 								<Link to='/dictionary/' role='button'>
-									Készíts új szótárat
+									<IconComp _icon='✨' /> Készíts új szótárat
 								</Link>{' '}
 								<Link to='/import/' role='button'>
-									Tölts be egy szótárat
+									<IconComp _icon='📂' /> Tölts be egy
+									szótárat
 								</Link>
 							</ButtonRowComp>
 						)}
