@@ -1,11 +1,9 @@
-import { isString } from 'util'
-
 export function readJsonFromFile<T extends any>(file: File) {
 	return new Promise<T>((resolve, reject) => {
 		const reader = new FileReader()
 		reader.addEventListener('load', () => {
 			try {
-				if (!isString(reader.result)) {
+				if (typeof reader.result !== 'string') {
 					throw new Error(`[pydwop] ${reader.result}`)
 				}
 				resolve(JSON.parse(reader.result))

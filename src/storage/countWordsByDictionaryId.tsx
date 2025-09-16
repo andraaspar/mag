@@ -1,7 +1,12 @@
-import { IDBPTransaction } from 'idb'
 import { DbWord } from '../model/Word'
 import { countItems } from './countItems'
-import { Db, getDb, INDEX_WORDS_MODIFIED_DATE_0, STORE_WORDS } from './Db'
+import {
+	Db,
+	getDb,
+	INDEX_WORDS_MODIFIED_DATE_0,
+	STORE_WORDS,
+	TAnyModeTransaction,
+} from './Db'
 import { makeKeyRangeWordsModifiedDate } from './makeKeyRangeWordsModifiedDate'
 
 export async function countWordsByDictionaryId({
@@ -9,7 +14,7 @@ export async function countWordsByDictionaryId({
 	dictionaryId,
 	filter,
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TAnyModeTransaction<Db>
 	dictionaryId: number
 	filter?: (item: DbWord) => boolean
 }): Promise<number> {

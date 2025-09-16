@@ -1,7 +1,12 @@
-import { IDBPTransaction } from 'idb'
 import { Dictionary } from '../model/Dictionary'
 import { countNumberOfQuestions } from './countNumberOfQuestions'
-import { Db, getDb, STORE_DICTIONARIES, STORE_WORDS } from './Db'
+import {
+	Db,
+	getDb,
+	STORE_DICTIONARIES,
+	STORE_WORDS,
+	TUpdateTransaction,
+} from './Db'
 import { readDictionaryById } from './readDictionaryById'
 import { storeDictionary } from './storeDictionary'
 
@@ -9,7 +14,7 @@ export async function updateDictionaryCount({
 	t = getDb().transaction([STORE_DICTIONARIES, STORE_WORDS], 'readwrite'),
 	dictionaryId,
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TUpdateTransaction<Db>
 	dictionaryId: number
 }) {
 	const existingDictionary = await readDictionaryById({ t, id: dictionaryId })
@@ -23,5 +28,5 @@ export async function updateDictionaryCount({
 		...existingDictionary,
 		count,
 	}
-	await storeDictionary({ t: t as IDBPTransaction<Db>, dictionary })
+	await storeDictionary({ t, dictionary })
 }

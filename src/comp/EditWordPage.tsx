@@ -1,6 +1,5 @@
-import React from 'react'
-import { useHistory, useRouteMatch } from 'react-router'
-import { useCallback } from 'use-memo-one'
+import { useCallback } from 'react'
+import { useMatch } from 'react-router'
 import { dateToString } from '../function/dateToString'
 import { useDictionary } from '../hook/useDictionary'
 import { usePageTitle } from '../hook/usePageTitle'
@@ -14,13 +13,10 @@ import { UnknownDictionaryComp } from './UnknownDictionaryComp'
 export interface EditWordPageProps {}
 
 export function EditWordPage(props: EditWordPageProps) {
-	const history = useHistory()
-	const routeMatch = useRouteMatch<{
-		dictionaryId: string
-		wordId: string | undefined
-	}>(`/dictionary/:dictionaryId/word/:wordId?/`)
-	const dictionaryId =
-		routeMatch && parseInt(routeMatch.params.dictionaryId, 10)
+	const routeMatch = useMatch(`/dictionary/:dictionaryId/word/:wordId?/`)
+	const dictionaryId = routeMatch?.params.dictionaryId
+		? parseInt(routeMatch.params.dictionaryId, 10)
+		: undefined
 	const wordId =
 		routeMatch && routeMatch.params.wordId != null
 			? parseInt(routeMatch.params.wordId, 10)
@@ -29,11 +25,11 @@ export function EditWordPage(props: EditWordPageProps) {
 	const { $word, loadWord } = useWord(wordId)
 	const onSuccess = useCallback(() => {
 		if (isLoaded($word) && $word.current) {
-			history.goBack()
+			history.back()
 		} else {
 			loadDictionary()
 		}
-	}, [$word, history, loadDictionary])
+	}, [$word, loadDictionary])
 	usePageTitle(
 		!isLoaded($word)
 			? `Szó`
@@ -43,12 +39,12 @@ export function EditWordPage(props: EditWordPageProps) {
 	)
 	return (
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
-			{dictionary =>
+			{(dictionary) =>
 				dictionary.current == null ? (
 					<UnknownDictionaryComp />
 				) : (
 					<LoadableComp _value={$word} _load={loadWord}>
-						{word => (
+						{(word) => (
 							<EditWordComp
 								_dictionary={dictionary.current!}
 								_word={

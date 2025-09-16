@@ -1,4 +1,4 @@
-import { useMemo } from 'use-memo-one'
+import { useMemo } from 'react'
 import { isLoaded, TLoadable } from '../model/TLoadable'
 import { Word } from '../model/Word'
 import { useExistingTranslationError } from './useExistingTranslationError'

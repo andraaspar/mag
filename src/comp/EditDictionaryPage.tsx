@@ -1,6 +1,5 @@
-import React, { useContext } from 'react'
-import { useHistory, useRouteMatch } from 'react-router-dom'
-import { useCallback } from 'use-memo-one'
+import { useCallback, useContext } from 'react'
+import { useMatch, useNavigate } from 'react-router-dom'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { url } from '../function/url'
 import { useDictionary } from '../hook/useDictionary'
@@ -15,12 +14,10 @@ import { LoadableComp } from './LoadableComp'
 import { ShieldContext } from './ShieldContext'
 
 export function EditDictionaryPage() {
-	const routeMatch = useRouteMatch<{ dictionaryId: string | undefined }>(
-		`/dictionary/:dictionaryId/edit/`,
-	)
+	const routeMatch = useMatch(`/dictionary/:dictionaryId/edit/`)
 	const dictionaryId =
 		routeMatch && parseInt(routeMatch.params.dictionaryId + '', 10)
-	const history = useHistory()
+	const navigate = useNavigate()
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
 	const { showShield, hideShield } = useContext(ShieldContext)
 	const finish = useCallback(
@@ -31,12 +28,12 @@ export function EditDictionaryPage() {
 			})
 			hideShield('q0t143')
 			if (dictionaryId === storedDictionaryId) {
-				history.goBack()
+				history.back()
 			} else {
-				history.replace(url`/dictionary/${storedDictionaryId}/`)
+				navigate(url`/dictionary/${storedDictionaryId}/`, { replace: true })
 			}
 		},
-		[history, dictionaryId, showShield, hideShield],
+		[navigate, dictionaryId, showShield, hideShield],
 	)
 	usePageTitle(
 		isLoaded($dictionary) && $dictionary.current
@@ -46,15 +43,12 @@ export function EditDictionaryPage() {
 	return (
 		<>
 			<LoadableComp _value={$dictionary} _load={loadDictionary}>
-				{dictionary => (
+				{(dictionary) => (
 					<ContentRowComp>
 						<h1>
 							{dictionary.current ? (
 								<>
-									<DictionaryComp
-										_dictionary={dictionary.current}
-									/>{' '}
-									módosítása
+									<DictionaryComp _dictionary={dictionary.current} /> módosítása
 								</>
 							) : (
 								`Új szótár`

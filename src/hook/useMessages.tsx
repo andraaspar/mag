@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { useCallback } from 'use-memo-one'
+import { useCallback, useState } from 'react'
 import { ERROR_CHARACTER } from '../model/constants'
 
 export function useMessages() {
@@ -14,7 +13,7 @@ export function useMessages() {
 			/^Error:\s*/,
 			ERROR_CHARACTER + ' ',
 		)
-		set$messages(messages => {
+		set$messages((messages) => {
 			const lastMessage = messages[messages.length - 1]
 			let lastMessageCount = 1
 			const lastMessageStart = lastMessage
@@ -34,7 +33,7 @@ export function useMessages() {
 		})
 	}, [])
 	const removeMessageByIndex = useCallback((index: number) => {
-		set$messages(messages => [
+		set$messages((messages) => [
 			...messages.slice(0, index),
 			...messages.slice(index + 1),
 		])

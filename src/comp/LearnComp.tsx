@@ -1,4 +1,4 @@
-import React, { FormEvent, useContext, useRef, useState } from 'react'
+import { FormEvent, useContext, useRef, useState } from 'react'
 import { sanitizeString } from '../function/sanitizeString'
 import { Dictionary } from '../model/Dictionary'
 import { Word } from '../model/Word'
@@ -31,9 +31,8 @@ export function LearnComp({
 		_translationId === 0 ? _dictionary.language1 : _dictionary.language0
 	const question =
 		_translationId === 0 ? _word.translation0 : _word.translation1
-	const correctAnswer = (_translationId === 0
-		? _word.translation1
-		: _word.translation0
+	const correctAnswer = (
+		_translationId === 0 ? _word.translation1 : _word.translation0
 	).text
 	const [$answer, set$answer] = useState('')
 	const isAnswerCorrect = sanitizeString($answer) === correctAnswer
@@ -87,27 +86,21 @@ export function LearnComp({
 				<div>
 					{questionLanguage}: {question.text}
 				</div>
-				{question.description && (
-					<div>Megjegyzés: {question.description}</div>
-				)}
+				{question.description && <div>Megjegyzés: {question.description}</div>}
 				<FormRowComp>
 					<LabelComp _required>{answerLanguage}</LabelComp>
 					<input
 						ref={inputRef}
 						autoFocus
 						value={$answer}
-						onChange={e => {
+						onChange={(e) => {
 							set$answer(e.target.value)
 						}}
 					/>
 				</FormRowComp>
 				<ButtonRowComp>
 					<button disabled={!isAnswerCorrect}>Rendben</button>
-					<button
-						type='button'
-						onClick={onShowAnswer}
-						disabled={$answerShown}
-					>
+					<button type='button' onClick={onShowAnswer} disabled={$answerShown}>
 						Mutasd a választ
 					</button>
 				</ButtonRowComp>

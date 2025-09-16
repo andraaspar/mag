@@ -1,13 +1,11 @@
-import { useState } from 'react'
-import { useCallback } from 'use-memo-one'
+import { useCallback, useState } from 'react'
 import { TLoadable } from '../model/TLoadable'
 import { Word } from '../model/Word'
 import { readWord } from '../storage/readWord'
 
 export function useWord(wordId: number | null) {
-	const [$word, set$word] = useState<
-		TLoadable<{ current: Word | undefined }>
-	>(null)
+	const [$word, set$word] =
+		useState<TLoadable<{ current: Word | undefined }>>(null)
 	const loadWord = useCallback(() => {
 		if (wordId == null) {
 			set$word({ current: undefined })
@@ -15,11 +13,11 @@ export function useWord(wordId: number | null) {
 			let aborted = false
 			set$word(Date.now())
 			readWord({ wordId })
-				.then(word => {
+				.then((word) => {
 					if (aborted) return
 					set$word({ current: word })
 				})
-				.catch(e => {
+				.catch((e) => {
 					if (aborted) return
 					console.error(e)
 					set$word(e + '')

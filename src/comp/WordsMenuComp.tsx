@@ -1,5 +1,4 @@
-import React, { useContext } from 'react'
-import { useMemo } from 'use-memo-one'
+import { useContext, useMemo } from 'react'
 import {
 	CHECKBOX_CHARACTER,
 	ERROR_CHARACTER,
@@ -39,7 +38,7 @@ export function WordsMenuComp({
 	return (
 		<select
 			value=''
-			onChange={async e => {
+			onChange={async (e) => {
 				switch (e.target.value) {
 					case BulkActions.Deselect:
 						_setSelectedWordIds({})
@@ -48,7 +47,7 @@ export function WordsMenuComp({
 						showShield('q0t1hz')
 						await toggleWords({
 							dictionaryId: _dictionaryId,
-							wordIds: Object.keys(_selectedWordIds).map(_ => +_),
+							wordIds: Object.keys(_selectedWordIds).map((_) => +_),
 							enable: false,
 						})
 						hideShield('q0t1hz')
@@ -59,7 +58,7 @@ export function WordsMenuComp({
 						showShield('q0t1iw')
 						await toggleWords({
 							dictionaryId: _dictionaryId,
-							wordIds: Object.keys(_selectedWordIds).map(_ => +_),
+							wordIds: Object.keys(_selectedWordIds).map((_) => +_),
 							enable: true,
 						})
 						hideShield('q0t1iw')
@@ -68,16 +67,12 @@ export function WordsMenuComp({
 						break
 					case BulkActions.Delete:
 						if (
-							window.confirm(
-								`Biztosan törölni akarod a kiválasztott szavakat?`,
-							)
+							window.confirm(`Biztosan törölni akarod a kiválasztott szavakat?`)
 						) {
 							showShield('q0t1je')
 							await deleteWords({
 								dictionaryId: _dictionaryId,
-								wordIds: Object.keys(_selectedWordIds).map(
-									_ => +_,
-								),
+								wordIds: Object.keys(_selectedWordIds).map((_) => +_),
 							})
 							hideShield('q0t1je')
 							_setSelectedWordIds({})
@@ -104,9 +99,7 @@ export function WordsMenuComp({
 				{NO_QUESTIONS_CHARACTER} kapcsold ki
 			</option>
 			{selectedWordsCount > 0 && (
-				<option value={BulkActions.Delete}>
-					{ERROR_CHARACTER} töröld
-				</option>
+				<option value={BulkActions.Delete}>{ERROR_CHARACTER} töröld</option>
 			)}
 		</select>
 	)

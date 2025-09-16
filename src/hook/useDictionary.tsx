@@ -1,13 +1,11 @@
-import { useState } from 'react'
-import { useCallback } from 'use-memo-one'
+import { useCallback, useState } from 'react'
 import { Dictionary } from '../model/Dictionary'
 import { TLoadable } from '../model/TLoadable'
 import { readDictionaryById } from '../storage/readDictionaryById'
 
-export function useDictionary(dictionaryId: number | null) {
-	const [$dictionary, set$dictionary] = useState<
-		TLoadable<{ current: Dictionary | undefined }>
-	>(null)
+export function useDictionary(dictionaryId: number | null | undefined) {
+	const [$dictionary, set$dictionary] =
+		useState<TLoadable<{ current: Dictionary | undefined }>>(null)
 	const loadDictionary = useCallback(() => {
 		if (dictionaryId == null) {
 			set$dictionary({ current: undefined })
@@ -15,11 +13,11 @@ export function useDictionary(dictionaryId: number | null) {
 			let aborted = false
 			set$dictionary(Date.now())
 			readDictionaryById({ id: dictionaryId })
-				.then(dictionary => {
+				.then((dictionary) => {
 					if (aborted) return
 					set$dictionary({ current: dictionary })
 				})
-				.catch(e => {
+				.catch((e) => {
 					console.error(e)
 					set$dictionary(e + '')
 				})

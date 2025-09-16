@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react'
-import { useMemo } from 'use-memo-one'
+import { Fragment, useMemo } from 'react'
 import { TSelection } from '../model/TSelection'
 import { Word } from '../model/Word'
 import { WordListComp } from './WordListComp'

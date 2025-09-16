@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { useMemo } from 'use-memo-one'
+import { useMemo, useState } from 'react'
 import { ShieldContextType } from '../comp/ShieldContext'
 import { omit } from '../function/omit'
 import { withInterface } from '../function/withInterface'
@@ -9,8 +8,8 @@ export function useShield() {
 	const shieldContextValue = useMemo(
 		() =>
 			withInterface<ShieldContextType>({
-				showShield: key => {
-					set$shieldKeys(shieldKeys => {
+				showShield: (key) => {
+					set$shieldKeys((shieldKeys) => {
 						const result = {
 							...shieldKeys,
 							[key]: (shieldKeys[key] || 0) + 1,
@@ -23,13 +22,13 @@ export function useShield() {
 						return result
 					})
 				},
-				hideShield: key => {
-					set$shieldKeys(shieldKeys => {
+				hideShield: (key) => {
+					set$shieldKeys((shieldKeys) => {
 						let result: typeof shieldKeys
-						if (shieldKeys[key] > 1) {
+						if ((shieldKeys[key] ?? 0) > 1) {
 							result = {
 								...shieldKeys,
-								[key]: shieldKeys[key] - 1,
+								[key]: (shieldKeys[key] ?? 0) - 1,
 							}
 						} else {
 							result = omit(shieldKeys, key)

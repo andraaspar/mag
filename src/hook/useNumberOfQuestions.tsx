@@ -1,12 +1,10 @@
-import { useState } from 'react'
-import { useCallback } from 'use-memo-one'
+import { useCallback, useState } from 'react'
 import { TLoadable } from '../model/TLoadable'
 import { countNumberOfQuestions } from '../storage/countNumberOfQuestions'
 
 export function useNumberOfQuestions(dictionaryId: number | null) {
-	const [$numberOfQuestions, set$numberOfQuestions] = useState<
-		TLoadable<{ current: number }>
-	>(null)
+	const [$numberOfQuestions, set$numberOfQuestions] =
+		useState<TLoadable<{ current: number }>>(null)
 	const loadNumberOfQuestions = useCallback(() => {
 		if (dictionaryId == null) {
 			set$numberOfQuestions(0)
@@ -14,11 +12,11 @@ export function useNumberOfQuestions(dictionaryId: number | null) {
 			let aborted = false
 			set$numberOfQuestions(Date.now())
 			countNumberOfQuestions({ dictionaryId })
-				.then(count => {
+				.then((count) => {
 					if (aborted) return
 					set$numberOfQuestions({ current: count })
 				})
-				.catch(e => {
+				.catch((e) => {
 					if (aborted) return
 					set$numberOfQuestions(e + '')
 				})

@@ -1,3 +1,5 @@
+import { equal, notEqual } from 'node:assert/strict'
+import { it } from 'node:test'
 import { avoidDuplicates } from './avoidDuplicates'
 
 export function equals(a: number, b: number) {
@@ -5,20 +7,20 @@ export function equals(a: number, b: number) {
 }
 
 it(`[q0icmo]`, () => {
-	expect(avoidDuplicates([0, 0, 1], equals)).toEqual([0, 1, 0])
+	equal(avoidDuplicates([0, 0, 1], equals), [0, 1, 0])
 })
 
 it(`[q0id5i]`, () => {
-	expect(avoidDuplicates([1, 0, 0], equals)).toEqual([0, 1, 0])
+	equal(avoidDuplicates([1, 0, 0], equals), [0, 1, 0])
 })
 
 it(`[q0idlk]`, () => {
 	const result = avoidDuplicates([0, 1, 2, 0], equals)
 	console.log(result)
-	expect(result[0]).not.toBe(result[3])
-	expect(result.length).toBe(4)
-	expect(result.filter(n => n != null).length).toBe(4)
-	expect(result.filter(n => n !== 0).length).toBe(2)
-	expect(result.includes(1)).toBe(true)
-	expect(result.includes(2)).toBe(true)
+	notEqual(result[0], result[3])
+	equal(result.length, 4)
+	equal(result.filter((n) => n != null).length, 4)
+	equal(result.filter((n) => n !== 0).length, 2)
+	equal(result.includes(1), true)
+	equal(result.includes(2), true)
 })

@@ -1,6 +1,11 @@
-import { IDBPTransaction } from 'idb'
 import { Dictionary, dictionaryToDb } from '../model/Dictionary'
-import { Db, getDb, INDEX_DICTIONARIES_NAME, STORE_DICTIONARIES } from './Db'
+import {
+	Db,
+	getDb,
+	INDEX_DICTIONARIES_NAME,
+	STORE_DICTIONARIES,
+	TAnyModeTransaction,
+} from './Db'
 
 export class DictionaryNameConflictError extends Error {
 	constructor(public dictionary: Dictionary) {
@@ -12,7 +17,7 @@ export async function checkForConflictingDictionary({
 	t = getDb().transaction([STORE_DICTIONARIES], 'readonly'),
 	dictionary,
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TAnyModeTransaction<Db>
 	dictionary: Dictionary
 }) {
 	const dbDictionary = dictionaryToDb(dictionary)

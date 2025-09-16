@@ -1,26 +1,24 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import { AppComp } from './comp/AppComp'
 import './index.css'
-import * as serviceWorker from './serviceWorker'
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root')!)
+root.render(
 	<HashRouter>
 		<AppComp />
 	</HashRouter>,
-	document.getElementById('root'),
 )
 
-serviceWorker.register({
-	onSuccess: () => {
-		if (globalThis.setIsCached) {
-			globalThis.setIsCached(true)
-		}
-	},
-	onUpdate: () => {
-		if (globalThis.setHasUpdate) {
-			globalThis.setHasUpdate(true)
-		}
-	},
-})
+// window.addEventListener('load', async () => {
+// 	try {
+// 		const reg = await navigator.serviceWorker.register(
+// 			new URL('./service-worker.js', import.meta.url),
+// 			{ type: 'module', updateViaCache: 'none' },
+// 		)
+// 		console.log(`[t2n45k] Service worker registered.`)
+// 		reg.update()
+// 	} catch (e) {
+// 		console.error(`[t2n45m]`, e)
+// 	}
+// })

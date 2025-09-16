@@ -1,91 +1,31 @@
 {
+	"private": true,
+	"homepage": "https://andraaspar.github.io/mag",
 	"name": "mag",
 	"version": "0.1.0",
-	"homepage": "https://andraaspar.github.io/mag",
-	"private": true,
 	"dependencies": {
-		"@types/jest": "24.0.18",
-		"@types/node": "12.7.5",
-		"@types/preval.macro": "^3.0.0",
-		"@types/react": "16.9.2",
-		"@types/react-dom": "16.9.0",
-		"@types/react-router-dom": "^5.1.0",
-		"escape-string-regexp": "^2.0.0",
-		"idb": "^4.0.4",
-		"preval.macro": "^3.0.0",
-		"qs": "^6.9.0",
-		"react": "^16.9.0",
-		"react-dom": "^16.9.0",
-		"react-focus-lock": "^2.2.1",
-		"react-router-dom": "^5.1.0",
-		"react-scripts": "3.2.0",
-		"sanitize.css": "^11.0.0",
-		"typescript": "3.7.2",
-		"use-memo-one": "^1.1.1"
+		"@types/node": "24.4.0",
+		"@types/qs": "^6.14.0",
+		"@types/react": "19.1.13",
+		"@types/react-dom": "19.1.9",
+		"@types/react-router-dom": "^5.3.3",
+		"escape-string-regexp": "^5.0.0",
+		"gh-pages": "^6.3.0",
+		"idb": "^8.0.3",
+		"qs": "^6.14.0",
+		"react": "^19.1.1",
+		"react-dom": "^19.1.1",
+		"react-focus-lock": "^2.13.6",
+		"react-router-dom": "^7.9.1",
+		"sanitize.css": "^13.0.0",
+		"typescript": "~5.9.2",
+		"vite": "^7.1.5",
+		"vite-plugin-pwa": "^1.0.3"
 	},
 	"scripts": {
-		"predeploy": "yarn build",
-		"deploy": "gh-pages -d build",
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
-		"eject": "react-scripts eject"
-	},
-	"eslintConfig": {
-		"extends": "react-app",
-		"rules": {
-			"no-restricted-imports": [
-				"error",
-				{
-					"paths": [
-						{
-							"name": "react",
-							"importNames": [
-								"useMemo",
-								"useCallback"
-							],
-							"message": "`useMemo` and `useCallback` are subject to cache busting. Please use `useMemoOne`"
-						},
-						{
-							"name": "use-memo-one",
-							"importNames": [
-								"useMemoOne",
-								"useCallbackOne"
-							],
-							"message": "use-memo-one exports `useMemo` and `useCallback` which work nicer with `eslint-plugin-react-hooks`"
-						}
-					]
-				}
-			],
-			"no-restricted-properties": [
-				2,
-				{
-					"object": "React",
-					"property": "useMemo",
-					"message": "Please use useMemo from 'use-memo-one'."
-				},
-				{
-					"object": "React",
-					"property": "useCallback",
-					"message": "Please use useCallback from 'use-memo-one'."
-				}
-			]
-		}
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
-	},
-	"devDependencies": {
-		"@types/qs": "^6.5.3",
-		"gh-pages": "^2.1.1"
+		"build": "tsc && vite build",
+		"deploy": "gh-pages -d dist",
+		"dev": "vite",
+		"preview": "vite preview"
 	}
 }

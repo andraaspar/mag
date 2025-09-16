@@ -1,6 +1,5 @@
-import React, { useRef, useState } from 'react'
-import { useRouteMatch } from 'react-router-dom'
-import { useMemo } from 'use-memo-one'
+import { useMemo, useRef, useState } from 'react'
+import { useMatch } from 'react-router-dom'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { url } from '../function/url'
 import { useDictionary } from '../hook/useDictionary'
@@ -23,10 +22,8 @@ import { UnknownDictionaryComp } from './UnknownDictionaryComp'
 export interface ExportDictionaryPageProps {}
 
 export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
-	const routeMatch = useRouteMatch<{ dictionaryId: string }>(
-		'/dictionary/:dictionaryId/export/',
-	)
-	const dictionaryId = routeMatch
+	const routeMatch = useMatch('/dictionary/:dictionaryId/export/')
+	const dictionaryId = routeMatch?.params.dictionaryId
 		? parseInt(routeMatch.params.dictionaryId, 10)
 		: null
 	const textAreaRef = useRef<HTMLTextAreaElement>(null)
@@ -80,21 +77,18 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 	const downloadLinkRef = useRef<HTMLAnchorElement>(null)
 	return (
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
-			{dictionary =>
+			{(dictionary) =>
 				dictionary.current ? (
 					<ContentRowComp>
 						<h1>
-							<DictionaryComp _dictionary={dictionary.current} />{' '}
-							szótár kimentése
+							<DictionaryComp _dictionary={dictionary.current} /> szótár
+							kimentése
 						</h1>
 						<LoadableComp _value={$wordCount} _load={loadWordCount}>
-							{wordCount => (
+							{(wordCount) => (
 								<>
-									<LoadableComp
-										_value={$words}
-										_load={loadWords}
-									>
-										{words => (
+									<LoadableComp _value={$words} _load={loadWords}>
+										{(words) => (
 											<>
 												<FormRowComp>
 													<textarea
@@ -107,44 +101,29 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 													<button
 														type='button'
 														onClick={() => {
-															if (
-																textAreaRef.current
-															) {
+															if (textAreaRef.current) {
 																textAreaRef.current.focus()
 																textAreaRef.current.setSelectionRange(
 																	0,
 																	$json.length,
 																)
-																document.execCommand(
-																	'copy',
-																)
+																document.execCommand('copy')
 															}
 														}}
 													>
-														<IconComp _icon='📋' />{' '}
-														Másold
+														<IconComp _icon='📋' /> Másold
 													</button>
 													<a
 														role='button'
 														ref={downloadLinkRef}
 														download={`${dictionaryToString(
 															dictionary.current!,
-														)}${
-															pageCount > 1
-																? `-${$page +
-																		1}`
-																: ''
-														}.json`}
+														)}${pageCount > 1 ? `-${$page + 1}` : ''}.json`}
 														href={url`data:text/json;charset=utf-8,${$json}`}
 													>
-														<IconComp _icon='💾' />{' '}
-														Tárold el
+														<IconComp _icon='💾' /> Tárold el
 													</a>
-													<FocusRefComp
-														_focusThis={
-															downloadLinkRef
-														}
-													/>
+													<FocusRefComp _focusThis={downloadLinkRef} />
 												</ButtonRowComp>
 											</>
 										)}

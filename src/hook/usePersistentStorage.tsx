@@ -1,11 +1,9 @@
-import { useState } from 'react'
-import { useCallback } from 'use-memo-one'
+import { useCallback, useState } from 'react'
 import { TLoadable } from '../model/TLoadable'
 
 export function usePersistentStorage() {
-	const [$isPersistentStorage, set$isPersistentStorage] = useState<
-		TLoadable<{ current: boolean }>
-	>(null)
+	const [$isPersistentStorage, set$isPersistentStorage] =
+		useState<TLoadable<{ current: boolean }>>(null)
 	const loadPersistentStorage = useCallback(() => {
 		let aborted = false
 		;(async () => {

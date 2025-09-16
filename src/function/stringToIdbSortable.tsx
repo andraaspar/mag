@@ -1,5 +1,3 @@
-import { isNumber } from 'util'
-
 let _map: Map<string, number> | null = null
 let firstNonLetterIndex = 0
 
@@ -34,9 +32,9 @@ export function stringToIdbSortable(
 ) {
 	const map = getStringToIdbSortableMap()
 	s = s.toLocaleLowerCase()
-	return s.replace(/./g, match => {
+	return s.replace(/./g, (match) => {
 		let index = map.get(match)
-		if (!isNumber(index)) {
+		if (typeof index !== 'number') {
 			index = firstNonLetterIndex + match.charCodeAt(0)
 		}
 		if (reverse) {

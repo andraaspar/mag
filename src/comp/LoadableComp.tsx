@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 import { usePrevious } from '../hook/usePrevious'
 import { PROGRESS_CHARACTER } from '../model/constants'
 import {
@@ -43,15 +43,13 @@ export function LoadableComp<T extends object>({
 		}
 	}, [_load, _debugName, valueNeedsLoadingAt, valueIsLoadingAt])
 	return (
-		<React.Fragment>
+		<>
 			{!loadChanged && isLoaded(_value) && children(_value)}
-			{(loadChanged ||
-				hasNotStartedLoading(_value) ||
-				isLoading(_value)) &&
+			{(loadChanged || hasNotStartedLoading(_value) || isLoading(_value)) &&
 				PROGRESS_CHARACTER}
 			{hasLoadError(_value) && (
 				<span style={{ color: `#bf0000` }}>{_value}</span>
 			)}
-		</React.Fragment>
+		</>
 	)
 }

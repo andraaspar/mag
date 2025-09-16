@@ -16,10 +16,7 @@ export async function handleDictionaryImport({
 	dictionary: Dictionary
 	words: readonly Word[]
 }) {
-	const t = getDb().transaction(
-		[STORE_DICTIONARIES, STORE_WORDS],
-		'readwrite',
-	)
+	const t = getDb().transaction([STORE_DICTIONARIES, STORE_WORDS], 'readwrite')
 	let dictionaryId: number
 	await checkForConflictingDictionary({
 		t,
@@ -29,17 +26,20 @@ export async function handleDictionaryImport({
 		t,
 		dictionary,
 	})
-	const wordsWithDictionaryId = words.map(word =>
+	const wordsWithDictionaryId = words.map((word) =>
 		withInterface<Word>({
 			...word,
 			dictionaryId,
 		}),
 	)
-	const wordsNotConflicting = await asyncFilter(wordsWithDictionaryId, word =>
+	const wordsNotConflicting = await asyncFilter(wordsWithDictionaryId, (word) =>
 		checkForConflictingWord({
 			t,
 			word,
-		}).then(() => true, () => false),
+		}).then(
+			() => true,
+			() => false,
+		),
 	)
 	for (const word of wordsNotConflicting) {
 		await storeWord({

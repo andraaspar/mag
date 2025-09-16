@@ -1,6 +1,5 @@
-import { IDBPTransaction } from 'idb'
 import { Word } from '../model/Word'
-import { Db, getDb, STORE_WORDS } from './Db'
+import { Db, getDb, STORE_WORDS, TAnyModeTransaction } from './Db'
 import { readWordByTranslation } from './readWordByTranslation'
 
 export class ExistingTranslationError extends Error {
@@ -13,7 +12,7 @@ export async function checkForConflictingWord({
 	t = getDb().transaction([STORE_WORDS], 'readonly'),
 	word,
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TAnyModeTransaction<Db>
 	word: Word
 }) {
 	const existingTranslations = await Promise.all([
@@ -31,7 +30,7 @@ export async function checkForConflictingWord({
 		}),
 	])
 	const existingTranslationsWithDifferingId = existingTranslations.map(
-		other => (other && other.id !== word.id ? other : undefined),
+		(other) => (other && other.id !== word.id ? other : undefined),
 	) as [Word | undefined, Word | undefined]
 	if (
 		existingTranslationsWithDifferingId[0] ||

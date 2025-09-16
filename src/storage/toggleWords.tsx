@@ -1,4 +1,3 @@
-import { IDBPTransaction } from 'idb'
 import { DEFAULT_COUNT } from '../model/constants'
 import { Word, wordFromDb, wordToDb } from '../model/Word'
 import {
@@ -7,6 +6,7 @@ import {
 	INDEX_WORDS_MODIFIED_DATE_0,
 	STORE_DICTIONARIES,
 	STORE_WORDS,
+	TUpdateTransaction,
 } from './Db'
 import { makeKeyRangeWordsModifiedDate } from './makeKeyRangeWordsModifiedDate'
 import { readWord } from './readWord'
@@ -19,7 +19,7 @@ export async function toggleWords({
 	wordIds,
 	enable,
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TUpdateTransaction<Db>
 	dictionaryId: number
 	wordIds: readonly number[]
 	enable: boolean

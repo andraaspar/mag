@@ -1,5 +1,4 @@
-import React, { FormEvent, useContext, useState } from 'react'
-import { useCallback, useMemo } from 'use-memo-one'
+import { FormEvent, useCallback, useContext, useMemo, useState } from 'react'
 import { dateToString } from '../function/dateToString'
 import { sanitizeWord } from '../function/sanitizeWord'
 import { useWordValidationErrors } from '../hook/useWordValidationErrors'
@@ -124,7 +123,7 @@ export function EditWordComp({
 					<input
 						autoFocus
 						value={$translation0Text}
-						onChange={e => {
+						onChange={(e) => {
 							set$translation0Text(e.target.value)
 						}}
 					/>
@@ -133,7 +132,7 @@ export function EditWordComp({
 					<LabelComp>Magyarázat</LabelComp>
 					<input
 						value={$translation0Description}
-						onChange={e => {
+						onChange={(e) => {
 							set$translation0Description(e.target.value)
 						}}
 					/>
@@ -142,7 +141,7 @@ export function EditWordComp({
 					<LabelComp _required>{_dictionary.language1}</LabelComp>
 					<input
 						value={$translation1Text}
-						onChange={e => {
+						onChange={(e) => {
 							set$translation1Text(e.target.value)
 						}}
 					/>
@@ -151,7 +150,7 @@ export function EditWordComp({
 					<LabelComp>Magyarázat</LabelComp>
 					<input
 						value={$translation1Description}
-						onChange={e => {
+						onChange={(e) => {
 							set$translation1Description(e.target.value)
 						}}
 					/>
@@ -159,12 +158,9 @@ export function EditWordComp({
 				{_word.id && (
 					<FormRowComp>
 						<small>
-							Kérdések:{' '}
-							{_word.translation0.count > 0 &&
-								QUESTIONS_CHARACTER}{' '}
+							Kérdések: {_word.translation0.count > 0 && QUESTIONS_CHARACTER}{' '}
 							{_word.translation0.count} /{' '}
-							{_word.translation1.count > 0 &&
-								QUESTIONS_CHARACTER}{' '}
+							{_word.translation1.count > 0 && QUESTIONS_CHARACTER}{' '}
 							{_word.translation1.count}
 						</small>
 					</FormRowComp>
@@ -173,8 +169,7 @@ export function EditWordComp({
 				<ButtonRowComp>
 					<button
 						disabled={
-							!isLoaded(validationErrors) ||
-							validationErrors.length > 0
+							!isLoaded(validationErrors) || validationErrors.length > 0
 						}
 					>
 						<IconComp _icon={SUCCESS_CHARACTER} /> Tárold el
@@ -196,17 +191,11 @@ export function EditWordComp({
 												..._word,
 												translation0: {
 													..._word.translation0,
-													count:
-														_word.translation0
-															.count ||
-														DEFAULT_COUNT,
+													count: _word.translation0.count || DEFAULT_COUNT,
 												},
 												translation1: {
 													..._word.translation1,
-													count:
-														_word.translation1
-															.count ||
-														DEFAULT_COUNT,
+													count: _word.translation1.count || DEFAULT_COUNT,
 												},
 											},
 										})
@@ -220,13 +209,11 @@ export function EditWordComp({
 									}
 								}}
 							>
-								<IconComp _icon={QUESTIONS_CHARACTER} />{' '}
-								Kapcsold be a szót
+								<IconComp _icon={QUESTIONS_CHARACTER} /> Kapcsold be a szót
 							</button>
 						)}
 					{_word.id &&
-						(_word.translation0.count > 0 ||
-							_word.translation1.count > 0) && (
+						(_word.translation0.count > 0 || _word.translation1.count > 0) && (
 							<button
 								type='button'
 								onClick={async () => {
@@ -259,8 +246,7 @@ export function EditWordComp({
 									}
 								}}
 							>
-								<IconComp _icon={NO_QUESTIONS_CHARACTER} />{' '}
-								Kapcsold ki a szót
+								<IconComp _icon={NO_QUESTIONS_CHARACTER} /> Kapcsold ki a szót
 							</button>
 						)}
 				</ButtonRowComp>

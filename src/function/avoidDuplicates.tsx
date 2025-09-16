@@ -6,7 +6,7 @@ export function avoidDuplicates<T>(
 	let count = result.length
 	let lastItem: T | undefined = undefined
 	for (let i = count - 1; i >= 0; i--) {
-		const item = result[i]
+		const item = result[i]!
 		if (lastItem != null) {
 			if (equals(lastItem, item)) {
 				if (i > 0) {
@@ -19,7 +19,7 @@ export function avoidDuplicates<T>(
 		}
 		lastItem = item
 	}
-	if (result.length > 3 && equals(result[0], result[count - 1])) {
+	if (result.length > 3 && equals(result[0]!, result[count - 1]!)) {
 		result.splice(1, 0, ...result.splice(0, 1))
 	}
 	return result

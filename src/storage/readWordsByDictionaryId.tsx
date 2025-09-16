@@ -1,4 +1,3 @@
-import { IDBPTransaction } from 'idb'
 import { DbWord, Word, wordFromDb } from '../model/Word'
 import {
 	Db,
@@ -8,6 +7,7 @@ import {
 	INDEX_WORDS_MODIFIED_DATE_0,
 	INDEX_WORDS_MODIFIED_DATE_1,
 	STORE_WORDS,
+	TAnyModeTransaction,
 } from './Db'
 import { makeKeyRangeWordsCountTranslation } from './makeKeyRangeWordsCountTranslation'
 import { makeKeyRangeWordsModifiedDate } from './makeKeyRangeWordsModifiedDate'
@@ -26,13 +26,11 @@ export async function readWordsByDictionaryId({
 	sort = WordsByDictionaryIdSort.ModifiedDate0,
 	...rest
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TAnyModeTransaction<Db>
 	dictionaryId: number
 	sort?: WordsByDictionaryIdSort
 } & Omit<ReadItemsPagingParams<DbWord>, 'range'>): Promise<Word[]> {
-	const dictionaryIdIndex = t
-		.objectStore(STORE_WORDS)
-		.index(getIndexName(sort))
+	const dictionaryIdIndex = t.objectStore(STORE_WORDS).index(getIndexName(sort))
 	const words = await readItems({
 		source: dictionaryIdIndex,
 		range: makeKeyRange(dictionaryId, sort),

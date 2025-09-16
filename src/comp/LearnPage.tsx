@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Redirect, useRouteMatch } from 'react-router-dom'
-import { useCallback } from 'use-memo-one'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Navigate, useMatch } from 'react-router-dom'
 import { useDictionary } from '../hook/useDictionary'
 import { usePageTitle } from '../hook/usePageTitle'
 import { useQuestions } from '../hook/useQuestions'
@@ -16,11 +15,10 @@ import { UnknownDictionaryComp } from './UnknownDictionaryComp'
 export interface LearnPageProps {}
 
 export function LearnPage(props: LearnPageProps) {
-	const routeMatch = useRouteMatch<{ dictionaryId: string }>(
-		'/dictionary/:dictionaryId/learn/',
-	)
-	const dictionaryId =
-		routeMatch && parseInt(routeMatch.params.dictionaryId, 10)
+	const routeMatch = useMatch('/dictionary/:dictionaryId/learn/')
+	const dictionaryId = routeMatch?.params.dictionaryId
+		? parseInt(routeMatch.params.dictionaryId, 10)
+		: undefined
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
 	const lastWordId = useRef<number | null>(null)
 	const { $questions, set$questions, loadQuestions } = useQuestions({
@@ -90,40 +88,30 @@ export function LearnPage(props: LearnPageProps) {
 	usePageTitle(`Tanulás`)
 	return (
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
-			{dictionary =>
+			{(dictionary) =>
 				dictionary.current == null ? (
 					<UnknownDictionaryComp />
 				) : (
 					<ContentRowComp>
 						<h1>Tanulás</h1>
 						<LoadableComp _value={$questions} _load={loadQuestions}>
-							{questions =>
-								questions.current == null ||
-								questions.current.length === 0 ? (
-									<Redirect to={`../`} />
+							{(questions) =>
+								questions.current == null || questions.current.length === 0 ? (
+									<Navigate relative={'path'} to={`../`} />
 								) : (
 									<>
 										<FormRowComp>
-											<ProgressComp
-												_progress={progress}
-											/>
+											<ProgressComp _progress={progress} />
 										</FormRowComp>
-										<LoadableComp
-											_value={$word}
-											_load={loadWord}
-										>
-											{word =>
+										<LoadableComp _value={$word} _load={loadWord}>
+											{(word) =>
 												word.current == null ? (
 													<></>
 												) : (
 													<LearnComp
-														_dictionary={
-															dictionary.current!
-														}
+														_dictionary={dictionary.current!}
 														_word={word.current}
-														_translationId={
-															translationId
-														}
+														_translationId={translationId}
 														_next={next}
 													/>
 												)

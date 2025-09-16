@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useMemo } from 'use-memo-one'
+import { useMemo, useState } from 'react'
 import { sanitizeDictionary } from '../function/sanitizeDictionary'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
 import { SUCCESS_CHARACTER } from '../model/constants'
@@ -21,12 +20,12 @@ export function EditDictionaryComp({
 	_storeDictionary,
 }: EditDictionaryCompProps) {
 	const [$dictionary, set$dictionary] = useState(_dictionary)
-	const sanitizedDictionary = useMemo(() => sanitizeDictionary($dictionary), [
-		$dictionary,
-	])
-	const dictionaryValidationErrors = useDictionaryValidationErrors(
-		sanitizedDictionary,
+	const sanitizedDictionary = useMemo(
+		() => sanitizeDictionary($dictionary),
+		[$dictionary],
 	)
+	const dictionaryValidationErrors =
+		useDictionaryValidationErrors(sanitizedDictionary)
 	const touched = !!(
 		sanitizedDictionary.language0 ||
 		sanitizedDictionary.language1 ||
@@ -34,7 +33,7 @@ export function EditDictionaryComp({
 	)
 	return (
 		<form
-			onSubmit={async e => {
+			onSubmit={async (e) => {
 				e.preventDefault()
 				_storeDictionary(sanitizedDictionary)
 			}}

@@ -1,6 +1,5 @@
-import React, { useContext, useRef } from 'react'
-import { useHistory, useRouteMatch } from 'react-router'
-import { Link } from 'react-router-dom'
+import { useContext, useRef } from 'react'
+import { Link, useMatch } from 'react-router-dom'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { useDictionary } from '../hook/useDictionary'
 import { useNumberOfQuestions } from '../hook/useNumberOfQuestions'
@@ -22,17 +21,13 @@ import { UnknownDictionaryComp } from './UnknownDictionaryComp'
 export interface DictionaryPageProps {}
 
 export function DictionaryPage(props: DictionaryPageProps) {
-	const history = useHistory()
-	const routeMatch = useRouteMatch<{ dictionaryId: string }>(
-		'/dictionary/:dictionaryId/',
-	)
-	const dictionaryId = routeMatch
+	const routeMatch = useMatch('/dictionary/:dictionaryId/')
+	const dictionaryId = routeMatch?.params.dictionaryId
 		? parseInt(routeMatch.params.dictionaryId, 10)
 		: null
 	const { $dictionary, loadDictionary } = useDictionary(dictionaryId)
-	const { $numberOfQuestions, loadNumberOfQuestions } = useNumberOfQuestions(
-		dictionaryId,
-	)
+	const { $numberOfQuestions, loadNumberOfQuestions } =
+		useNumberOfQuestions(dictionaryId)
 	const { $wordCount, loadWordCount } = useWordCountByDictionaryId({
 		dictionaryId,
 	})
@@ -49,33 +44,25 @@ export function DictionaryPage(props: DictionaryPageProps) {
 	)
 	return (
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
-			{dictionary =>
+			{(dictionary) =>
 				dictionary.current ? (
 					<ContentRowComp>
 						<h1>
 							<DictionaryComp _dictionary={dictionary.current} />
 						</h1>
 						<LoadableComp _value={$wordCount} _load={loadWordCount}>
-							{wordCount =>
+							{(wordCount) =>
 								wordCount.current ? (
 									<>
 										<LoadableComp
 											_value={$numberOfQuestions}
 											_load={loadNumberOfQuestions}
 										>
-											{numberOfQuestions =>
+											{(numberOfQuestions) =>
 												numberOfQuestions.current ? (
-													<p>
-														{
-															numberOfQuestions.current
-														}{' '}
-														kérdésem van.
-													</p>
+													<p>{numberOfQuestions.current} kérdésem van.</p>
 												) : (
-													<p>
-														Gratulálok! Mindet
-														megtanultad!
-													</p>
+													<p>Gratulálok! Mindet megtanultad!</p>
 												)
 											}
 										</LoadableComp>
@@ -83,19 +70,11 @@ export function DictionaryPage(props: DictionaryPageProps) {
 								) : (
 									<p>
 										Íme az új szótárad! Először{' '}
-										<Link
-											to='./word/'
-											innerRef={addAWordLinkRef}
-										>
+										<Link to='./word/' ref={addAWordLinkRef}>
 											adj hozzá szavakat
 										</Link>
-										<FocusRefComp
-											_focusThis={addAWordLinkRef}
-										/>
-										, vagy{' '}
-										<Link to='./import/'>
-											tölts be szavakat!
-										</Link>
+										<FocusRefComp _focusThis={addAWordLinkRef} />, vagy{' '}
+										<Link to='./import/'>tölts be szavakat!</Link>
 									</p>
 								)
 							}
@@ -104,11 +83,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 							{isLoaded($numberOfQuestions) &&
 								$numberOfQuestions.current > 0 && (
 									<>
-										<Link
-											to='./learn/'
-											innerRef={askLinkRef}
-											role='button'
-										>
+										<Link to='./learn/' ref={askLinkRef} role='button'>
 											<IconComp _icon='❓' /> Kérdezz!
 										</Link>
 										<FocusRefComp _focusThis={askLinkRef} />
@@ -134,16 +109,14 @@ export function DictionaryPage(props: DictionaryPageProps) {
 								onClick={async () => {
 									if (
 										dictionaryId != null &&
-										window.confirm(
-											`Biztosan törölni akarod ezt a szótárat?`,
-										)
+										window.confirm(`Biztosan törölni akarod ezt a szótárat?`)
 									) {
 										showShield('q0t19b')
 										try {
 											await deleteDictionary({
 												dictionaryId,
 											})
-											history.goBack()
+											history.back()
 										} catch (e) {
 											showMessage(e)
 										}
@@ -151,8 +124,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 									}
 								}}
 							>
-								<IconComp _icon={ERROR_CHARACTER} /> Töröld ezt
-								a szótárat
+								<IconComp _icon={ERROR_CHARACTER} /> Töröld ezt a szótárat
 							</button>
 						</ButtonRowComp>
 					</ContentRowComp>

@@ -1,5 +1,10 @@
-import { DBSchema, IDBPDatabase, IDBPTransaction, openDB } from 'idb'
-import { isNumber } from 'util'
+import {
+	DBSchema,
+	IDBPDatabase,
+	IDBPTransaction,
+	openDB,
+	StoreNames,
+} from 'idb'
 import { dateToString } from '../function/dateToString'
 import { getStringToIdbSortableMap } from '../function/stringToIdbSortable'
 import { ERROR_CHARACTER } from '../model/constants'
@@ -49,20 +54,8 @@ export interface Db extends DBSchema {
 			[INDEX_WORDS_COUNT_1]: [number, number]
 			[INDEX_WORDS_TRANSLATION_0]: [number, string, string]
 			[INDEX_WORDS_TRANSLATION_1]: [number, string, string]
-			[INDEX_WORDS_MODIFIED_DATE_0]: [
-				number,
-				string,
-				number,
-				string,
-				string,
-			]
-			[INDEX_WORDS_MODIFIED_DATE_1]: [
-				number,
-				string,
-				number,
-				string,
-				string,
-			]
+			[INDEX_WORDS_MODIFIED_DATE_0]: [number, string, number, string, string]
+			[INDEX_WORDS_MODIFIED_DATE_1]: [number, string, number, string, string]
 			[INDEX_WORDS_COUNT_TRANSLATION_0]: [number, number, string, string]
 			[INDEX_WORDS_COUNT_TRANSLATION_1]: [number, number, string, string]
 		}
@@ -83,6 +76,19 @@ export interface Db1 extends DBSchema {
 	}
 }
 
+export type TVersionChangeTransaction<T extends DBSchema = Db> =
+	IDBPTransaction<T, StoreNames<T>[], 'versionchange'>
+export type TUpdateTransaction<T extends DBSchema = Db> = IDBPTransaction<
+	T,
+	StoreNames<T>[],
+	'readwrite' | 'versionchange'
+>
+export type TAnyModeTransaction<T extends DBSchema = Db> = IDBPTransaction<
+	T,
+	StoreNames<T>[],
+	IDBTransactionMode
+>
+
 let db: IDBPDatabase<Db> | null = null
 
 export function getDb() {
@@ -99,9 +105,7 @@ export async function initDb(showMessage: (message: any) => void) {
 				}
 				switch (oldVersion) {
 					case 1:
-						await upgradeDb1To2((t as unknown) as IDBPTransaction<
-							Db1 | Db
-						>)
+						await upgradeDb1To2(t as TVersionChangeTransaction<Db1 | Db>)
 						break
 				}
 				if (oldVersion < 3) {
@@ -125,7 +129,7 @@ export async function initDb(showMessage: (message: any) => void) {
 	return db
 }
 
-async function createDb2(t: IDBPTransaction<Db>) {
+async function createDb2(t: TVersionChangeTransaction) {
 	const dictionariesStore = t.db.createObjectStore(STORE_DICTIONARIES, {
 		keyPath: 'id',
 		autoIncrement: true,
@@ -202,7 +206,7 @@ async function createDb2(t: IDBPTransaction<Db>) {
 	)
 }
 
-async function upgradeDb1To2(t: IDBPTransaction<Db1 | Db>) {
+async function upgradeDb1To2(t: TVersionChangeTransaction<Db1 | Db>) {
 	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
 	const wordsStore = t.objectStore(STORE_WORDS)
 	const wordlistsStore = t.objectStore(DEPRECATED_STORE_WORDLISTS)
@@ -217,7 +221,7 @@ async function upgradeDb1To2(t: IDBPTransaction<Db1 | Db>) {
 				count: 0,
 			}),
 		)
-		if (isNumber(dictionaryId)) {
+		if (typeof dictionaryId === 'number') {
 			for (const word1 of dictionary1.words) {
 				await wordsStore.put(
 					wordToDb({
@@ -242,7 +246,7 @@ async function upgradeDb1To2(t: IDBPTransaction<Db1 | Db>) {
 	t.db.deleteObjectStore(DEPRECATED_STORE_WORDLISTS)
 }
 
-async function upgradeDb2To3(t: IDBPTransaction<Db>) {
+async function upgradeDb2To3(t: TVersionChangeTransaction<Db>) {
 	const dictionariesStore = t.objectStore(STORE_DICTIONARIES)
 	let cursor = await dictionariesStore.openKeyCursor()
 	while (cursor) {

@@ -1,10 +1,10 @@
-import { IDBPTransaction } from 'idb'
 import {
 	Db,
 	getDb,
 	INDEX_WORDS_MODIFIED_DATE_0,
 	STORE_DICTIONARIES,
 	STORE_WORDS,
+	TUpdateTransaction,
 } from './Db'
 import { makeKeyRangeWordsModifiedDate } from './makeKeyRangeWordsModifiedDate'
 import { updateDictionaryCount } from './updateDictionaryCount'
@@ -14,7 +14,7 @@ export async function deleteWords({
 	dictionaryId,
 	wordIds,
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TUpdateTransaction<Db>
 	dictionaryId: number
 	wordIds: readonly number[]
 }) {

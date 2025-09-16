@@ -1,10 +1,10 @@
-import { IDBPTransaction } from 'idb'
 import {
 	Db,
 	getDb,
 	INDEX_WORDS_COUNT_0,
 	STORE_DICTIONARIES,
 	STORE_WORDS,
+	TUpdateTransaction,
 } from './Db'
 import { makeKeyRangeWordsCount } from './makeKeyRangeWordsCount'
 
@@ -12,7 +12,7 @@ export async function deleteDictionary({
 	t = getDb().transaction([STORE_DICTIONARIES, STORE_WORDS], 'readwrite'),
 	dictionaryId,
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TUpdateTransaction<Db>
 	dictionaryId: number
 }) {
 	const wordsIndex = t.objectStore(STORE_WORDS).index(INDEX_WORDS_COUNT_0)

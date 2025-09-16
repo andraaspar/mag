@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { useHistory, useRouteMatch } from 'react-router'
-import { useCallback } from 'use-memo-one'
+import { useCallback, useContext, useState } from 'react'
+import { useMatch, useNavigate } from 'react-router'
 import { handleDictionaryImport } from '../function/handleDictionaryImport'
 import { url } from '../function/url'
 import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationErrors'
@@ -30,19 +29,13 @@ export interface ImportParams {
 
 export function ImportFromFilePage() {
 	usePageTitle(`Tölts be szavakat`)
-	const routeMatch = useRouteMatch<{ dictionaryId: string | undefined }>(
-		`/dictionary/:dictionaryId/import/`,
-	)
+	const routeMatch = useMatch(`/dictionary/:dictionaryId/import/`)
 	const dictionaryId =
 		routeMatch && parseInt(routeMatch.params.dictionaryId + '', 10)
-	const history = useHistory()
-	const [
-		$importableDictionary,
-		set$importableDictionary,
-	] = useState<ImportableDictionary | null>(null)
-	const [$importParams, set$importParams] = useState<ImportParams | null>(
-		null,
-	)
+	const navigate = useNavigate()
+	const [$importableDictionary, set$importableDictionary] =
+		useState<ImportableDictionary | null>(null)
+	const [$importParams, set$importParams] = useState<ImportParams | null>(null)
 	const dictionaryValidationErrors = useDictionaryValidationErrors(
 		$importParams && $importParams.dictionary,
 	)
@@ -59,7 +52,7 @@ export function ImportFromFilePage() {
 		<ContentRowComp>
 			<h1>Tölts be szavakat</h1>
 			<form
-				onSubmit={async e => {
+				onSubmit={async (e) => {
 					e.preventDefault()
 					showShield('q0t0z5')
 					try {
@@ -67,24 +60,22 @@ export function ImportFromFilePage() {
 							throw new Error(`[pydz1i]`)
 						}
 						const words = $importParams.swapLanguages
-							? $importableDictionary.words.map(word => ({
+							? $importableDictionary.words.map((word) => ({
 									...word,
 									translation0: word.translation1,
 									translation1: word.translation0,
 							  }))
 							: $importableDictionary.words
-						const storedDictionaryId = await handleDictionaryImport(
-							{
-								dictionary: $importParams.dictionary,
-								words,
-							},
-						)
+						const storedDictionaryId = await handleDictionaryImport({
+							dictionary: $importParams.dictionary,
+							words,
+						})
 						if (storedDictionaryId === dictionaryId) {
-							history.goBack()
+							history.back()
 						} else {
-							history.replace(
-								url`/dictionary/${storedDictionaryId}/`,
-							)
+							navigate(url`/dictionary/${storedDictionaryId}/`, {
+								replace: true,
+							})
 						}
 					} catch (e) {
 						showMessage(e)
@@ -94,9 +85,7 @@ export function ImportFromFilePage() {
 			>
 				<ContentRowComp>
 					{!$importableDictionary && (
-						<GetWordsComp
-							_setImportableDictionary={setImportableDictionary}
-						/>
+						<GetWordsComp _setImportableDictionary={setImportableDictionary} />
 					)}
 					{$importableDictionary && $importParams && (
 						<SetImportParamsComp

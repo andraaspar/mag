@@ -1,8 +1,7 @@
 import qs from 'qs'
-import React, { useState } from 'react'
-import { useHistory, useLocation, useRouteMatch } from 'react-router'
+import { useCallback, useMemo, useState } from 'react'
+import { useLocation, useMatch, useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
-import { useCallback, useMemo } from 'use-memo-one'
 import { dictionaryToString } from '../function/dictionaryToString'
 import { queryToRegExp } from '../function/queryToRegExp'
 import { sanitizeEnumValue } from '../function/sanitizeEnumValue'
@@ -33,13 +32,12 @@ import { WordsSortComp } from './WordsSortComp'
 export interface WordsPageProps {}
 
 export function WordsPage(props: WordsPageProps) {
-	const history = useHistory()
+	const navigate = useNavigate()
 	const location = useLocation()
-	const routeMatch = useRouteMatch<{ dictionaryId: string }>(
-		`/dictionary/:dictionaryId/words/`,
-	)
-	const dictionaryId =
-		routeMatch && parseInt(routeMatch.params.dictionaryId, 10)
+	const routeMatch = useMatch(`/dictionary/:dictionaryId/words/`)
+	const dictionaryId = routeMatch?.params.dictionaryId
+		? parseInt(routeMatch.params.dictionaryId, 10)
+		: undefined
 	const query = useMemo(
 		() =>
 			qs.parse(location.search.slice(1)) as {
@@ -80,21 +78,25 @@ export function WordsPage(props: WordsPageProps) {
 			: WordsByDictionaryIdSort.ModifiedDate0
 	const setQ = useCallback(
 		(q: string) => {
-			history.replace(`?${qs.stringify({ q, sort, page })}`)
+			navigate(`?${qs.stringify({ q, sort, page })}`, { replace: true })
 		},
-		[history, page, sort],
+		[navigate, page, sort],
 	)
 	const setPage = useCallback(
 		(newPage: number) => {
-			history.replace(`?${qs.stringify({ q, sort, page: newPage })}`)
+			navigate(`?${qs.stringify({ q, sort, page: newPage })}`, {
+				replace: true,
+			})
 		},
-		[history, q, sort],
+		[navigate, q, sort],
 	)
 	const setSort = useCallback(
 		(newSort: WordsByDictionaryIdSort) => {
-			history.replace(`?${qs.stringify({ q, sort: newSort, page })}`)
+			navigate(`?${qs.stringify({ q, sort: newSort, page })}`, {
+				replace: true,
+			})
 		},
-		[history, q, page],
+		[navigate, q, page],
 	)
 	const { $words, loadWords } = useWordsByDictionaryId({
 		dictionaryId,
@@ -111,21 +113,20 @@ export function WordsPage(props: WordsPageProps) {
 	)
 	return (
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
-			{dictionary =>
+			{(dictionary) =>
 				dictionary.current == null ? (
 					<UnknownDictionaryComp />
 				) : (
 					<ContentRowComp>
 						<h1>
-							<DictionaryComp _dictionary={dictionary.current!} />{' '}
-							szavai
+							<DictionaryComp _dictionary={dictionary.current!} /> szavai
 						</h1>
 						<FormRowComp>
 							<input
 								autoFocus
 								placeholder='Szűrd a szavakat'
 								value={q}
-								onChange={e => {
+								onChange={(e) => {
 									setQ(e.target.value)
 								}}
 							/>
@@ -148,20 +149,14 @@ export function WordsPage(props: WordsPageProps) {
 							_language1Name={dictionary.current!.language1}
 						/>
 						<LoadableComp _value={$wordCount} _load={loadWordCount}>
-							{wordCount => (
+							{(wordCount) => (
 								<>
-									<LoadableComp
-										_value={$words}
-										_load={loadWords}
-									>
-										{words =>
-											words.current == null ||
-											words.current.length === 0 ? (
+									<LoadableComp _value={$words} _load={loadWords}>
+										{(words) =>
+											words.current == null || words.current.length === 0 ? (
 												<p>
 													<em>
-														<IconComp _icon='🙈' />{' '}
-														Nem találtam egy szót
-														sem.
+														<IconComp _icon='🙈' /> Nem találtam egy szót sem.
 													</em>
 												</p>
 											) : sort == null ||
@@ -171,15 +166,9 @@ export function WordsPage(props: WordsPageProps) {
 											  ].includes(sort) ? (
 												<WordListByDateComp
 													_words={words.current}
-													_firstIndex={
-														pageSize * page
-													}
-													_selectedWordIds={
-														$selectedWordIds
-													}
-													_setSelectedWordIds={
-														set$selectedWordIds
-													}
+													_firstIndex={pageSize * page}
+													_selectedWordIds={$selectedWordIds}
+													_setSelectedWordIds={set$selectedWordIds}
 													_swapTranslations={[
 														WordsByDictionaryIdSort.CountTranslation1,
 														WordsByDictionaryIdSort.ModifiedDate1,
@@ -188,15 +177,9 @@ export function WordsPage(props: WordsPageProps) {
 											) : (
 												<WordListComp
 													_words={words.current}
-													_firstIndex={
-														pageSize * page
-													}
-													_selectedWordIds={
-														$selectedWordIds
-													}
-													_setSelectedWordIds={
-														set$selectedWordIds
-													}
+													_firstIndex={pageSize * page}
+													_selectedWordIds={$selectedWordIds}
+													_setSelectedWordIds={set$selectedWordIds}
 													_swapTranslations={[
 														WordsByDictionaryIdSort.CountTranslation1,
 														WordsByDictionaryIdSort.ModifiedDate1,
@@ -216,7 +199,7 @@ export function WordsPage(props: WordsPageProps) {
 							)}
 						</LoadableComp>
 						<ButtonRowComp>
-							<Link to={`../word/`} role='button'>
+							<Link relative={'path'} to={`../word/`} role='button'>
 								<IconComp _icon='➕' /> Adj hozzá egy szót
 							</Link>
 							<WordsMenuComp

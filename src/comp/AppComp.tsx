@@ -1,6 +1,5 @@
-import preval from 'preval.macro'
-import React, { useEffect, useState } from 'react'
-import { Route, Switch } from 'react-router'
+import { useEffect, useState } from 'react'
+import { Route, Routes } from 'react-router'
 import { Link } from 'react-router-dom'
 import { hasKeys } from '../function/hasKeys'
 import { setStringToIdbSortableMap } from '../function/stringToIdbSortable'
@@ -49,12 +48,12 @@ export function AppComp() {
 	const { showShield, hideShield } = shieldContextValue
 
 	useEffect(() => {
-		globalThis.setIsCached = flag => {
+		globalThis.setIsCached = (flag) => {
 			if (flag) {
 				showMessage(`${SUCCESS_CHARACTER} Internet nélkül is működöm!`)
 			}
 		}
-		globalThis.setHasUpdate = flag => {
+		globalThis.setHasUpdate = (flag) => {
 			if (flag) {
 				showMessage(`⬆️ Kész az új verzióm! Indíts újra, és telepítem.`)
 			}
@@ -69,9 +68,7 @@ export function AppComp() {
 				const t = db.transaction(STORE_SETTINGS, 'readonly')
 				const settingsStore = t.objectStore(STORE_SETTINGS)
 				setStringToIdbSortableMap(
-					await settingsStore.get(
-						KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP,
-					),
+					await settingsStore.get(KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP),
 				)
 				set$hasDb(true)
 			} catch (e) {
@@ -117,69 +114,64 @@ export function AppComp() {
 							</p>
 						)}
 						{$hasDb && (
-							<Switch>
-								<Route exact path='/'>
-									<StartPage />
-								</Route>
-								<Route path='/import/'>
-									<ImportFromFilePage />
-								</Route>
-								<Route exact path='/dictionary/'>
-									<EditDictionaryPage />
-								</Route>
-								<Route exact path='/dictionary/:dictionaryId/'>
-									<DictionaryPage />
-								</Route>
-								<Route path='/dictionary/:dictionaryId/export/'>
-									<ExportDictionaryPage />
-								</Route>
-								<Route path='/dictionary/:dictionaryId/word/'>
-									<EditWordPage />
-								</Route>
-								<Route path='/dictionary/:dictionaryId/words/'>
-									<WordsPage />
-								</Route>
-								<Route path='/dictionary/:dictionaryId/import/'>
-									<ImportFromFilePage />
-								</Route>
-								<Route path='/dictionary/:dictionaryId/learn/'>
-									<LearnPage />
-								</Route>
-								<Route path='/dictionary/:dictionaryId/edit/'>
-									<EditDictionaryPage />
-								</Route>
-								<Route path='/'>
-									<NotFoundPage />
-								</Route>
-							</Switch>
+							<Routes>
+								<Route path='/' element={<StartPage />} />
+								<Route path='/import/' element={<ImportFromFilePage />} />
+								<Route path='/dictionary/' element={<EditDictionaryPage />} />
+								<Route
+									path='/dictionary/:dictionaryId/'
+									element={<DictionaryPage />}
+								/>
+								<Route
+									path='/dictionary/:dictionaryId/export/'
+									element={<ExportDictionaryPage />}
+								/>
+								<Route
+									path='/dictionary/:dictionaryId/word/'
+									element={<EditWordPage />}
+								/>
+								<Route
+									path='/dictionary/:dictionaryId/words/'
+									element={<WordsPage />}
+								/>
+								<Route
+									path='/dictionary/:dictionaryId/import/'
+									element={<ImportFromFilePage />}
+								/>
+								<Route
+									path='/dictionary/:dictionaryId/learn/'
+									element={<LearnPage />}
+								/>
+								<Route
+									path='/dictionary/:dictionaryId/edit/'
+									element={<EditDictionaryPage />}
+								/>
+								<Route element={<NotFoundPage />} />
+							</Routes>
 						)}
 					</RowComp>
 					<SpacerComp />
 					<div className={styles.footer}>
-						Verzió:{' '}
-						{preval`module.exports = new Date().toLocaleString()`}
+						Verzió: {__BUILD_DATE__}
 						{' • '}
 						<strong>
 							<LoadableComp
 								_value={$isPersistentStorage}
 								_load={loadPersistentStorage}
 							>
-								{isPersistentStorage =>
+								{(isPersistentStorage) =>
 									isPersistentStorage.current ? (
 										<>Maradandó tárhelyem van.</>
 									) : navigator.storage ? (
 										<>
-											{WARNING_CHARACTER} Nincs maradandó
-											tárhelyem!{' '}
+											{WARNING_CHARACTER} Nincs maradandó tárhelyem!{' '}
 											<button
 												type='button'
 												onClick={async () => {
 													showShield('q0t0uo')
 													const isPersistent = await navigator.storage.persist()
 													if (isPersistent) {
-														set$isPersistentStorage(
-															null,
-														)
+														set$isPersistentStorage(null)
 													} else {
 														showMessage(
 															`${ERROR_CHARACTER} Nem kaptam maradandó tárhelyet. Próbáld meg később!`,
@@ -192,10 +184,7 @@ export function AppComp() {
 											</button>
 										</>
 									) : (
-										<>
-											Ez a böngésző nem támogatja a
-											maradandó tárhelyet.
-										</>
+										<>Ez a böngésző nem támogatja a maradandó tárhelyet.</>
 									)
 								}
 							</LoadableComp>

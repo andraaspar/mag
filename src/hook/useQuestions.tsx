@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { useCallback } from 'use-memo-one'
+import { useCallback, useState } from 'react'
 import { avoidDuplicates } from '../function/avoidDuplicates'
 import { shuffle } from '../function/shuffle'
 import { Question } from '../model/Question'
@@ -10,12 +9,11 @@ export function useQuestions({
 	dictionaryId,
 	wordIdNotFirst,
 }: {
-	dictionaryId: number | null
+	dictionaryId: number | null | undefined
 	wordIdNotFirst: React.MutableRefObject<number | null>
 }) {
-	const [$questions, set$questions] = useState<
-		TLoadable<{ current: readonly Question[] | undefined }>
-	>(null)
+	const [$questions, set$questions] =
+		useState<TLoadable<{ current: readonly Question[] | undefined }>>(null)
 	const loadQuestions = useCallback(() => {
 		let aborted = false
 		if (dictionaryId == null) {
@@ -25,7 +23,7 @@ export function useQuestions({
 			readQuestions({
 				dictionaryId,
 			})
-				.then(questions => {
+				.then((questions) => {
 					if (aborted) return
 					questions = shuffle(questions)
 					questions = avoidDuplicates(
@@ -41,7 +39,7 @@ export function useQuestions({
 					}
 					set$questions({ current: questions })
 				})
-				.catch(e => {
+				.catch((e) => {
 					if (aborted) return
 					console.error(e)
 					set$questions(e + '')

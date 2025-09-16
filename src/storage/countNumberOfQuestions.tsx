@@ -1,10 +1,10 @@
-import { IDBPTransaction } from 'idb/build/esm/entry'
 import {
 	Db,
 	getDb,
 	INDEX_WORDS_COUNT_0,
 	INDEX_WORDS_COUNT_1,
 	STORE_WORDS,
+	TAnyModeTransaction,
 } from './Db'
 import { makeKeyRangeWordsCount } from './makeKeyRangeWordsCount'
 
@@ -12,7 +12,7 @@ export async function countNumberOfQuestions({
 	t = getDb().transaction([STORE_WORDS], 'readonly'),
 	dictionaryId,
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TAnyModeTransaction<Db>
 	dictionaryId: number
 }): Promise<number> {
 	const wordsStore = t.objectStore(STORE_WORDS)

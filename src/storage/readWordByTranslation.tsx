@@ -1,4 +1,3 @@
-import { IDBPTransaction } from 'idb'
 import { Translation } from '../model/Translation'
 import { wordFromDb } from '../model/Word'
 import {
@@ -7,6 +6,7 @@ import {
 	INDEX_WORDS_TRANSLATION_0,
 	INDEX_WORDS_TRANSLATION_1,
 	STORE_WORDS,
+	TAnyModeTransaction,
 } from './Db'
 
 export async function readWordByTranslation({
@@ -15,7 +15,7 @@ export async function readWordByTranslation({
 	translationIndex,
 	translation,
 }: {
-	t?: IDBPTransaction<Db>
+	t?: TAnyModeTransaction<Db>
 	dictionaryId: number
 	translationIndex: 0 | 1
 	translation: Translation

@@ -1,4 +1,4 @@
-import { useMemo } from 'use-memo-one'
+import { useMemo } from 'react'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded, TLoadable } from '../model/TLoadable'
 import { useConflictingDictionary } from './useConflictingDictionary'
@@ -17,8 +17,7 @@ export function useDictionaryValidationErrors(
 						!dictionary.name.trim() &&
 						new Error(`A név megadása kötelező.`),
 					dictionary &&
-						(!dictionary.language0.trim() ||
-							!dictionary.language1.trim()) &&
+						(!dictionary.language0.trim() || !dictionary.language1.trim()) &&
 						new Error(`Mindkét nyelvet el kell nevezned.`),
 					dictionary &&
 						dictionary.language0 &&
