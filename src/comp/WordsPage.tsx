@@ -38,16 +38,15 @@ export function WordsPage(props: WordsPageProps) {
 	const dictionaryId = routeMatch?.params.dictionaryId
 		? parseInt(routeMatch.params.dictionaryId, 10)
 		: undefined
-	const query = useMemo(
-		() =>
-			qs.parse(location.search.slice(1)) as {
-				q: string | undefined
-				page: string | undefined
-				sort: string | undefined
-			},
-		[location.search],
-	)
-	const q = query.q || ''
+	const query = useMemo(() => {
+		const params = new URLSearchParams(location.search)
+		return {
+			q: params.get('q'),
+			page: params.get('page'),
+			sort: params.get('sort'),
+		}
+	}, [location.search])
+	const q = query.q ?? ''
 	const filter = useMemo(() => {
 		const qRe = queryToRegExp(q)
 		return qRe
