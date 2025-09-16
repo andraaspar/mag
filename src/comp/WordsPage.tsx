@@ -1,4 +1,3 @@
-import qs from 'qs'
 import { useCallback, useMemo, useState } from 'react'
 import { useLocation, useMatch, useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -77,23 +76,42 @@ export function WordsPage(props: WordsPageProps) {
 			: WordsByDictionaryIdSort.ModifiedDate0
 	const setQ = useCallback(
 		(q: string) => {
-			navigate(`?${qs.stringify({ q, sort, page })}`, { replace: true })
+			navigate(
+				'?' +
+					new URLSearchParams({
+						q,
+						sort: sort + '',
+						page: page + '',
+					}).toString(),
+				{ replace: true },
+			)
 		},
 		[navigate, page, sort],
 	)
 	const setPage = useCallback(
 		(newPage: number) => {
-			navigate(`?${qs.stringify({ q, sort, page: newPage })}`, {
-				replace: true,
-			})
+			navigate(
+				'?' +
+					new URLSearchParams({
+						q,
+						sort: sort + '',
+						page: newPage + '',
+					}).toString(),
+				{
+					replace: true,
+				},
+			)
 		},
 		[navigate, q, sort],
 	)
 	const setSort = useCallback(
 		(newSort: WordsByDictionaryIdSort) => {
-			navigate(`?${qs.stringify({ q, sort: newSort, page })}`, {
-				replace: true,
-			})
+			navigate(
+				'?' + new URLSearchParams({ q, sort: newSort + '', page: page + '' }),
+				{
+					replace: true,
+				},
+			)
 		},
 		[navigate, q, page],
 	)

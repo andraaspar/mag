@@ -76,6 +76,10 @@ a {
 	flex-direction: column;
 }
 
+:disabled {
+	cursor: not-allowed;
+}
+
 button,
 input,
 textarea,

@@ -127,7 +127,7 @@ export function AppComp() {
 									element={<ExportDictionaryPage />}
 								/>
 								<Route
-									path='/dictionary/:dictionaryId/word/'
+									path='/dictionary/:dictionaryId/word/:wordId?/'
 									element={<EditWordPage />}
 								/>
 								<Route
