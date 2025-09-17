@@ -1,0 +1,15 @@
+input:not([type]) {
+	flex: 1 0 auto;
+	width: 50px;
+	border-radius: var(--border-radius);
+	background-color: black;
+	border: 1px solid var(--gray-2);
+	box-shadow: var(--shadow-1);
+	padding: var(--button-padding);
+}
+
+input[type='file'] {
+	border: 1px solid transparent;
+	padding: 0;
+	width: 100%;
+}

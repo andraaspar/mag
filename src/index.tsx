@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import { AppComp } from './comp/AppComp'
-import './index.css'
+import './css/index.css'
 
 const root = createRoot(document.getElementById('root')!)
 root.render(

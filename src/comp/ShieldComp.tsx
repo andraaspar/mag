@@ -1,16 +1,16 @@
-import React, { PropsWithChildren } from 'react'
-import ReactFocusLock from 'react-focus-lock'
+import { PropsWithChildren, useEffect, useRef } from 'react'
 import { PROGRESS_CHARACTER } from '../model/constants'
-import styles from './ShieldComp.module.css'
 
 export interface ShieldCompProps {}
 
 export function ShieldComp(props: PropsWithChildren<ShieldCompProps>) {
+	const ref = useRef<HTMLDialogElement>(null)
+	useEffect(() => {
+		ref.current?.showModal()
+	})
 	return (
-		<ReactFocusLock returnFocus>
-			<div className={styles.shield} tabIndex={0}>
-				{PROGRESS_CHARACTER}
-			</div>
-		</ReactFocusLock>
+		<dialog className='ccc_layer' ref={ref}>
+			<div className='ccc_shield'>{PROGRESS_CHARACTER}</div>
+		</dialog>
 	)
 }

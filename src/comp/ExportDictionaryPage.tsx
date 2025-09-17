@@ -9,11 +9,8 @@ import { useWordsByDictionaryId } from '../hook/useWordsByDictionaryId'
 import { ExportedDictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { ExportedWord } from '../model/Word'
-import { ButtonRowComp } from './ButtonRowComp'
-import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
-import { FormRowComp } from './FormRowComp'
 import { IconComp } from './IconComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
@@ -79,7 +76,7 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
 			{(dictionary) =>
 				dictionary.current ? (
-					<ContentRowComp>
+					<div className='ccc_col ccc_gap_0_5'>
 						<h1>
 							<DictionaryComp _dictionary={dictionary.current} /> szótár
 							kimentése
@@ -90,14 +87,14 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 									<LoadableComp _value={$words} _load={loadWords}>
 										{(words) => (
 											<>
-												<FormRowComp>
+												<div className='ccc_para'>
 													<textarea
 														ref={textAreaRef}
 														value={$json}
 														readOnly
 													></textarea>
-												</FormRowComp>
-												<ButtonRowComp>
+												</div>
+												<div className='ccc_para'>
 													<button
 														type='button'
 														onClick={() => {
@@ -124,7 +121,7 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 														<IconComp _icon='💾' /> Tárold el
 													</a>
 													<FocusRefComp _focusThis={downloadLinkRef} />
-												</ButtonRowComp>
+												</div>
 											</>
 										)}
 									</LoadableComp>
@@ -138,7 +135,7 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 								</>
 							)}
 						</LoadableComp>
-					</ContentRowComp>
+					</div>
 				) : (
 					<UnknownDictionaryComp />
 				)

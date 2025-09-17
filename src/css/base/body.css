@@ -1,0 +1,12 @@
+body {
+	flex: 1 0 auto;
+	display: flex;
+	flex-direction: column;
+	margin: 0 auto;
+	width: 100%;
+	max-width: 50rem;
+	overflow: auto;
+
+	background-color: var(--gray-1);
+	color: white;
+}

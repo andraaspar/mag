@@ -8,8 +8,6 @@ import { useWordCountByDictionaryId } from '../hook/useWordCountByDictionaryId'
 import { ERROR_CHARACTER } from '../model/constants'
 import { isLoaded } from '../model/TLoadable'
 import { deleteDictionary } from '../storage/deleteDictionary'
-import { ButtonRowComp } from './ButtonRowComp'
-import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
 import { IconComp } from './IconComp'
@@ -46,7 +44,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 		<LoadableComp _value={$dictionary} _load={loadDictionary}>
 			{(dictionary) =>
 				dictionary.current ? (
-					<ContentRowComp>
+					<div className='ccc_col ccc_gap_0_5'>
 						<h1>
 							<DictionaryComp _dictionary={dictionary.current} />
 						</h1>
@@ -79,7 +77,7 @@ export function DictionaryPage(props: DictionaryPageProps) {
 								)
 							}
 						</LoadableComp>
-						<ButtonRowComp>
+						<div className='ccc_para'>
 							{isLoaded($numberOfQuestions) &&
 								$numberOfQuestions.current > 0 && (
 									<>
@@ -126,8 +124,8 @@ export function DictionaryPage(props: DictionaryPageProps) {
 							>
 								<IconComp _icon={ERROR_CHARACTER} /> Töröld ezt a szótárat
 							</button>
-						</ButtonRowComp>
-					</ContentRowComp>
+						</div>
+					</div>
 				) : (
 					<UnknownDictionaryComp />
 				)

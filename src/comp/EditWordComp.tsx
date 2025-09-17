@@ -15,12 +15,9 @@ import { checkForConflictingWord } from '../storage/checkForConflictingWord'
 import { getDb, STORE_DICTIONARIES, STORE_WORDS } from '../storage/Db'
 import { storeWord } from '../storage/storeWord'
 import { updateDictionaryCount } from '../storage/updateDictionaryCount'
-import { ButtonRowComp } from './ButtonRowComp'
-import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
-import { FormRowComp } from './FormRowComp'
 import { IconComp } from './IconComp'
-import { LabelComp } from './LabelComp'
+import { RequiredComp } from './RequiredComp'
 import { ShieldContext } from './ShieldContext'
 import { ShowMessageContext } from './ShowMessageContext'
 
@@ -116,10 +113,13 @@ export function EditWordComp({
 	)
 	return (
 		<form onSubmit={onSubmit}>
-			<ContentRowComp>
+			<div className='ccc_col ccc_gap_0_5'>
 				<h1>{_word.id ? `Módosítsd a szót` : `Adj hozzá egy szót`}</h1>
-				<FormRowComp>
-					<LabelComp _required>{_dictionary.language0}</LabelComp>
+				<div className='ccc_para'>
+					<label>
+						{_dictionary.language0}
+						<RequiredComp />:
+					</label>
 					<input
 						autoFocus
 						value={$translation0Text}
@@ -127,46 +127,49 @@ export function EditWordComp({
 							set$translation0Text(e.target.value)
 						}}
 					/>
-				</FormRowComp>
-				<FormRowComp>
-					<LabelComp>Magyarázat</LabelComp>
+				</div>
+				<div className='ccc_para'>
+					<label>Magyarázat:</label>
 					<input
 						value={$translation0Description}
 						onChange={(e) => {
 							set$translation0Description(e.target.value)
 						}}
 					/>
-				</FormRowComp>
-				<FormRowComp>
-					<LabelComp _required>{_dictionary.language1}</LabelComp>
+				</div>
+				<div className='ccc_para'>
+					<label>
+						{_dictionary.language1}
+						<RequiredComp />:
+					</label>
 					<input
 						value={$translation1Text}
 						onChange={(e) => {
 							set$translation1Text(e.target.value)
 						}}
 					/>
-				</FormRowComp>
-				<FormRowComp>
-					<LabelComp>Magyarázat</LabelComp>
+				</div>
+				<div className='ccc_para'>
+					<label>Magyarázat:</label>
 					<input
 						value={$translation1Description}
 						onChange={(e) => {
 							set$translation1Description(e.target.value)
 						}}
 					/>
-				</FormRowComp>
+				</div>
 				{_word.id && (
-					<FormRowComp>
+					<div className='ccc_para'>
 						<small>
 							Kérdések: {_word.translation0.count > 0 && QUESTIONS_CHARACTER}{' '}
 							{_word.translation0.count} /{' '}
 							{_word.translation1.count > 0 && QUESTIONS_CHARACTER}{' '}
 							{_word.translation1.count}
 						</small>
-					</FormRowComp>
+					</div>
 				)}
 				{touched && <ErrorsComp _errors={validationErrors} />}
-				<ButtonRowComp>
+				<div className='ccc_para'>
 					<button
 						disabled={
 							!isLoaded(validationErrors) || validationErrors.length > 0
@@ -249,8 +252,8 @@ export function EditWordComp({
 								<IconComp _icon={NO_QUESTIONS_CHARACTER} /> Kapcsold ki a szót
 							</button>
 						)}
-				</ButtonRowComp>
-			</ContentRowComp>
+				</div>
+			</div>
 		</form>
 	)
 }

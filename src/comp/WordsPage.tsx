@@ -15,10 +15,7 @@ import { isLoaded } from '../model/TLoadable'
 import { TSelection } from '../model/TSelection'
 import { DbWord } from '../model/Word'
 import { WordsByDictionaryIdSort } from '../storage/readWordsByDictionaryId'
-import { ButtonRowComp } from './ButtonRowComp'
-import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
-import { FormRowComp } from './FormRowComp'
 import { IconComp } from './IconComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
@@ -134,11 +131,11 @@ export function WordsPage(props: WordsPageProps) {
 				dictionary.current == null ? (
 					<UnknownDictionaryComp />
 				) : (
-					<ContentRowComp>
+					<div className='ccc_col ccc_gap_0_5'>
 						<h1>
 							<DictionaryComp _dictionary={dictionary.current!} /> szavai
 						</h1>
-						<FormRowComp>
+						<div className='ccc_para'>
 							<input
 								autoFocus
 								placeholder='Szűrd a szavakat'
@@ -150,7 +147,7 @@ export function WordsPage(props: WordsPageProps) {
 							{filter && (
 								<button
 									type='button'
-									className='does-not-expand'
+									className='ccc_does_not_expand'
 									onClick={() => {
 										setQ('')
 									}}
@@ -158,7 +155,7 @@ export function WordsPage(props: WordsPageProps) {
 									{CLOSE_CHARACTER}
 								</button>
 							)}
-						</FormRowComp>
+						</div>
 						<WordsSortComp
 							_sort={sort}
 							_setSort={setSort}
@@ -215,7 +212,7 @@ export function WordsPage(props: WordsPageProps) {
 								</>
 							)}
 						</LoadableComp>
-						<ButtonRowComp>
+						<div className='ccc_para'>
 							<Link relative={'path'} to={`../word/`} role='button'>
 								<IconComp _icon='➕' /> Adj hozzá egy szót
 							</Link>
@@ -225,8 +222,8 @@ export function WordsPage(props: WordsPageProps) {
 								_setSelectedWordIds={set$selectedWordIds}
 								_onDone={loadDictionary}
 							/>
-						</ButtonRowComp>
-					</ContentRowComp>
+						</div>
+					</div>
 				)
 			}
 		</LoadableComp>

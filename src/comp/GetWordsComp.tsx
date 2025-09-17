@@ -1,14 +1,11 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { dictionaryFromAndroid } from '../function/dictionaryFromAndroid'
 import { dictionaryFromExport } from '../function/dictionaryFromExport'
 import { readJsonFromFile } from '../function/readJsonFromFile'
 import { wordFromAndroid } from '../function/wordFromAndroid'
 import { wordFromExport } from '../function/wordFromExport'
 import { DictionaryFromAndroid, ExportedDictionary } from '../model/Dictionary'
-import { ContentRowComp } from './ContentRowComp'
-import { FormRowComp } from './FormRowComp'
 import { ImportableDictionary } from './ImportFromFilePage'
-import { LabelComp } from './LabelComp'
 import { ShowMessageContext } from './ShowMessageContext'
 
 export interface GetWordsCompProps {
@@ -19,13 +16,13 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 	const [$json, set$json] = useState('')
 	const showMessage = useContext(ShowMessageContext)
 	return (
-		<ContentRowComp>
-			<FormRowComp>
-				<LabelComp>Fájlból</LabelComp>
+		<div className='ccc_col ccc_gap_0_5'>
+			<div className='ccc_para'>
+				<label>Fájlból:</label>
 				<input
 					autoFocus
 					type='file'
-					onChange={async e => {
+					onChange={async (e) => {
 						try {
 							const files = e.target.files
 							if (!files) return
@@ -36,19 +33,13 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 							>(file)
 							if ('version' in dictionary) {
 								_setImportableDictionary({
-									dictionary: dictionaryFromExport(
-										dictionary,
-									),
+									dictionary: dictionaryFromExport(dictionary),
 									words: dictionary.words.map(wordFromExport),
 								})
 							} else {
 								_setImportableDictionary({
-									dictionary: dictionaryFromAndroid(
-										dictionary,
-									),
-									words: dictionary.words.map(
-										wordFromAndroid,
-									),
+									dictionary: dictionaryFromAndroid(dictionary),
+									words: dictionary.words.map(wordFromAndroid),
 								})
 							}
 						} catch (e) {
@@ -56,23 +47,22 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 						}
 					}}
 				/>
-			</FormRowComp>
-			<FormRowComp>
-				<LabelComp>Vágólapról</LabelComp>
+			</div>
+			<div className='ccc_para'>
+				<label>Vágólapról:</label>
 				<textarea
 					placeholder={`Illeszd be ide...`}
 					rows={1}
 					cols={`Illeszd be ide...`.length}
 					value={$json}
-					onChange={e => {
+					onChange={(e) => {
 						try {
 							const json = e.currentTarget.value
 							set$json(json)
 							if (!json) return
 							try {
-								var dictionary:
-									| DictionaryFromAndroid
-									| ExportedDictionary = JSON.parse(json)
+								var dictionary: DictionaryFromAndroid | ExportedDictionary =
+									JSON.parse(json)
 							} catch (e) {
 								console.error(e)
 								throw new Error(
@@ -82,21 +72,13 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 							try {
 								if ('version' in dictionary) {
 									_setImportableDictionary({
-										dictionary: dictionaryFromExport(
-											dictionary,
-										),
-										words: dictionary.words.map(
-											wordFromExport,
-										),
+										dictionary: dictionaryFromExport(dictionary),
+										words: dictionary.words.map(wordFromExport),
 									})
 								} else {
 									_setImportableDictionary({
-										dictionary: dictionaryFromAndroid(
-											dictionary,
-										),
-										words: dictionary.words.map(
-											wordFromAndroid,
-										),
+										dictionary: dictionaryFromAndroid(dictionary),
+										words: dictionary.words.map(wordFromAndroid),
 									})
 								}
 							} catch (e) {
@@ -111,7 +93,7 @@ export function GetWordsComp({ _setImportableDictionary }: GetWordsCompProps) {
 						}
 					}}
 				></textarea>
-			</FormRowComp>
-		</ContentRowComp>
+			</div>
+		</div>
 	)
 }

@@ -8,8 +8,6 @@ import { SUCCESS_CHARACTER } from '../model/constants'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { Word } from '../model/Word'
-import { ButtonRowComp } from './ButtonRowComp'
-import { ContentRowComp } from './ContentRowComp'
 import { ErrorsComp } from './ErrorsComp'
 import { GetWordsComp } from './GetWordsComp'
 import { IconComp } from './IconComp'
@@ -49,7 +47,7 @@ export function ImportFromFilePage() {
 	}, [])
 	const { showShield, hideShield } = useContext(ShieldContext)
 	return (
-		<ContentRowComp>
+		<div className='ccc_col ccc_gap_0_5'>
 			<h1>Tölts be szavakat</h1>
 			<form
 				onSubmit={async (e) => {
@@ -83,7 +81,7 @@ export function ImportFromFilePage() {
 					hideShield('q0t0z5')
 				}}
 			>
-				<ContentRowComp>
+				<div className='ccc_col ccc_gap_0_5'>
 					{!$importableDictionary && (
 						<GetWordsComp _setImportableDictionary={setImportableDictionary} />
 					)}
@@ -97,7 +95,7 @@ export function ImportFromFilePage() {
 					)}
 					<ErrorsComp _errors={dictionaryValidationErrors} />
 					{$importableDictionary && (
-						<ButtonRowComp>
+						<div className='ccc_para'>
 							<button
 								disabled={
 									!isLoaded(dictionaryValidationErrors) ||
@@ -106,10 +104,10 @@ export function ImportFromFilePage() {
 							>
 								<IconComp _icon={SUCCESS_CHARACTER} /> Tárold el
 							</button>
-						</ButtonRowComp>
+						</div>
 					)}
-				</ContentRowComp>
+				</div>
 			</form>
-		</ContentRowComp>
+		</div>
 	)
 }

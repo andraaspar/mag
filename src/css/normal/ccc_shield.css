@@ -1,0 +1,19 @@
+.ccc_shield {
+	flex: 0 0 auto;
+	margin: auto;
+	font-size: 2rem;
+
+	animation-delay: 0.5s;
+	animation-name: fade-in-t2qba4;
+	animation-duration: 1s;
+	animation-fill-mode: both;
+}
+
+@keyframes fade-in-t2qba4 {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}

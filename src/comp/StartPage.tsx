@@ -11,11 +11,8 @@ import { selectPageCount } from '../selector/selectPageCount'
 import { countDictionaries } from '../storage/countDictionaries'
 import { getDb, STORE_DICTIONARIES } from '../storage/Db'
 import { readDictionaries } from '../storage/readDictionaries'
-import { ButtonRowComp } from './ButtonRowComp'
-import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { FocusRefComp } from './FocusRefComp'
-import { FormRowComp } from './FormRowComp'
 import { IconComp } from './IconComp'
 import { LoadableComp } from './LoadableComp'
 import { PagingComp } from './PagingComp'
@@ -90,11 +87,11 @@ export function StartPage(props: StartPageProps) {
 	})
 	const makeADictionaryLinkRef = useRef<HTMLAnchorElement>(null)
 	return (
-		<ContentRowComp>
+		<div className='ccc_col ccc_gap_0_5'>
 			<h1>Szia!</h1>
 			<p>Mag vagyok, egy szógyakorló program. Magolj velem!</p>
 			{isLoaded($totalDictionaryCount) && $totalDictionaryCount.count > 0 && (
-				<FormRowComp>
+				<div className='ccc_para'>
 					<input
 						autoFocus
 						placeholder='Szűrd a szótárakat'
@@ -106,7 +103,7 @@ export function StartPage(props: StartPageProps) {
 					{$query && (
 						<button
 							type='button'
-							className='does-not-expand'
+							className='ccc_does_not_expand'
 							onClick={() => {
 								set$query('')
 							}}
@@ -114,7 +111,7 @@ export function StartPage(props: StartPageProps) {
 							{CLOSE_CHARACTER}
 						</button>
 					)}
-				</FormRowComp>
+				</div>
 			)}
 			<LoadableComp _value={$dictionariesOnPage} _load={loadDictionariesOnPage}>
 				{(dictionaries) => (
@@ -162,18 +159,18 @@ export function StartPage(props: StartPageProps) {
 								</Link>
 							</p>
 						) : (
-							<ButtonRowComp>
+							<div className='ccc_para'>
 								<Link to='/dictionary/' role='button'>
 									<IconComp _icon='✨' /> Készíts új szótárat
 								</Link>{' '}
 								<Link to='/import/' role='button'>
 									<IconComp _icon='📂' /> Tölts be egy szótárat
 								</Link>
-							</ButtonRowComp>
+							</div>
 						)}
 					</>
 				)}
 			</LoadableComp>
-		</ContentRowComp>
+		</div>
 	)
 }

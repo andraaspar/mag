@@ -1,4 +1,3 @@
-import React from 'react'
 import { QUESTIONS_CHARACTER } from '../model/constants'
 import { Translation } from '../model/Translation'
 

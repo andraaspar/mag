@@ -13,7 +13,6 @@
 		"idb": "^8.0.3",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
-		"react-focus-lock": "^2.13.6",
 		"react-router-dom": "^7.9.1",
 		"typescript": "~5.9.2",
 		"vite": "^7.1.5",

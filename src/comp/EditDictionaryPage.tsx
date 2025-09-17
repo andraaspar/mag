@@ -7,7 +7,6 @@ import { usePageTitle } from '../hook/usePageTitle'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
 import { storeDictionary } from '../storage/storeDictionary'
-import { ContentRowComp } from './ContentRowComp'
 import { DictionaryComp } from './DictionaryComp'
 import { EditDictionaryComp } from './EditDictionaryComp'
 import { LoadableComp } from './LoadableComp'
@@ -44,7 +43,7 @@ export function EditDictionaryPage() {
 		<>
 			<LoadableComp _value={$dictionary} _load={loadDictionary}>
 				{(dictionary) => (
-					<ContentRowComp>
+					<div className='ccc_col ccc_gap_0_5'>
 						<h1>
 							{dictionary.current ? (
 								<>
@@ -65,7 +64,7 @@ export function EditDictionaryPage() {
 							}
 							_storeDictionary={finish}
 						/>
-					</ContentRowComp>
+					</div>
 				)}
 			</LoadableComp>
 		</>

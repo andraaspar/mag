@@ -1,0 +1,14 @@
+option {
+	color: var(--teal-6);
+	background-color: black;
+
+	&:checked {
+		color: white;
+		background-color: var(--gray-2);
+	}
+
+	&:hover {
+		color: var(--teal-7);
+		background-color: var(--gray-1);
+	}
+}

@@ -1,0 +1,7 @@
+.ccc_required {
+	color: var(--red-4);
+	position: relative;
+	bottom: 0.3em;
+	font-weight: bold;
+	margin: 0 0.15em;
+}

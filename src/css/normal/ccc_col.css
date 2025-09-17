@@ -1,0 +1,11 @@
+.ccc_col {
+	display: flex;
+	flex-flow: column;
+
+	&.ccc__0_25 {
+		gap: 0.25rem;
+	}
+	&.ccc__1 {
+		gap: 1rem;
+	}
+}

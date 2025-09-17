@@ -3,11 +3,8 @@ import { dictionaryToString } from '../function/dictionaryToString'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded, TLoadable } from '../model/TLoadable'
 import { readDictionaries } from '../storage/readDictionaries'
-import { ContentRowComp } from './ContentRowComp'
 import { DictionaryPropsComp } from './DictionaryPropsComp'
-import { FormRowComp } from './FormRowComp'
 import { ImportableDictionary, ImportParams } from './ImportFromFilePage'
-import { LabelComp } from './LabelComp'
 import { LoadableComp } from './LoadableComp'
 
 export interface SetImportParamsCompProps {
@@ -73,9 +70,9 @@ export function SetImportParamsComp({
 	return (
 		<LoadableComp _value={$dictionaries} _load={loadDictionaries}>
 			{(dictionaries) => (
-				<ContentRowComp>
-					<FormRowComp>
-						<LabelComp>Egyesítsd ezzel a szótárral</LabelComp>
+				<div className='ccc_col ccc_gap_0_5'>
+					<div className='ccc_para'>
+						<label>Egyesítsd ezzel a szótárral:</label>
 						<select
 							value={_importParams.dictionary.id}
 							onChange={(e) => {
@@ -99,13 +96,13 @@ export function SetImportParamsComp({
 								</option>
 							))}
 						</select>
-					</FormRowComp>
+					</div>
 					<DictionaryPropsComp
 						_dictionary={_importParams.dictionary}
 						_setDictionary={setDictionary}
 					/>
-					<FormRowComp>
-						<LabelComp>Nyelvsorrend</LabelComp>
+					<div className='ccc_para'>
+						<label>Nyelvsorrend:</label>
 						<select
 							value={_importParams.swapLanguages + ''}
 							onChange={(e) => {
@@ -129,8 +126,8 @@ export function SetImportParamsComp({
 								{_importParams.dictionary.language0}
 							</option>
 						</select>
-					</FormRowComp>
-				</ContentRowComp>
+					</div>
+				</div>
 			)}
 		</LoadableComp>
 	)

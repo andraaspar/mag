@@ -1,5 +1,5 @@
 const SW_SELF = self as any as ServiceWorkerGlobalScope
-const cacheName = `tools-${__BUILD_TIMESTAMP__}`
+const cacheName = `mag-${__BUILD_TIMESTAMP__}`
 const manifest = (self as any).__WB_MANIFEST as {
 	revision: string | null
 	url: string

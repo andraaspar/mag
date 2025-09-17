@@ -5,10 +5,7 @@ import { Word } from '../model/Word'
 import { getDb, STORE_DICTIONARIES, STORE_WORDS } from '../storage/Db'
 import { storeWord } from '../storage/storeWord'
 import { updateDictionaryCount } from '../storage/updateDictionaryCount'
-import { ButtonRowComp } from './ButtonRowComp'
-import { ContentRowComp } from './ContentRowComp'
-import { FormRowComp } from './FormRowComp'
-import { LabelComp } from './LabelComp'
+import { RequiredComp } from './RequiredComp'
 import { ShieldContext } from './ShieldContext'
 
 export interface LearnCompProps {
@@ -82,13 +79,16 @@ export function LearnComp({
 
 	return (
 		<form onSubmit={onSubmit}>
-			<ContentRowComp>
+			<div className='ccc_col ccc_gap_0_5'>
 				<div>
 					{questionLanguage}: {question.text}
 				</div>
 				{question.description && <div>Megjegyzés: {question.description}</div>}
-				<FormRowComp>
-					<LabelComp _required>{answerLanguage}</LabelComp>
+				<div className='ccc_para'>
+					<label>
+						{answerLanguage}
+						<RequiredComp />:
+					</label>
 					<input
 						ref={inputRef}
 						autoFocus
@@ -97,14 +97,14 @@ export function LearnComp({
 							set$answer(e.target.value)
 						}}
 					/>
-				</FormRowComp>
-				<ButtonRowComp>
+				</div>
+				<div className='ccc_para'>
 					<button disabled={!isAnswerCorrect}>Rendben</button>
 					<button type='button' onClick={onShowAnswer} disabled={$answerShown}>
 						Mutasd a választ
 					</button>
-				</ButtonRowComp>
-			</ContentRowComp>
+				</div>
+			</div>
 		</form>
 	)
 }

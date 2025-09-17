@@ -4,8 +4,6 @@ import { useDictionaryValidationErrors } from '../hook/useDictionaryValidationEr
 import { SUCCESS_CHARACTER } from '../model/constants'
 import { Dictionary } from '../model/Dictionary'
 import { isLoaded } from '../model/TLoadable'
-import { ButtonRowComp } from './ButtonRowComp'
-import { ContentRowComp } from './ContentRowComp'
 import { DictionaryPropsComp } from './DictionaryPropsComp'
 import { ErrorsComp } from './ErrorsComp'
 import { IconComp } from './IconComp'
@@ -38,13 +36,13 @@ export function EditDictionaryComp({
 				_storeDictionary(sanitizedDictionary)
 			}}
 		>
-			<ContentRowComp>
+			<div className='ccc_col ccc_gap_0_5'>
 				<DictionaryPropsComp
 					_dictionary={$dictionary}
 					_setDictionary={set$dictionary}
 				/>
 				{touched && <ErrorsComp _errors={dictionaryValidationErrors} />}
-				<ButtonRowComp>
+				<div className='ccc_para'>
 					<button
 						disabled={
 							!isLoaded(dictionaryValidationErrors) ||
@@ -53,8 +51,8 @@ export function EditDictionaryComp({
 					>
 						<IconComp _icon={SUCCESS_CHARACTER} /> Tárold el
 					</button>
-				</ButtonRowComp>
-			</ContentRowComp>
+				</div>
+			</div>
 		</form>
 	)
 }

@@ -6,17 +6,12 @@ import { setStringToIdbSortableMap } from '../function/stringToIdbSortable'
 import { useMessages } from '../hook/useMessages'
 import { usePersistentStorage } from '../hook/usePersistentStorage'
 import { useShield } from '../hook/useShield'
-import {
-	ERROR_CHARACTER,
-	SUCCESS_CHARACTER,
-	WARNING_CHARACTER,
-} from '../model/constants'
+import { ERROR_CHARACTER, WARNING_CHARACTER } from '../model/constants'
 import {
 	initDb,
 	KEY_SETTINGS_STRING_TO_IDB_SORTABLE_MAP,
 	STORE_SETTINGS,
 } from '../storage/Db'
-import styles from './AppComp.module.css'
 import { DictionaryPage } from './DictionaryPage'
 import { EditDictionaryPage } from './EditDictionaryPage'
 import { EditWordPage } from './EditWordPage'
@@ -26,11 +21,9 @@ import { LearnPage } from './LearnPage'
 import { LoadableComp } from './LoadableComp'
 import { MessagesComp } from './MessagesComp'
 import { NotFoundPage } from './NotFoundPage'
-import { RowComp } from './RowComp'
 import { ShieldComp } from './ShieldComp'
 import { ShieldContext } from './ShieldContext'
 import { ShowMessageContext } from './ShowMessageContext'
-import { SpacerComp } from './SpacerComp'
 import { StartPage } from './StartPage'
 import { WordsPage } from './WordsPage'
 
@@ -47,18 +40,18 @@ export function AppComp() {
 	const { $shieldKeys, shieldContextValue } = useShield()
 	const { showShield, hideShield } = shieldContextValue
 
-	useEffect(() => {
-		globalThis.setIsCached = (flag) => {
-			if (flag) {
-				showMessage(`${SUCCESS_CHARACTER} Internet nélkül is működöm!`)
-			}
-		}
-		globalThis.setHasUpdate = (flag) => {
-			if (flag) {
-				showMessage(`⬆️ Kész az új verzióm! Indíts újra, és telepítem.`)
-			}
-		}
-	}, [showMessage])
+	// useEffect(() => {
+	// 	globalThis.setIsCached = (flag) => {
+	// 		if (flag) {
+	// 			showMessage(`${SUCCESS_CHARACTER} Internet nélkül is működöm!`)
+	// 		}
+	// 	}
+	// 	globalThis.setHasUpdate = (flag) => {
+	// 		if (flag) {
+	// 			showMessage(`⬆️ Kész az új verzióm! Indíts újra, és telepítem.`)
+	// 		}
+	// 	}
+	// }, [showMessage])
 
 	useEffect(() => {
 		showShield('q0t0sl')
@@ -81,8 +74,8 @@ export function AppComp() {
 	return (
 		<ShowMessageContext.Provider value={showMessage}>
 			<ShieldContext.Provider value={shieldContextValue}>
-				<RowComp _isVertical _gap={20} _padding={20} _fill>
-					<div className={styles.header}>
+				<div className='ccc_col ccc_gap_1 ccc_pad_1 ccc_flex_1_0_0'>
+					<div className='ccc_header'>
 						<button
 							type='button'
 							onClick={() => {
@@ -91,7 +84,7 @@ export function AppComp() {
 						>
 							←
 						</button>
-						<Link to='/' className='button-padding-y'>
+						<Link to='/' className='ccc_button_padding_y'>
 							Mag
 						</Link>
 						<button
@@ -103,7 +96,7 @@ export function AppComp() {
 							→
 						</button>
 					</div>
-					<RowComp _isVertical>
+					<div className='ccc_col'>
 						<MessagesComp
 							_messages={messages}
 							_removeMessageByIndex={removeMessageByIndex}
@@ -149,9 +142,8 @@ export function AppComp() {
 								<Route element={<NotFoundPage />} />
 							</Routes>
 						)}
-					</RowComp>
-					<SpacerComp />
-					<div className={styles.footer}>
+					</div>
+					<div className='ccc_footer'>
 						Verzió: {__BUILD_DATE__}
 						{' • '}
 						<strong>
@@ -190,7 +182,7 @@ export function AppComp() {
 							</LoadableComp>
 						</strong>
 					</div>
-				</RowComp>
+				</div>
 				{hasKeys($shieldKeys) && <ShieldComp />}
 			</ShieldContext.Provider>
 		</ShowMessageContext.Provider>

@@ -1,4 +1,4 @@
-.outer {
+.ccc_progress_outer {
 	position: relative;
 	display: flex;
 	width: 100%;
@@ -7,7 +7,7 @@
 	border-radius: var(--border-radius);
 }
 
-.inner {
+.ccc_progress_inner {
 	flex: 0 0 0;
 	background-color: #d60044;
 	border-radius: var(--border-radius);

@@ -1,6 +1,3 @@
-import React from 'react'
-import { ButtonRowComp } from './ButtonRowComp'
-
 export interface PagingCompProps {
 	_page: number
 	_setPage: (n: number) => void
@@ -9,10 +6,10 @@ export interface PagingCompProps {
 
 export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
 	return (
-		<ButtonRowComp>
+		<div className='ccc_para'>
 			<button
 				type='button'
-				className='does-not-expand'
+				className='ccc_does_not_expand'
 				disabled={_page === 0}
 				onClick={() => {
 					_setPage(_page - 1)
@@ -20,12 +17,12 @@ export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
 			>
 				«
 			</button>
-			<div className='button-padding-y'>
+			<div className='ccc_button_padding_y'>
 				{_page + 1} / {_pageCount}
 			</div>
 			<button
 				type='button'
-				className='does-not-expand'
+				className='ccc_does_not_expand'
 				disabled={_page === _pageCount - 1}
 				onClick={() => {
 					_setPage(_page + 1)
@@ -33,6 +30,6 @@ export function PagingComp({ _page, _pageCount, _setPage }: PagingCompProps) {
 			>
 				»
 			</button>
-		</ButtonRowComp>
+		</div>
 	)
 }

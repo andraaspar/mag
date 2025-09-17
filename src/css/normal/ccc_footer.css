@@ -1,0 +1,8 @@
+.ccc_footer {
+	border-top: 3px solid black;
+	padding-top: 20px;
+	text-align: center;
+	font-size: small;
+	color: var(--white-6);
+	margin-top: auto;
+}
