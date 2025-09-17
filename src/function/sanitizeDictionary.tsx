@@ -8,5 +8,7 @@ export function sanitizeDictionary(d: Dictionary): Dictionary {
 		language0: sanitizeString(d.language0),
 		language1: sanitizeString(d.language1),
 		count: d.count,
+		categories0: d.categories0?.map((c) => sanitizeString(c)),
+		categories1: d.categories1?.map((c) => sanitizeString(c)),
 	}
 }

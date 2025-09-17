@@ -6,5 +6,7 @@ export function dictionaryFromExport(d: ExportedDictionary): Dictionary {
 		language0: d.language0,
 		language1: d.language1,
 		count: 0,
+		categories0: d.categories0,
+		categories1: d.categories1,
 	}
 }

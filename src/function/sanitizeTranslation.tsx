@@ -6,5 +6,6 @@ export function sanitizeTranslation(t: Translation): Translation {
 		count: t.count,
 		text: sanitizeString(t.text),
 		description: sanitizeString(t.description),
+		category: t.category?.trim() ? sanitizeString(t.category) : undefined,
 	}
 }

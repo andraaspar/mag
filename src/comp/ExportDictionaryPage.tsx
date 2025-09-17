@@ -52,6 +52,8 @@ export function ExportDictionaryPage(props: ExportDictionaryPageProps) {
 			name: $dictionary.current.name,
 			language0: $dictionary.current.language0,
 			language1: $dictionary.current.language1,
+			categories0: $dictionary.current.categories0,
+			categories1: $dictionary.current.categories1,
 			words: $words.current.map(
 				(w): ExportedWord => ({
 					modifiedDate: w.modifiedDate,

@@ -23,6 +23,12 @@ export function useDictionaryValidationErrors(
 						dictionary.language0 &&
 						dictionary.language0 === dictionary.language1 &&
 						new Error(`A két nyelv neve nem lehet ugyanaz.`),
+					dictionary &&
+						dictionary.categories0?.find((it) => !it.trim()) &&
+						new Error(`Üres kategória név nem megengedett.`),
+					dictionary &&
+						dictionary.categories1?.find((it) => !it.trim()) &&
+						new Error(`Üres kategória név nem megengedett.`),
 			  ].filter(Boolean) as Error[])
 	}, [conflictingDictionary, dictionary])
 	return result

@@ -9,6 +9,7 @@ export function TranslationComp({ _translation }: TranslationCompProps) {
 	return (
 		<>
 			{_translation.count > 0 && `${QUESTIONS_CHARACTER} `}
+			{_translation.category && <i>{_translation.category}</i>}{' '}
 			{_translation.text}
 			{_translation.description && (
 				<>

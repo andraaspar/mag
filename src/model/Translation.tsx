@@ -4,6 +4,7 @@ export interface Translation {
 	text: string
 	description: string
 	count: number
+	category?: string
 }
 
 export interface DbTranslation extends Translation {
@@ -20,6 +21,7 @@ export function translationToDb(t: Translation): DbTranslation {
 		textForSort: stringToIdbSortable(t.text),
 		descriptionForSort: stringToIdbSortable(t.description),
 		countForSort: t.count > 0 ? 0 : 1,
+		category: t.category,
 	}
 }
 
@@ -28,5 +30,6 @@ export function translationFromDb(t: DbTranslation): Translation {
 		text: t.text,
 		count: t.count,
 		description: t.description,
+		category: t.category,
 	}
 }

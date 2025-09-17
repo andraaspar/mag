@@ -28,17 +28,25 @@ export function LearnComp({
 		_translationId === 0 ? _dictionary.language1 : _dictionary.language0
 	const question =
 		_translationId === 0 ? _word.translation0 : _word.translation1
-	const correctAnswer = (
+	const correctAnswer =
 		_translationId === 0 ? _word.translation1 : _word.translation0
-	).text
+	const categories =
+		_translationId === 0 ? _dictionary.categories1 : _dictionary.categories0
+	const hasCategory =
+		!!correctAnswer.category && !!categories && categories.length > 1
 	const [$answer, set$answer] = useState('')
-	const isAnswerCorrect = sanitizeString($answer) === correctAnswer
+	const [$category, set$category] = useState('')
+	const isAnswerCorrect = sanitizeString($answer) === correctAnswer.text
 	const [$answerShown, set$answerShown] = useState(false)
+	const [$categoryShown, set$categoryShown] = useState(false)
 	const { showShield, hideShield } = useContext(ShieldContext)
 
 	async function onSubmit(e: FormEvent) {
 		e.preventDefault()
-		const newCount = Math.min(3, question.count + ($answerShown ? 1 : -1))
+		if (!canSubmit()) return
+		const isCorrect =
+			!$answerShown && (!hasCategory || $category === correctAnswer.category)
+		const newCount = Math.min(3, question.count + (isCorrect ? -1 : 1))
 		showShield('q0t1q5')
 		const t = getDb().transaction(
 			[STORE_DICTIONARIES, STORE_WORDS],
@@ -73,15 +81,21 @@ export function LearnComp({
 	function onShowAnswer() {
 		if (correctAnswer == null) return
 		set$answerShown(true)
-		set$answer(correctAnswer)
+		set$categoryShown(true)
+		set$answer(correctAnswer.text)
 		inputRef.current!.focus()
+	}
+
+	function canSubmit() {
+		return isAnswerCorrect && (!hasCategory || $categoryShown)
 	}
 
 	return (
 		<form onSubmit={onSubmit}>
 			<div className='ccc_col ccc_gap_0_5'>
 				<div>
-					{questionLanguage}: {question.text}
+					{questionLanguage}: {question.category && <i>{question.category}</i>}{' '}
+					{question.text}
 				</div>
 				{question.description && <div>Megjegyzés: {question.description}</div>}
 				<div className='ccc_para'>
@@ -89,6 +103,23 @@ export function LearnComp({
 						{answerLanguage}
 						<RequiredComp />:
 					</label>
+					{hasCategory &&
+						!$categoryShown &&
+						categories.map((category) => (
+							<button
+								onClick={() => {
+									set$category(category)
+									if (category === correctAnswer.category)
+										set$categoryShown(true)
+									else onShowAnswer()
+								}}
+							>
+								{category}
+							</button>
+						))}
+					{hasCategory && $categoryShown && (
+						<div className='ccc_button_padding_y'>{correctAnswer.category}</div>
+					)}
 					<input
 						ref={inputRef}
 						autoFocus
@@ -99,7 +130,7 @@ export function LearnComp({
 					/>
 				</div>
 				<div className='ccc_para'>
-					<button disabled={!isAnswerCorrect}>Rendben</button>
+					<button disabled={!canSubmit()}>Rendben</button>
 					<button type='button' onClick={onShowAnswer} disabled={$answerShown}>
 						Mutasd a választ
 					</button>

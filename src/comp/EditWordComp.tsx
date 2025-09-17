@@ -38,6 +38,12 @@ export function EditWordComp({
 	const [$translation0Text, set$translation0Text] = useState(
 		_word.translation0.text,
 	)
+	const [$translation0Category, set$translation0Category] = useState(
+		_word.translation0.category,
+	)
+	const [$translation1Category, set$translation1Category] = useState(
+		_word.translation1.category,
+	)
 	const [$translation1Text, set$translation1Text] = useState(
 		_word.translation1.text,
 	)
@@ -51,7 +57,9 @@ export function EditWordComp({
 		$translation0Text ||
 		$translation1Text ||
 		$translation0Description ||
-		$translation1Description
+		$translation1Description ||
+		$translation0Category ||
+		$translation1Category
 	)
 	const sanitizedWord = useMemo(
 		() =>
@@ -63,19 +71,23 @@ export function EditWordComp({
 					text: $translation0Text,
 					description: $translation0Description,
 					count: DEFAULT_COUNT,
+					category: $translation0Category,
 				},
 				translation1: {
 					text: $translation1Text,
 					description: $translation1Description,
 					count: DEFAULT_COUNT,
+					category: $translation1Category,
 				},
 			}),
 		[
 			_dictionary,
 			_word.id,
 			$translation0Text,
+			$translation0Category,
 			$translation0Description,
 			$translation1Text,
+			$translation1Category,
 			$translation1Description,
 		],
 	)
@@ -128,6 +140,26 @@ export function EditWordComp({
 						}}
 					/>
 				</div>
+				{(_dictionary.categories0?.length ?? 0) > 0 && (
+					<div className='ccc_para'>
+						{_dictionary.categories0!.map((category) => (
+							<label>
+								<input
+									type='radio'
+									name='t2qmyi'
+									checked={$translation0Category === category}
+									onClick={(e) => {
+										e.preventDefault()
+										set$translation0Category(
+											$translation0Category === category ? undefined : category,
+										)
+									}}
+								/>{' '}
+								{category}
+							</label>
+						))}
+					</div>
+				)}
 				<div className='ccc_para'>
 					<label>Magyarázat:</label>
 					<input
@@ -149,6 +181,26 @@ export function EditWordComp({
 						}}
 					/>
 				</div>
+				{(_dictionary.categories1?.length ?? 0) > 0 && (
+					<div className='ccc_para'>
+						{_dictionary.categories1!.map((category) => (
+							<label>
+								<input
+									type='radio'
+									name='t2qmxy'
+									checked={$translation1Category === category}
+									onClick={(e) => {
+										e.preventDefault()
+										set$translation1Category(
+											$translation1Category === category ? undefined : category,
+										)
+									}}
+								/>{' '}
+								{category}
+							</label>
+						))}
+					</div>
+				)}
 				<div className='ccc_para'>
 					<label>Magyarázat:</label>
 					<input
