@@ -10,6 +10,7 @@ export default {
 	plugins: [
 		VitePWA({
 			strategies: 'injectManifest',
+			injectRegister: false,
 			srcDir: 'src',
 			filename: 'service-worker.ts',
 		}),

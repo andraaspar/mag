@@ -10,15 +10,15 @@ root.render(
 	</HashRouter>,
 )
 
-// window.addEventListener('load', async () => {
-// 	try {
-// 		const reg = await navigator.serviceWorker.register(
-// 			new URL('./service-worker.js', import.meta.url),
-// 			{ type: 'module', updateViaCache: 'none' },
-// 		)
-// 		console.log(`[t2n45k] Service worker registered.`)
-// 		reg.update()
-// 	} catch (e) {
-// 		console.error(`[t2n45m]`, e)
-// 	}
-// })
+window.addEventListener('load', async () => {
+	try {
+		const reg = await navigator.serviceWorker.register('./service-worker.js', {
+			type: 'module',
+			updateViaCache: 'none',
+		})
+		console.log(`[t2n45k] Service worker registered.`)
+		reg.update()
+	} catch (e) {
+		console.error(`[t2n45m]`, e)
+	}
+})
