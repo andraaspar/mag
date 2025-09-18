@@ -44,8 +44,8 @@ html {
 	--shadow-1: 0 2px 4px var(--black-3);
 
 	--button-padding-x: 0.375em;
-	--ccc_button_padding_y: 0.25em;
-	--button-padding: var(--button-padding-x) var(--ccc_button_padding_y);
+	--button-padding-y: 0.25em;
+	--button-padding: var(--button-padding-y) var(--button-padding-x);
 
 	display: flex;
 	flex-direction: column;

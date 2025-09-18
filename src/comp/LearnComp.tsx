@@ -94,8 +94,10 @@ export function LearnComp({
 		<form onSubmit={onSubmit}>
 			<div className='ccc_col ccc_gap_0_5'>
 				<div>
-					{questionLanguage}: {question.category && <i>{question.category}</i>}{' '}
-					{question.text}
+					{questionLanguage}:{' '}
+					<span className='ccc_large'>
+						{question.category && <i>{question.category}</i>} {question.text}
+					</span>
 				</div>
 				{question.description && <div>Megjegyzés: {question.description}</div>}
 				<div className='ccc_para'>
@@ -103,31 +105,35 @@ export function LearnComp({
 						{answerLanguage}
 						<RequiredComp />:
 					</label>
-					{hasCategory &&
-						!$categoryShown &&
-						categories.map((category) => (
-							<button
-								onClick={() => {
-									set$category(category)
-									if (category === correctAnswer.category)
-										set$categoryShown(true)
-									else onShowAnswer()
-								}}
-							>
-								{category}
-							</button>
-						))}
-					{hasCategory && $categoryShown && (
-						<div className='ccc_button_padding_y'>{correctAnswer.category}</div>
-					)}
-					<input
-						ref={inputRef}
-						autoFocus
-						value={$answer}
-						onChange={(e) => {
-							set$answer(e.target.value)
-						}}
-					/>
+					<span className='ccc_para ccc_large ccc_flex_1_0_0'>
+						{hasCategory &&
+							!$categoryShown &&
+							categories.map((category, index) => (
+								<button
+									autoFocus={index === 0}
+									onClick={() => {
+										set$category(category)
+										if (category === correctAnswer.category)
+											set$categoryShown(true)
+										else onShowAnswer()
+										inputRef.current?.focus()
+									}}
+								>
+									{category}
+								</button>
+							))}
+						{hasCategory && $categoryShown && (
+							<i className='ccc_button_padding_y'>{correctAnswer.category}</i>
+						)}
+						<input
+							ref={inputRef}
+							autoFocus={!hasCategory || $categoryShown}
+							value={$answer}
+							onChange={(e) => {
+								set$answer(e.target.value)
+							}}
+						/>
+					</span>
 				</div>
 				<div className='ccc_para'>
 					<button disabled={!canSubmit()}>Rendben</button>

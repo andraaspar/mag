@@ -1,10 +1,10 @@
 input:not([type]) {
 	flex: 1 0 auto;
-	width: 50px;
+	width: 10em;
 	border-radius: var(--border-radius);
 	background-color: black;
-	border: 1px solid var(--gray-2);
-	box-shadow: var(--shadow-1);
+	border: 0;
+	box-shadow: var(--shadow-1), inset 0 0 0 1px var(--gray-2);
 	padding: var(--button-padding);
 }
 

@@ -9,7 +9,7 @@
 .content {
 	flex: 1 1 auto;
 	white-space: pre-wrap;
-	padding: var(--ccc_button_padding_y) 0;
+	padding: var(--button-padding-y) 0;
 	border: 1px solid transparent;
 	border-left: 0;
 	border-right: 0;

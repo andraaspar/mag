@@ -58,9 +58,13 @@ export function DictionaryPage(props: DictionaryPageProps) {
 										>
 											{(numberOfQuestions) =>
 												numberOfQuestions.current ? (
-													<p>{numberOfQuestions.current} kérdésem van.</p>
+													<p className='ccc_large'>
+														{numberOfQuestions.current} kérdésem van.
+													</p>
 												) : (
-													<p>Gratulálok! Mindet megtanultad!</p>
+													<p className='ccc_large'>
+														Gratulálok! Mindet megtanultad!
+													</p>
 												)
 											}
 										</LoadableComp>
